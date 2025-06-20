@@ -31,7 +31,8 @@ class AlarmiApp extends ConsumerWidget {
       // themeMode: ref.watch(configProvider).darkMode ? ThemeMode.dark : ThemeMode.light,
       themeMode: ThemeMode.system,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: "Pretendard",
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
       ),
     );
   }
