@@ -51,8 +51,8 @@ void navPagePush(
 ]) async {
   final result = await Navigator.of(context).push(
     PageRouteBuilder(
-      transitionDuration: Duration(milliseconds: 500),
-      reverseTransitionDuration: Duration(milliseconds: 500),
+      transitionDuration: Duration(milliseconds: 200),
+      reverseTransitionDuration: Duration(milliseconds: 200),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         final offsetAnimation = Tween(
           begin: Offset(1, 0),

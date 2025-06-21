@@ -7,7 +7,14 @@ import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 
 class FeedDialog extends StatefulWidget {
-  const FeedDialog({super.key});
+  final void Function() toggleLight;
+  final void Function(String newMsg) setMessage;
+
+  const FeedDialog({
+    super.key,
+    required this.toggleLight,
+    required this.setMessage,
+  });
 
   @override
   State<FeedDialog> createState() => _FeedDialogState();
@@ -17,10 +24,6 @@ class _FeedDialogState extends State<FeedDialog> {
   int total = 0;
   double userEnergy = 0.0;
   double totalExpectEnergy = 0.0;
-  // late AnimationController energyBarController = AnimationController(
-  //   vsync: this,
-  //   duration: Duration(milliseconds: 800),
-  // );
 
   void onQuantityChanged(newTotal) {
     setState(() {
@@ -45,8 +48,19 @@ class _FeedDialogState extends State<FeedDialog> {
 
   @override
   void dispose() {
-    // energyBarController.dispose();
     super.dispose();
+  }
+
+  void onFeed() {
+    if (totalExpectEnergy != userEnergy) {
+      int percent =
+          (totalExpectEnergy * 100).toInt() > 100
+              ? 100
+              : (totalExpectEnergy * 100).toInt();
+      widget.setMessage('에너지 $percent% 충전 완료!');
+    }
+    widget.toggleLight();
+    Navigator.pop(context);
   }
 
   @override
@@ -126,7 +140,7 @@ class _FeedDialogState extends State<FeedDialog> {
           ),
           Gaps.v8,
           ElevatedButton(
-            onPressed: total > 0 ? () => Navigator.pop(context) : null,
+            onPressed: total > 0 ? onFeed : null,
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue.shade400,

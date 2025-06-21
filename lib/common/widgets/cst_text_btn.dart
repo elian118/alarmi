@@ -1,6 +1,5 @@
 import 'dart:ffi';
 
-import 'package:alarmi/common/consts/sizes.dart';
 import 'package:flutter/material.dart';
 
 class CstTextBtn extends StatelessWidget {
@@ -8,7 +7,10 @@ class CstTextBtn extends StatelessWidget {
   final TextStyle style;
   final Double? width;
   final String? imgIconSrc;
+  final double? spacing;
   final void Function()? onPressed;
+  final EdgeInsetsGeometry? padding;
+  final Color? backgroundColor;
 
   const CstTextBtn({
     super.key,
@@ -16,19 +18,22 @@ class CstTextBtn extends StatelessWidget {
     required this.style,
     this.width,
     this.imgIconSrc,
+    this.spacing,
     this.onPressed,
+    this.padding,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-        backgroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: Sizes.size24),
+        backgroundColor: backgroundColor,
+        padding: padding,
       ),
       onPressed: onPressed,
       child: Row(
-        spacing: 12,
+        spacing: spacing != null ? spacing! : 12,
         children: [
           if (imgIconSrc != null) Image.asset(imgIconSrc!),
           Text(label, style: style),

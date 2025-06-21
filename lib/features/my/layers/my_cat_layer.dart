@@ -15,10 +15,22 @@ class MyCatLayer extends StatefulWidget {
 
 class _MyCatLayerState extends State<MyCatLayer> {
   bool _isLight = false;
+  String _message = '좋은 아침!';
 
   void _toggleLight() {
     setState(() {
       _isLight = !_isLight;
+    });
+  }
+
+  void _setMessage(newMsg) {
+    setState(() {
+      _message = newMsg;
+    });
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        _message = '좋은 아침!';
+      });
     });
   }
 
@@ -46,7 +58,7 @@ class _MyCatLayerState extends State<MyCatLayer> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  '좋은 아침!',
+                  _message,
                   style: TextStyle(
                     fontSize: Sizes.size18,
                     fontWeight: FontWeight.w500,
@@ -94,6 +106,11 @@ class _MyCatLayerState extends State<MyCatLayer> {
                     children: [
                       CstTextBtn(
                         imgIconSrc: 'assets/images/feed_icon.png',
+                        backgroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 0.0,
+                          horizontal: Sizes.size24,
+                        ),
                         label: '밥주기',
                         style: TextStyle(
                           color: Colors.black,
@@ -103,13 +120,22 @@ class _MyCatLayerState extends State<MyCatLayer> {
                         onPressed:
                             () => showModalBottomSheet(
                               context: context,
-                              builder: (context) => FeedDialog(),
+                              builder:
+                                  (context) => FeedDialog(
+                                    toggleLight: _toggleLight,
+                                    setMessage: _setMessage,
+                                  ),
                               isScrollControlled: true,
                             ),
                       ),
                       Gaps.h36,
                       CstTextBtn(
                         imgIconSrc: 'assets/images/fishing_rod_icon.png',
+                        backgroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 0.0,
+                          horizontal: Sizes.size24,
+                        ),
                         label: '낚시하기',
                         style: TextStyle(
                           color: Colors.black,

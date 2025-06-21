@@ -1,6 +1,9 @@
-import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/widgets/cst_text_btn.dart';
+import 'package:alarmi/features/my/screens/notifications_screen.dart';
 import 'package:alarmi/utils/helper_utils.dart';
+import 'package:alarmi/utils/route_utils.dart';
+import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 
 class MyHeader extends StatelessWidget {
@@ -25,26 +28,40 @@ class MyHeader extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Image.asset('assets/images/fish_icon.png'),
-                  Gaps.h8,
-                  Text('보관함', style: TextStyle(fontWeight: FontWeight.w600)),
-                ],
+              CstTextBtn(
+                imgIconSrc: 'assets/images/fish_icon.png',
+                padding: EdgeInsets.zero,
+                spacing: 8,
+                label: '보관함',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                onPressed: () => callSimpleToast("보관함 클릭"),
               ),
-              Row(
-                children: [
-                  Image.asset('assets/images/shopping_icon.png'),
-                  Gaps.h8,
-                  Text('상점', style: TextStyle(fontWeight: FontWeight.w600)),
-                ],
+              CstTextBtn(
+                imgIconSrc: 'assets/images/shopping_icon.png',
+                padding: EdgeInsets.zero,
+                spacing: 8,
+                label: '상점',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                onPressed: () => callSimpleToast("상점 클릭"),
               ),
-              Row(
-                children: [
-                  Image.asset('assets/images/bell_icon.png'),
-                  Gaps.h8,
-                  Text('알림', style: TextStyle(fontWeight: FontWeight.w600)),
-                ],
+              CstTextBtn(
+                imgIconSrc: 'assets/images/bell_icon.png',
+                padding: EdgeInsets.zero,
+                spacing: 8,
+                label: '알림',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                // onPressed: () => callSimpleToast("알림 클릭"),
+                onPressed:
+                    () => navPagePush(context, NotificationsScreen(), true),
               ),
             ],
           ),
