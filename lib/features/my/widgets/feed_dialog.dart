@@ -14,9 +14,32 @@ class FeedDialog extends StatefulWidget {
 }
 
 class _FeedDialogState extends State<FeedDialog> {
+  int total = 0;
+  double userEnergy = 0.25;
+  double totalExpectEnergy = 0.0;
+
+  void onQuantityChanged(newTotal) {
+    setState(() {
+      total = newTotal > 0 ? newTotal : 0;
+    });
+  }
+
+  void onExpectEnergyChange(newTotalExpectEnergy) {
+    setState(() {
+      totalExpectEnergy = newTotalExpectEnergy;
+    });
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      totalExpectEnergy = userEnergy;
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
     Size size = MediaQuery.of(context).size;
 
     return Container(
@@ -32,19 +55,37 @@ class _FeedDialogState extends State<FeedDialog> {
               Icon(Icons.favorite),
               Gaps.h8,
               Text(
-                '에너지 25%',
+                '에너지 ${(userEnergy * 100).toInt()}%',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
             ],
           ),
           Gaps.v8,
-          LinearProgressIndicator(
-            color: colorScheme.primary,
-            backgroundColor: Colors.grey,
-            value: 0.25,
-            borderRadius: BorderRadius.circular(20),
-            minHeight: 15,
+          Stack(
+            children: [
+              // 예상 에너지바
+              LinearProgressIndicator(
+                color: Colors.blue.withValues(alpha: userEnergy),
+                backgroundColor:
+                    totalExpectEnergy > 1
+                        ? Colors.red.withValues(alpha: 0.4)
+                        : Colors.grey.withValues(alpha: 0.4),
+                value: totalExpectEnergy,
+                borderRadius: BorderRadius.circular(20),
+                minHeight: 15,
+              ),
+              // 에너지바
+              LinearProgressIndicator(
+                color: Colors.blue,
+                backgroundColor: Colors.white.withValues(alpha: 0.0),
+                value: 0.25,
+                borderRadius: BorderRadius.circular(20),
+                minHeight: 15,
+              ),
+            ],
           ),
+          Gaps.v8,
+
           Gaps.v16,
           Container(
             height: size.height * 0.57,
@@ -53,18 +94,23 @@ class _FeedDialogState extends State<FeedDialog> {
                 spacing: 14,
                 runSpacing: 14,
                 children: [
-                  ...[
-                    ...fishes,
-                    ...fishes,
-                    ...fishes,
-                  ].map((fish) => FishTile(fish: fish)),
+                  ...[...fishes, ...fishes, ...fishes].map(
+                    (fish) => FishTile(
+                      fish: fish,
+                      userEnergy: userEnergy,
+                      totalExpectEnergy: totalExpectEnergy,
+                      onQuantityChanged: onQuantityChanged,
+                      onExpectEnergyChange: onExpectEnergyChange,
+                      total: total,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
           Gaps.v8,
           ElevatedButton(
-            onPressed: () {},
+            onPressed: total > 0 ? () => Navigator.pop(context) : null,
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue.shade400,
