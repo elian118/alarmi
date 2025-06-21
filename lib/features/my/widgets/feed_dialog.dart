@@ -15,8 +15,12 @@ class FeedDialog extends StatefulWidget {
 
 class _FeedDialogState extends State<FeedDialog> {
   int total = 0;
-  double userEnergy = 0.25;
+  double userEnergy = 0.0;
   double totalExpectEnergy = 0.0;
+  // late AnimationController energyBarController = AnimationController(
+  //   vsync: this,
+  //   duration: Duration(milliseconds: 800),
+  // );
 
   void onQuantityChanged(newTotal) {
     setState(() {
@@ -33,9 +37,16 @@ class _FeedDialogState extends State<FeedDialog> {
   @override
   void initState() {
     setState(() {
+      userEnergy = 0.25;
       totalExpectEnergy = userEnergy;
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // energyBarController.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,15 +75,20 @@ class _FeedDialogState extends State<FeedDialog> {
           Stack(
             children: [
               // 예상 에너지바
-              LinearProgressIndicator(
-                color: Colors.blue.withValues(alpha: userEnergy),
-                backgroundColor:
-                    totalExpectEnergy > 1
-                        ? Colors.red.withValues(alpha: 0.4)
-                        : Colors.grey.withValues(alpha: 0.4),
-                value: totalExpectEnergy,
-                borderRadius: BorderRadius.circular(20),
-                minHeight: 15,
+              TweenAnimationBuilder(
+                tween: Tween<double>(begin: userEnergy, end: totalExpectEnergy),
+                duration: Duration(milliseconds: 500),
+                builder:
+                    (context, value, child) => LinearProgressIndicator(
+                      color: Colors.blue.withValues(alpha: userEnergy),
+                      backgroundColor:
+                          value > 1
+                              ? Colors.red.withValues(alpha: 0.4)
+                              : Colors.grey.withValues(alpha: 0.4),
+                      value: value,
+                      borderRadius: BorderRadius.circular(20),
+                      minHeight: 15,
+                    ),
               ),
               // 에너지바
               LinearProgressIndicator(
