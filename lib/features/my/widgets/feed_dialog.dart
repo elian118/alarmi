@@ -1,7 +1,8 @@
 import 'package:alarmi/common/consts/gaps.dart';
+import 'package:alarmi/common/consts/raw_data/fishes.dart';
 import 'package:alarmi/common/consts/sizes.dart';
-import 'package:alarmi/common/widgets/container_tile.dart';
 import 'package:alarmi/common/widgets/cst_divider.dart';
+import 'package:alarmi/features/my/widgets/fish_tile.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class _FeedDialogState extends State<FeedDialog> {
       padding: EdgeInsets.all(Sizes.size12),
       child: Column(
         children: [
-          CstDivider(width: 100, thickness: 8),
+          CstDivider(width: 120, thickness: 8),
           Gaps.v16,
           Row(
             children: [
@@ -52,22 +53,11 @@ class _FeedDialogState extends State<FeedDialog> {
                 spacing: 14,
                 runSpacing: 14,
                 children: [
-                  ContainerTile(child: Text('참돔')),
-                  ContainerTile(child: Text('블루탱')),
-                  ContainerTile(child: Text('망치상어')),
-                  ContainerTile(child: Text('소코가오리')),
-                  ContainerTile(child: Text('참돔')),
-                  ContainerTile(child: Text('블루탱')),
-                  ContainerTile(child: Text('망치상어')),
-                  ContainerTile(child: Text('소코가오리')),
-                  ContainerTile(child: Text('참돔')),
-                  ContainerTile(child: Text('블루탱')),
-                  ContainerTile(child: Text('망치상어')),
-                  ContainerTile(child: Text('소코가오리')),
-                  ContainerTile(child: Text('참돔')),
-                  ContainerTile(child: Text('블루탱')),
-                  ContainerTile(child: Text('망치상어')),
-                  ContainerTile(child: Text('소코가오리')),
+                  ...[
+                    ...fishes,
+                    ...fishes,
+                    ...fishes,
+                  ].map((fish) => FishTile(fish: fish)),
                 ],
               ),
             ),
