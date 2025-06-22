@@ -1,17 +1,17 @@
 enum NotiType {
-  FriendRequest(template: '친구 신청을 보냈어요', type: 'general'),
-  ReceiveFriendRequest(
+  FriendReq(template: '친구 신청을 보냈어요', type: 'general'),
+  ReceiveFriendReq(
     template: '|sender|님이 친구를 신청했어요. 수락하시겠습니까?',
     type: 'invitation',
   ),
   AcceptFriendship(template: '|receiver|님이 친구 신청을 수락했어요.', type: 'accept'),
   ReceiverWakeUp(template: '내가 깨운 알림에 |receiver|님이 일어났어요!', type: 'general'),
   WeekAccomplished(template: '주간 기상 목표를 달성했어요. 보상을 확인하세요!', type: 'general'),
-  MemberInviteSomeoneToTeam(
+  InviteMemberToMember(
     template: '|sender|님이 잠수함에 |receiver|님을 초대했어요.',
     type: 'general',
   ),
-  BeInvitedToTeam(
+  InviteMemberToMe(
     template: '|teamName| 잠수함에 초대받았어요! 탑승하시겠어요?',
     type: 'invitation',
   ),

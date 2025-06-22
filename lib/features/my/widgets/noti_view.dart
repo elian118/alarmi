@@ -56,8 +56,8 @@ class _NotiTileState extends State<NotiTile> {
             ),
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
           ),
-          widget.noti.notiType == NotiType.BeInvitedToTeam ||
-                  widget.noti.notiType == NotiType.ReceiveFriendRequest
+          widget.noti.notiType == NotiType.InviteMemberToMe ||
+                  widget.noti.notiType == NotiType.ReceiveFriendReq
               ? Column(
                 children: [
                   Gaps.v24,

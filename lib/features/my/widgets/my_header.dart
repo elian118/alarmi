@@ -5,6 +5,7 @@ import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class MyHeader extends StatelessWidget {
   const MyHeader({super.key});
@@ -65,8 +66,16 @@ class MyHeader extends StatelessWidget {
               ),
             ],
           ),
+        ).animate().slideX(
+          begin: -1,
+          end: 0,
+          duration: 0.6.seconds,
+          curve: Curves.easeInOut,
         ),
-        Image.asset('assets/images/thumb.png'),
+        Image.asset('assets/images/thumb.png').animate().scale(
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        ),
       ],
     );
   }
