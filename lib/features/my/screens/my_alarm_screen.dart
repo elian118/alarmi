@@ -1,4 +1,4 @@
-import 'package:alarmi/features/my/layers/my_alarm_background_layer.dart';
+import 'package:alarmi/common/layers/background_layer.dart';
 import 'package:alarmi/features/my/layers/my_alarm_ui_layer.dart';
 import 'package:alarmi/features/my/layers/my_cat_layer.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,9 @@ class MyAlarmScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          Positioned.fill(child: MyAlarmBackgroundLayer()),
+          Positioned.fill(
+            child: BackgroundLayer(image: 'assets/images/my-alarm-bg.png'),
+          ),
           Positioned.fill(child: MyAlarmUiLayer()),
           Positioned.fill(child: MyCatLayer()),
         ],

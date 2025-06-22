@@ -2,19 +2,16 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-class MyAlarmBackgroundLayer extends StatelessWidget {
-  const MyAlarmBackgroundLayer({super.key});
+class BackgroundLayer extends StatelessWidget {
+  final String image;
+
+  const BackgroundLayer({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned.fill(
-          child: Image.asset(
-            'assets/images/my-alarm-bg.png',
-            fit: BoxFit.cover,
-          ),
-        ),
+        Positioned.fill(child: Image.asset(image, fit: BoxFit.cover)),
         // 흐리게
         Positioned.fill(
           child: BackdropFilter(

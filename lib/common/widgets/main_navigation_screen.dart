@@ -1,8 +1,6 @@
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/consts/tabs.dart';
 import 'package:alarmi/common/widgets/custom_navigaton.dart';
-import 'package:alarmi/features/my/screens/my_alarm_screen.dart';
-import 'package:alarmi/features/my/screens/new_alarm_screen.dart';
-import 'package:alarmi/features/my/screens/team_alarm_screen.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,22 +17,11 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  final List<String> _tabs = [
-    "my",
-    "new",
-    "team", // fake element for video post icon
-  ];
-
-  List<Widget> offStages = [
-    const MyAlarmScreen(),
-    const NewAlarmScreen(),
-    const TeamAlarmScreen(),
-  ];
-
-  late int _selectedIndex = _tabs.indexOf(widget.tab);
+  List<Widget> offStages = [...tabs.map((tab) => tab.target)];
+  late int _selectedIndex = [...tabs.map((t) => t.key)].indexOf(widget.tab);
 
   void _onTap(int index) {
-    context.go('/${_tabs[index]}');
+    context.push('/${tabs[index].key}');
     setState(() {
       _selectedIndex = index;
     });
@@ -43,7 +30,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   void initState() {
     super.initState();
-    if (kIsWeb) _tabs.remove("xxxxx");
+    if (kIsWeb) tabs.remove("xxxxx");
   }
 
   @override

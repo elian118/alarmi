@@ -87,6 +87,23 @@ class _MyCatLayerState extends State<MyCatLayer> {
           ),
         ),
         Positioned(
+              top: getWinHeight(context) * 0.295,
+              left: getWinHeight(context) * 0.01,
+              child: Container(
+                alignment: Alignment.center,
+                width: getWinWidth(context),
+                child: IgnorePointer(
+                  ignoring: true,
+                  child: Image.asset('assets/images/light.png'),
+                ),
+              ),
+            )
+            .animate(target: _isLight ? 1 : 0)
+            .fade(
+              duration: Duration(milliseconds: 800),
+              curve: Curves.easeInOut,
+            ),
+        Positioned(
           top: getWinHeight(context) * 0.3,
           child: Container(
             alignment: Alignment.center,

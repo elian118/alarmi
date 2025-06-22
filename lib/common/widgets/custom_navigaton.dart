@@ -1,4 +1,4 @@
-import 'package:alarmi/common/consts/raw_data/navs.dart';
+import 'package:alarmi/common/consts/tabs.dart';
 import 'package:alarmi/common/widgets/nav_tab.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
@@ -16,17 +16,19 @@ class CustomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = isDarkMode(context);
+    final List<String> tabKeys = [...tabs.map((t) => t.key)];
+
     return Container(
       color: isDark ? Colors.black : Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          for (var nav in navs)
+          for (var tab in tabs)
             NavTab(
-              text: nav['title'],
-              icon: nav['icon'],
-              isSelected: selectedIndex == navs.indexOf(nav),
-              onTap: () => onTap(navs.indexOf(nav)),
+              text: tab.name,
+              icon: tab.iconAsset,
+              isSelected: selectedIndex == tabKeys.indexOf(tab.key),
+              onTap: () => onTap(tabKeys.indexOf(tab.key)),
               selectedIndex: selectedIndex,
             ),
         ],
