@@ -21,7 +21,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   late int _selectedIndex = [...tabs.map((t) => t.key)].indexOf(widget.tab);
 
   void _onTap(int index) {
-    context.push('/${tabs[index].key}');
+    context.go('/${tabs[index].key}');
+    // context.push('/${tabs[index].key}'); // 이동할때마다 새로 스크린 불러옴(초기 애니메이션이 재생됨)
     setState(() {
       _selectedIndex = index;
     });
@@ -44,7 +45,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           for (var offStage in offStages)
             Offstage(
               offstage: _selectedIndex != offStages.indexOf(offStage),
-              child: offStage,
+              // 탭 스크린마다 초기 애니메이션이 다시 시작될 수 있도록 각 스크린의 키를 변경해준다.
+              child: KeyedSubtree(
+                key: ValueKey(
+                  tabs[_selectedIndex].key +
+                      DateTime.now().microsecondsSinceEpoch.toString(),
+                ),
+                child: offStage,
+              ),
             ),
         ],
       ),
