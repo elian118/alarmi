@@ -12,7 +12,7 @@ class MyAlarmScreen extends StatelessWidget {
       body: Stack(
         children: [
           Positioned.fill(
-            child: BackgroundLayer(image: 'assets/images/my-alarm-bg.png'),
+            child: BackgroundLayer(image: 'assets/images/my_alarm_bg.png'),
           ),
           Positioned.fill(child: MyAlarmUiLayer()),
           Positioned.fill(child: MyCatLayer()),

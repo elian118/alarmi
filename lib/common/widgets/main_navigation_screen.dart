@@ -1,6 +1,4 @@
-import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/common/consts/tabs.dart';
-import 'package:alarmi/common/widgets/custom_navigaton.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +53,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
         ],
       ),
-      bottomNavigationBar: Container(
+      /*bottomNavigationBar: Container(
         color: isDark ? Colors.black : Colors.white,
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
         child: Padding(
@@ -65,7 +63,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
           child: CustomNavigation(selectedIndex: _selectedIndex, onTap: _onTap),
         ),
-      ),
+      ),*/
     );
   }
 }

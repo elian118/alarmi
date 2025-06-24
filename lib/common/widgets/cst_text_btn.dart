@@ -11,6 +11,7 @@ class CstTextBtn extends StatelessWidget {
   final void Function()? onPressed;
   final EdgeInsetsGeometry? padding;
   final Color? backgroundColor;
+  final Color? foregroundColor;
 
   const CstTextBtn({
     super.key,
@@ -22,6 +23,7 @@ class CstTextBtn extends StatelessWidget {
     this.onPressed,
     this.padding,
     this.backgroundColor,
+    this.foregroundColor,
   });
 
   @override
@@ -29,6 +31,7 @@ class CstTextBtn extends StatelessWidget {
     return TextButton(
       style: TextButton.styleFrom(
         backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
         padding: padding,
       ),
       onPressed: onPressed,
