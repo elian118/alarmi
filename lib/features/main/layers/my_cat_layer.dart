@@ -76,7 +76,7 @@ class _MyCatLayerState extends State<MyCatLayer> {
           ),
         ),
         Positioned(
-          top: getWinHeight(context) * 0.22,
+          top: getWinHeight(context) * 0.27,
           child: Container(
             alignment: Alignment.center,
             width: getWinWidth(context),
@@ -87,7 +87,7 @@ class _MyCatLayerState extends State<MyCatLayer> {
           ),
         ),
         Positioned(
-              top: getWinHeight(context) * 0.295,
+              top: getWinHeight(context) * 0.345,
               left: getWinHeight(context) * 0.01,
               child: Container(
                 alignment: Alignment.center,
@@ -104,7 +104,7 @@ class _MyCatLayerState extends State<MyCatLayer> {
               curve: Curves.easeInOut,
             ),
         Positioned(
-          top: getWinHeight(context) * 0.3,
+          top: getWinHeight(context) * 0.35,
           child: Container(
             alignment: Alignment.center,
             margin: EdgeInsets.only(left: 32),
