@@ -1,11 +1,11 @@
 import 'package:alarmi/common/model/tab.dart';
-import 'package:alarmi/features/my/screens/my_alarm_screen.dart';
-import 'package:alarmi/features/my/screens/new_alarm_screen.dart';
-import 'package:alarmi/features/my/screens/team_alarm_screen.dart';
+import 'package:alarmi/features/main/screens/my_alarm_screen.dart';
+import 'package:alarmi/features/main/screens/new_alarm_screen.dart';
+import 'package:alarmi/features/main/screens/team_alarm_screen.dart';
 
 List<Tab> tabs = [
   Tab(
-    key: "my",
+    key: "main",
     name: "개인 알람",
     iconAsset: "assets/images/bi_person-fill.svg",
     target: MyAlarmScreen(),

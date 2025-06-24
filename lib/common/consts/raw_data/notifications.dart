@@ -1,5 +1,5 @@
-import 'package:alarmi/features/my/models/noti.dart';
-import 'package:alarmi/features/my/models/noti_type.dart';
+import 'package:alarmi/features/main/models/noti.dart';
+import 'package:alarmi/features/main/models/noti_type.dart';
 
 List<Noti> notifications = [
   Noti(

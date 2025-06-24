@@ -1,6 +1,6 @@
 import 'package:alarmi/common/layers/background_layer.dart';
-import 'package:alarmi/features/my/layers/my_alarm_ui_layer.dart';
-import 'package:alarmi/features/my/layers/my_cat_layer.dart';
+import 'package:alarmi/features/main/layers/my_alarm_ui_layer.dart';
+import 'package:alarmi/features/main/layers/my_cat_layer.dart';
 import 'package:flutter/material.dart';
 
 class MyAlarmScreen extends StatelessWidget {

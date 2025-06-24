@@ -22,7 +22,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   void _onTap(int index) {
     context.go('/${tabs[index].key}');
-    // context.push('/${tabs[index].key}'); // 이동할때마다 새로 스크린 불러옴(초기 애니메이션이 재생됨)
     setState(() {
       _selectedIndex = index;
     });

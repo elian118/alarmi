@@ -8,7 +8,7 @@ import '../../features/auth/screens/sign_up_screen.dart';
 
 final routerProvider = Provider((ref) {
   return GoRouter(
-    initialLocation: '/my',
+    initialLocation: '/main',
     redirect: (context, state) {
       final isLoggedIn = ref.read(authRepo).isLoggedIn;
       if (!isLoggedIn) {
@@ -31,7 +31,7 @@ final routerProvider = Provider((ref) {
       ),
       GoRoute(
         name: MainNavigationScreen.routeName,
-        path: '/:tab(my|new|team)',
+        path: '/:tab(main|new|team)',
         builder: (context, state) {
           final tab = state.pathParameters['tab']!;
           return MainNavigationScreen(tab: tab);

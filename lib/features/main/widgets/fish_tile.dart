@@ -1,5 +1,5 @@
 import 'package:alarmi/common/consts/sizes.dart';
-import 'package:alarmi/features/my/models/fish.dart';
+import 'package:alarmi/features/main/models/fish.dart';
 import 'package:flutter/material.dart';
 
 class FishTile extends StatefulWidget {

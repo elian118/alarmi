@@ -2,7 +2,7 @@ import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/fishes.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/common/widgets/cst_divider.dart';
-import 'package:alarmi/features/my/widgets/fish_tile.dart';
+import 'package:alarmi/features/main/widgets/fish_tile.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 

@@ -1,7 +1,7 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/common/widgets/cst_text_btn.dart';
-import 'package:alarmi/features/my/widgets/feed_dialog.dart';
+import 'package:alarmi/features/main/widgets/feed_dialog.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';

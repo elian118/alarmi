@@ -1,5 +1,5 @@
 import 'package:alarmi/common/consts/raw_data/my_alarms.dart';
-import 'package:alarmi/features/my/widgets/alarm.dart';
+import 'package:alarmi/features/main/widgets/alarm.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';

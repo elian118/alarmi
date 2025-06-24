@@ -1,4 +1,4 @@
-import 'package:alarmi/features/my/models/fish.dart';
+import 'package:alarmi/features/main/models/fish.dart';
 
 List<Fish> fishes = [
   Fish(
