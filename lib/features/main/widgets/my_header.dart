@@ -29,18 +29,16 @@ class _MyHeaderState extends State<MyHeader> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(40.0),
           child: AnimatedContainer(
             duration: Duration(milliseconds: 500),
             curve: Curves.easeInOut,
             width: _isFold ? _foldedHeaderWidth : _unfoldedHeaderWidth,
-            height: 40,
+            height: 47,
             decoration: BoxDecoration(
               color: Colors.grey.shade100,
               borderRadius: BorderRadius.circular(40.0),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: OverflowBox(
@@ -74,7 +72,7 @@ class _MyHeaderState extends State<MyHeader> {
                         Row(
                           children: [
                             CstTextBtn(
-                              imgIconSrc: 'assets/images/fish_icon.png',
+                              imgIconSrc: 'assets/images/icons/fish_icon.png',
                               padding: EdgeInsets.zero,
                               spacing: 8,
                               label: '보관함',
@@ -85,7 +83,8 @@ class _MyHeaderState extends State<MyHeader> {
                               onPressed: () => callSimpleToast("보관함 클릭"),
                             ),
                             CstTextBtn(
-                              imgIconSrc: 'assets/images/shopping_icon.png',
+                              imgIconSrc:
+                                  'assets/images/icons/shopping_icon.png',
                               padding: EdgeInsets.zero,
                               spacing: 8,
                               label: '상점',
@@ -96,7 +95,7 @@ class _MyHeaderState extends State<MyHeader> {
                               onPressed: () => callSimpleToast("상점 클릭"),
                             ),
                             CstTextBtn(
-                              imgIconSrc: 'assets/images/bell_icon.png',
+                              imgIconSrc: 'assets/images/icons/bell_icon.png',
                               padding: EdgeInsets.zero,
                               spacing: 8,
                               label: '알림',
@@ -120,9 +119,18 @@ class _MyHeaderState extends State<MyHeader> {
                 ),
 
                 Container(
+                  height: 40,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
                   ),
                   child: IconButton(
                     onPressed: toggleFold,
@@ -137,7 +145,7 @@ class _MyHeaderState extends State<MyHeader> {
           ),
         ).animate().slideX(begin: -1, end: 0),
 
-        Image.asset('assets/images/thumb.png').animate().scale(
+        Image.asset('assets/images/characters/thumb.png').animate().scale(
           duration: Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         ),

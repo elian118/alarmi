@@ -76,13 +76,13 @@ class _MyCatLayerState extends State<MyCatLayer> {
           ),
         ),
         Positioned(
-          top: getWinHeight(context) * 0.27,
+          top: (getWinHeight(context) * 0.5) - 220,
           child: Container(
             alignment: Alignment.center,
             width: getWinWidth(context),
             child: IgnorePointer(
               ignoring: true,
-              child: Image.asset('assets/images/eclipse.png'),
+              child: Image.asset('assets/images/characters/eclipse.png'),
             ),
           ),
         ),
@@ -94,7 +94,7 @@ class _MyCatLayerState extends State<MyCatLayer> {
                 width: getWinWidth(context),
                 child: IgnorePointer(
                   ignoring: true,
-                  child: Image.asset('assets/images/light.png'),
+                  child: Image.asset('assets/images/characters/light.png'),
                 ),
               ),
             )
@@ -107,10 +107,10 @@ class _MyCatLayerState extends State<MyCatLayer> {
           top: getWinHeight(context) * 0.35,
           child: Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.only(left: 32),
+            width: getWinWidth(context),
             child: GestureDetector(
               onTap: () => {if (_isLight == false) _toggleLight()},
-              child: Image.asset('assets/images/character.png'),
+              child: Image.asset('assets/images/characters/character.png'),
             ),
           ),
         ),
@@ -130,7 +130,7 @@ class _MyCatLayerState extends State<MyCatLayer> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CstTextBtn(
-                                imgIconSrc: 'assets/images/feed_icon.png',
+                                imgIconSrc: 'assets/images/icons/feed_icon.png',
                                 backgroundColor: Colors.white,
                                 padding: EdgeInsets.symmetric(
                                   vertical: 0.0,
@@ -156,7 +156,7 @@ class _MyCatLayerState extends State<MyCatLayer> {
                               Gaps.h36,
                               CstTextBtn(
                                 imgIconSrc:
-                                    'assets/images/fishing_rod_icon.png',
+                                    'assets/images/icons/fishing_rod_icon.png',
                                 backgroundColor: Colors.white,
                                 padding: EdgeInsets.symmetric(
                                   vertical: 0.0,

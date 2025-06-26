@@ -34,6 +34,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/icons/
+    - assets/images/characters/
+    - assets/images/fishes/
+    - assets/images/backgrounds/
   fonts:
     - family: Pretendard
       fonts:

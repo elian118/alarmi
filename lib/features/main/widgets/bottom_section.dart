@@ -74,7 +74,7 @@ class _BottomSectionState extends State<BottomSection> {
                         },
                         // 복잡해서 그런지, svg 형식 인식 못함 -> png로 변경
                         icon: Image.asset(
-                          "assets/images/fishing_rod_icon.png",
+                          "assets/images/icons/fishing_rod_icon.png",
                           width: 18,
                           height: 18,
                           fit: BoxFit.contain,
@@ -113,7 +113,7 @@ class _BottomSectionState extends State<BottomSection> {
                           );
                         },
                         icon: SvgPicture.asset(
-                          "assets/images/feed.svg",
+                          "assets/images/icons/feed.svg",
                           width: 18,
                           height: 18,
                           fit: BoxFit.contain,
@@ -147,7 +147,7 @@ class _BottomSectionState extends State<BottomSection> {
                 child: Row(
                   children: [
                     SvgPicture.asset(
-                      "assets/images/gen_alarm_icon.svg",
+                      "assets/images/icons/gen_alarm_icon.svg",
                       width: 18,
                       height: 18,
                       fit: BoxFit.contain,
@@ -156,7 +156,7 @@ class _BottomSectionState extends State<BottomSection> {
                         BlendMode.srcIn,
                       ),
                     ),
-                    Gaps.h8,
+                    Gaps.h12,
                     Text(
                       '알람 생성',
                       style: TextStyle(
@@ -176,7 +176,7 @@ class _BottomSectionState extends State<BottomSection> {
                 child: Row(
                   children: [
                     SvgPicture.asset(
-                      "assets/images/my_alarm_icon.svg",
+                      "assets/images/icons/my_alarm_icon.svg",
                       width: 18,
                       height: 18,
                       fit: BoxFit.contain,
@@ -185,7 +185,7 @@ class _BottomSectionState extends State<BottomSection> {
                         BlendMode.srcIn,
                       ),
                     ),
-                    Gaps.h8,
+                    Gaps.h12,
                     Text(
                       '내 알람',
                       style: TextStyle(
@@ -208,8 +208,8 @@ class _BottomSectionState extends State<BottomSection> {
                   onPressed: toggleCatMenus,
                   icon: SvgPicture.asset(
                     _isOpenCatMenus
-                        ? "assets/images/close.svg"
-                        : "assets/images/cat_icon.svg",
+                        ? "assets/images/icons/close.svg"
+                        : "assets/images/icons/cat_icon.svg",
                     width: 18,
                     height: 18,
                     fit: BoxFit.contain,

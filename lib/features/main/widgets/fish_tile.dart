@@ -70,7 +70,7 @@ class _FishTileState extends State<FishTile> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            "assets/images/${widget.fish.image}",
+            "assets/images/fishes/${widget.fish.image}",
             width: 88,
             height: 88,
           ),
