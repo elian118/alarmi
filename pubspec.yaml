@@ -22,6 +22,7 @@ dependencies:
   collection: ^1.19.1
   fluttertoast: ^8.2.12
   intl: ^0.20.2
+  alarm: ^5.1.4
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +39,7 @@ flutter:
     - assets/images/characters/
     - assets/images/fishes/
     - assets/images/backgrounds/
+    - assets/audios/
   fonts:
     - family: Pretendard
       fonts:

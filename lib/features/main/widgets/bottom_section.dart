@@ -3,6 +3,7 @@ import 'package:alarmi/features/main/widgets/feed_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomSection extends StatefulWidget {
   const BottomSection({super.key});
@@ -169,7 +170,7 @@ class _BottomSectionState extends State<BottomSection> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => context.go('/alarm-test'),
               style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 13),

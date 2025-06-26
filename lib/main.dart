@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +15,8 @@ void main() async {
 
   // final personalSettings = await SharedPreferences.getInstance();
   // final setRepository = ConfigRepository(personalSettings);
+
+  await Alarm.init(); // 알람 패키지 초기화
 
   runApp(ProviderScope(child: AlarmiApp()));
 }
