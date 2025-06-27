@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -12,12 +13,6 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   print(notificationResponse);
   // notificationResponse.actionId를 사용하여 어떤 액션이 눌렸는지 확인할 수 있습니다.
   print('백그라운드 알림 액션 ID: ${notificationResponse.actionId}');
-
-  // 예를 들어, 특정 액션에 따라 데이터 업데이트
-  if (notificationResponse.actionId == 'id_1') {
-    print('Action 1이 백그라운드에서 실행되었습니다.');
-    // await SharedPreferences.getInstance().then((prefs) => prefs.setBool('action1_handled', true));
-  }
 }
 
 class LocalNotificationService {
@@ -58,9 +53,19 @@ class LocalNotificationService {
                     DarwinNotificationActionOption.foreground,
                   },
                 ),
+                DarwinNotificationAction.plain(
+                  'stop_alarm_action',
+                  '알람 중지',
+                  options: <DarwinNotificationActionOption>{
+                    DarwinNotificationActionOption.destructive,
+                    DarwinNotificationActionOption.foreground,
+                  },
+                ),
               ],
               options: <DarwinNotificationCategoryOption>{
                 DarwinNotificationCategoryOption.hiddenPreviewShowTitle,
+                DarwinNotificationCategoryOption.customDismissAction,
+                DarwinNotificationCategoryOption.allowInCarPlay,
               },
             ),
             // 필요한 경우 다른 카테고리를 추가할 수 있습니다.
@@ -95,12 +100,12 @@ class LocalNotificationService {
     // FlutterLocalNotificationsPlugin 초기화
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (
-        NotificationResponse notificationResponse,
-      ) async {
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
         // 알림을 탭하거나 액션 버튼을 눌렀을 때의 동작 정의
-        // notificationResponse.actionId를 사용하여 어떤 액션이 눌렸는지 확인할 수 있습니다.
-        print('Notification action ID: ${notificationResponse.actionId}');
+        if (response.actionId == 'stop_alarm_action') {
+          // 인자를 직접 넘길 수 없으므로, 로컬 스토리지에서 알람마다 설정된 id를 가져와야 할 수 있다.
+          await Alarm.stop(42);
+        }
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
@@ -189,6 +194,26 @@ class LocalNotificationService {
       //     UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
       payload: payload,
+    );
+  }
+
+  static Future<void> showStopAlarmNotification(int alarmId) async {
+    const DarwinNotificationDetails darwinNotificationDetails =
+        DarwinNotificationDetails(
+          categoryIdentifier:
+              'alarm_category', // Use the category defined in initialization
+        );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      iOS: darwinNotificationDetails,
+    );
+
+    await _flutterLocalNotificationsPlugin.show(
+      alarmId, // Use the same ID as the alarm to link them
+      '알람이 울리고 있습니다!',
+      '알람을 중지하려면 "알람 중지" 버튼을 누르세요.',
+      platformChannelSpecifics,
+      payload: 'alarm_stop_payload_$alarmId',
     );
   }
 }
