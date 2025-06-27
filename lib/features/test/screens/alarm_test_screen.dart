@@ -1,5 +1,7 @@
 import 'package:alarm/alarm.dart';
 import 'package:alarmi/common/configs/alarmSettings.dart';
+import 'package:alarmi/common/configs/local_notification_configs.dart';
+import 'package:alarmi/common/widgets/cst_divider.dart';
 import 'package:flutter/material.dart';
 
 class AlarmTestScreen extends StatelessWidget {
@@ -61,6 +63,55 @@ class AlarmTestScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () => onTabGetAlarmCounts(context),
               child: const Text('설정된 알람 확인'),
+            ),
+            CstDivider(width: 100, thickness: 10),
+            // 일반 알림 보내기 버튼
+            ElevatedButton(
+              onPressed: () {
+                LocalNotificationService.showSimpleNotification(
+                  // <-- static 메서드 호출
+                  id: 0,
+                  title: '간단 알림',
+                  body: '이것은 일반적인 알림입니다.',
+                  payload: 'simple_notification_data',
+                );
+              },
+              child: const Text('일반 알림 보내기'),
+            ),
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                LocalNotificationService.showNotificationWithActions(
+                  // <-- static 메서드 호출
+                  id: 1,
+                  title: '액션 알림',
+                  body: '이 알림에는 버튼이 있습니다. iOS에서 확인하세요.',
+                  payload: 'action_notification_data',
+                );
+              },
+              child: const Text('액션 버튼 알림 보내기 (iOS)'),
+            ),
+            const SizedBox(height: 20),
+
+            // 예약 알림 버튼
+            ElevatedButton(
+              onPressed: () async {
+                final scheduledDate = DateTime.now().add(
+                  const Duration(seconds: 5),
+                );
+                await LocalNotificationService.scheduleNotification(
+                  id: 2,
+                  title: '예약 알림',
+                  body: '5초 뒤에 나타나는 알림입니다.',
+                  scheduledDate: scheduledDate,
+                  payload: 'scheduled_notification_data',
+                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('5초 후 알림이 예약되었습니다.')));
+              },
+              child: const Text('5초 후 예약 알림 보내기'),
             ),
           ],
         ),

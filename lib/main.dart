@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
 
 import 'common/configs/local_notification_configs.dart';
 import 'common/routes/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // runApp() 실행 전에 위젯 바인딩
+
+  tz.initializeTimeZones(); // 타임존 데이터 초기화
+
   // 세로모드 고정
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

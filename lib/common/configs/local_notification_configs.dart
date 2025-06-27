@@ -1,9 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-// flutter_local_notifications 플러그인 전역 인스턴스
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+import 'package:timezone/timezone.dart' as tz;
 
 // 백그라운드에서 알림 탭/액션 처리 함수
 @pragma('vm:entry-point')
@@ -12,6 +9,7 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   // 이 컨텍스트에서는 Flutter UI에 직접 접근할 수 없으므로,
   // SharedPreferences, 데이터베이스 업데이트, HTTP 요청 등 비동기 작업에 적합합니다.
 
+  print(notificationResponse);
   // notificationResponse.actionId를 사용하여 어떤 액션이 눌렸는지 확인할 수 있습니다.
   print('백그라운드 알림 액션 ID: ${notificationResponse.actionId}');
 
@@ -23,6 +21,13 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 }
 
 class LocalNotificationService {
+  // flutter_local_notifications 플러그인 전역 인스턴스
+  static final FlutterLocalNotificationsPlugin
+  _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  static FlutterLocalNotificationsPlugin get instance =>
+      _flutterLocalNotificationsPlugin;
+
   static Future<void> initializeNotifications() async {
     // Android 알림 초기 설정
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -71,7 +76,7 @@ class LocalNotificationService {
         );
 
     // flutter_local_notifications 안드로이드 13 이상 권한 요청 설정
-    await flutterLocalNotificationsPlugin
+    await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin
         >()
@@ -80,7 +85,7 @@ class LocalNotificationService {
     // flutter_local_notifications iOS 권한 요청 설정
     final status = await Permission.notification.status;
     if (status.isDenied || status.isLimited || status.isPermanentlyDenied) {
-      await flutterLocalNotificationsPlugin
+      await _flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin
           >()
@@ -88,7 +93,7 @@ class LocalNotificationService {
     }
 
     // FlutterLocalNotificationsPlugin 초기화
-    await flutterLocalNotificationsPlugin.initialize(
+    await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (
         NotificationResponse notificationResponse,
@@ -120,7 +125,7 @@ class LocalNotificationService {
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
     );
-    await flutterLocalNotificationsPlugin.show(
+    await _flutterLocalNotificationsPlugin.show(
       id,
       title,
       body,
@@ -144,11 +149,45 @@ class LocalNotificationService {
       iOS: darwinNotificationDetails,
     );
 
-    await flutterLocalNotificationsPlugin.show(
+    await _flutterLocalNotificationsPlugin.show(
       id,
       title,
       body,
       notificationDetails,
+      payload: payload,
+    );
+  }
+
+  static Future<void> scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledDate,
+    String? payload,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          'scheduled_channel_id',
+          'Scheduled Notifications',
+          channelDescription: '채널 설명',
+          importance: Importance.max,
+          priority: Priority.high,
+        );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: DarwinNotificationDetails(),
+    );
+
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local), // tz.local = 'Asia.Seoul'
+      platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      // uiLocalNotificationDateInterpretation:
+      //     UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
       payload: payload,
     );
   }
