@@ -29,12 +29,12 @@ class AlarmTestScreen extends StatelessWidget {
     ).showSnackBar(SnackBar(content: Text('알람 설정됨: ${dateTime.toLocal()}')));
 
     // Alarm이 울릴 때 감지하여 커스텀 알림 발행
-    Alarm.ringing.listen((alarmSet) {
-      print(alarmSet);
-      // 이 리스너는 알람이 울리기 시작할 때 호출됩니다.
-      // 여기에서 flutter_local_notifications를 사용하여 커스텀 알림을 보냅니다.
-      LocalNotificationService.showStopAlarmNotification(42);
-    });
+    // Alarm.ringing.listen((alarmSet) {
+    //   print(alarmSet);
+    //   // 이 리스너는 알람이 울리기 시작할 때 호출됩니다.
+    //   // 여기에서 flutter_local_notifications를 사용하여 커스텀 알림을 보냅니다.
+    //   LocalNotificationService.showStopAlarmNotification(42);
+    // });
   }
 
   void onTabStopAlarm(BuildContext context) async {

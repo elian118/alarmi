@@ -63,7 +63,7 @@ class LocalNotificationService {
                 ),
               ],
               options: <DarwinNotificationCategoryOption>{
-                DarwinNotificationCategoryOption.hiddenPreviewShowTitle,
+                // DarwinNotificationCategoryOption.hiddenPreviewShowTitle,
                 DarwinNotificationCategoryOption.customDismissAction,
                 DarwinNotificationCategoryOption.allowInCarPlay,
               },
@@ -101,6 +101,7 @@ class LocalNotificationService {
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        print(response);
         // 알림을 탭하거나 액션 버튼을 눌렀을 때의 동작 정의
         if (response.actionId == 'stop_alarm_action') {
           // 인자를 직접 넘길 수 없으므로, 로컬 스토리지에서 알람마다 설정된 id를 가져와야 할 수 있다.
