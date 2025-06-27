@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 class AlarmTestScreen extends StatelessWidget {
   static const String routeName = 'alarm-test';
   static const String routeURL = '/alarm-test';
+  static const int delay = 5;
 
   const AlarmTestScreen({super.key});
 
-  void onTabAlarmSet(BuildContext context) async {
+  void onTabAlarmSet(BuildContext context, int delay) async {
     // 현재 시간 + 5초 후에 알람 설정
     final now = DateTime.now();
     final dateTime = DateTime(
@@ -19,7 +20,7 @@ class AlarmTestScreen extends StatelessWidget {
       now.day,
       now.hour,
       now.minute,
-      now.second + 5, // 3초 후
+      now.second + delay, // 5초 후
     );
 
     await Alarm.set(alarmSettings: getAlarmSettings(dateTime));
@@ -42,6 +43,40 @@ class AlarmTestScreen extends StatelessWidget {
     ).showSnackBar(SnackBar(content: Text('현재 설정된 알람 수: ${alarms.length}')));
   }
 
+  void onTabGeneralNoti() {
+    LocalNotificationService.showSimpleNotification(
+      // <-- static 메서드 호출
+      id: 0,
+      title: '간단 알림',
+      body: '이것은 일반적인 알림입니다.',
+      payload: 'simple_notification_data',
+    );
+  }
+
+  void onTabIOSNotiWithBtn() {
+    LocalNotificationService.showNotificationWithActions(
+      // <-- static 메서드 호출
+      id: 1,
+      title: '액션 알림',
+      body: '이 알림에는 버튼이 있습니다. iOS에서 확인하세요.',
+      payload: 'action_notification_data',
+    );
+  }
+
+  void onTabScheduledNoti(BuildContext context) async {
+    final scheduledDate = DateTime.now().add(const Duration(seconds: delay));
+    await LocalNotificationService.scheduleNotification(
+      id: 2,
+      title: '예약 알림',
+      body: '$delay초 뒤에 나타나는 알림입니다.',
+      scheduledDate: scheduledDate,
+      payload: 'scheduled_notification_data',
+    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('$delay초 후 알림이 예약되었습니다.')));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,8 +86,8 @@ class AlarmTestScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () => onTabAlarmSet(context),
-              child: const Text('알람 설정 (5초 후)'),
+              onPressed: () => onTabAlarmSet(context, delay),
+              child: const Text('알람 설정 ($delay)'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -67,51 +102,21 @@ class AlarmTestScreen extends StatelessWidget {
             CstDivider(width: 100, thickness: 10),
             // 일반 알림 보내기 버튼
             ElevatedButton(
-              onPressed: () {
-                LocalNotificationService.showSimpleNotification(
-                  // <-- static 메서드 호출
-                  id: 0,
-                  title: '간단 알림',
-                  body: '이것은 일반적인 알림입니다.',
-                  payload: 'simple_notification_data',
-                );
-              },
+              onPressed: onTabGeneralNoti,
               child: const Text('일반 알림 보내기'),
             ),
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: () {
-                LocalNotificationService.showNotificationWithActions(
-                  // <-- static 메서드 호출
-                  id: 1,
-                  title: '액션 알림',
-                  body: '이 알림에는 버튼이 있습니다. iOS에서 확인하세요.',
-                  payload: 'action_notification_data',
-                );
-              },
+              onPressed: onTabIOSNotiWithBtn,
               child: const Text('액션 버튼 알림 보내기 (iOS)'),
             ),
             const SizedBox(height: 20),
 
             // 예약 알림 버튼
             ElevatedButton(
-              onPressed: () async {
-                final scheduledDate = DateTime.now().add(
-                  const Duration(seconds: 5),
-                );
-                await LocalNotificationService.scheduleNotification(
-                  id: 2,
-                  title: '예약 알림',
-                  body: '5초 뒤에 나타나는 알림입니다.',
-                  scheduledDate: scheduledDate,
-                  payload: 'scheduled_notification_data',
-                );
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('5초 후 알림이 예약되었습니다.')));
-              },
-              child: const Text('5초 후 예약 알림 보내기'),
+              onPressed: () => onTabScheduledNoti(context),
+              child: const Text('$delay초 후 예약 알림 보내기'),
             ),
           ],
         ),
