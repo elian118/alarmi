@@ -170,7 +170,7 @@ class _BottomSectionState extends State<BottomSection> {
               ),
             ),
             ElevatedButton(
-              onPressed: () => context.go('/alarm-test'),
+              onPressed: () => context.push('/alarm-test'),
               style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 13),

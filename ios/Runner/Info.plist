@@ -54,5 +54,11 @@
     <array>
         <string>com.gdelataillade.fetch</string>
     </array>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Debugging requires local network access to connect to the development tools.</string>
+    <key>NSBonjourServices</key>
+    <array>
+      <string>_dartobservatory._tcp</string>
+    </array>
 </dict>
 </plist>

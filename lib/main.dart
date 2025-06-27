@@ -2,7 +2,9 @@ import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 
+import 'common/configs/local_notification_configs.dart';
 import 'common/routes/router.dart';
 
 void main() async {
@@ -16,6 +18,14 @@ void main() async {
   // final personalSettings = await SharedPreferences.getInstance();
   // final setRepository = ConfigRepository(personalSettings);
 
+  // 권한 요청
+  await [
+    Permission.audio,
+    Permission.notification,
+    Permission.scheduleExactAlarm,
+  ].request();
+
+  await LocalNotificationService.initializeNotifications(); // flutter_local_notifications 초기 설정
   await Alarm.init(); // 알람 패키지 초기화
 
   runApp(ProviderScope(child: AlarmiApp()));

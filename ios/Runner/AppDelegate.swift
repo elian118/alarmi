@@ -2,6 +2,7 @@ import Flutter
 import UIKit
 import UserNotifications
 import alarm
+import flutter_local_notifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -10,11 +11,16 @@ import alarm
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     if #available(iOS 10.0, *) {
-        UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
+        UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
     SwiftAlarmPlugin.registerBackgroundTasks()
 
     GeneratedPluginRegistrant.register(with: self)
+
+    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+        GeneratedPluginRegistrant.register(with: registry)
+    }
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
