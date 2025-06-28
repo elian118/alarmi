@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
+import 'main_navigation_screen.dart';
+
 class BottomSection extends StatefulWidget {
   const BottomSection({super.key});
 
@@ -44,11 +46,11 @@ class _BottomSectionState extends State<BottomSection> {
         return CstRoundBtn(
           label: '홈',
           gaps: Gaps.h28,
-          onPressed: () => context.go('/main'),
+          onPressed: () => context.go(MainNavigationScreen.routeURL),
           backgroundColor: Colors.grey.shade800,
           icon: Icon(Icons.home),
         );
-      case '/main':
+      case MainNavigationScreen.routeURL:
         return CstRoundBtn(
           label: '내 알람',
           onPressed: () => context.push('/alarm-test'),

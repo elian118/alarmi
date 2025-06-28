@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   static const String routeName = 'mainNavigation';
+  static const String routeURL = '/main';
   final String tab;
 
   const MainNavigationScreen({super.key, required this.tab});

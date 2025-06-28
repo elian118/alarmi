@@ -1,3 +1,4 @@
+import 'package:alarmi/common/widgets/main_navigation_screen.dart';
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/main/widgets/main_header_menus.dart';
 import 'package:alarmi/utils/route_utils.dart';
@@ -26,13 +27,14 @@ class _MyHeaderState extends State<MyHeader> {
     switch (currentPath) {
       case AlarmsScreen.routeURL:
         return null;
-      case '/main':
+      case MainNavigationScreen.routeURL:
         return MainHeaderMenus(
           isFold: _isFold,
           foldedHeaderWidth: _foldedHeaderWidth,
           unfoldedHeaderWidth: _unfoldedHeaderWidth,
           toggleFold: toggleFold,
         );
+
       default:
         Container();
     }
