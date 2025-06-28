@@ -96,7 +96,7 @@ class _BottomSectionState extends State<BottomSection> {
           tag: 'bottomSection',
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            spacing: 14,
+            // spacing: 8,
             children: [
               Row(
                 spacing: 14,

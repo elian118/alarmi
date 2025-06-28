@@ -48,7 +48,7 @@ class GenAlarmMenus extends StatelessWidget {
                                       '내 알람 만들기',
                                       style: TextStyle(
                                         color: Colors.black87,
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -56,7 +56,7 @@ class GenAlarmMenus extends StatelessWidget {
                                       '미션 여부를 자유롭게 설정할 수 있어요',
                                       style: TextStyle(
                                         color: Colors.black87,
-                                        fontSize: 13,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ],
@@ -95,7 +95,7 @@ class GenAlarmMenus extends StatelessWidget {
                                       '팀 알람 만들기',
                                       style: TextStyle(
                                         color: Colors.black87,
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -103,7 +103,7 @@ class GenAlarmMenus extends StatelessWidget {
                                       '목표를 달성하고 더 많은 물고기를 얻을 수 있어요',
                                       style: TextStyle(
                                         color: Colors.black87,
-                                        fontSize: 13,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ],

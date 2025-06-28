@@ -1,6 +1,7 @@
 import 'package:alarm/alarm.dart';
 import 'package:alarmi/common/configs/alarmSettings.dart';
 import 'package:alarmi/common/configs/local_notification_configs.dart';
+import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/widgets/cst_divider.dart';
 import 'package:flutter/material.dart';
 
@@ -107,7 +108,9 @@ class AlarmTestScreen extends StatelessWidget {
               onPressed: () => onTabGetAlarmCounts(context),
               child: const Text('설정된 알람 확인'),
             ),
+            Gaps.v24,
             CstDivider(width: 100, thickness: 10),
+            Gaps.v24,
             // 일반 알림 보내기 버튼
             ElevatedButton(
               onPressed: onTabGeneralNoti,

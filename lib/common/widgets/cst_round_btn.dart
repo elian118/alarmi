@@ -34,7 +34,7 @@ class CstRoundBtn extends StatelessWidget {
       ),
       child: Container(
         width: width ?? 84,
-        padding: EdgeInsets.symmetric(vertical: 13),
+        padding: EdgeInsets.symmetric(vertical: 12),
         child: Row(
           children: [
             icon ?? Icon(Icons.close),
