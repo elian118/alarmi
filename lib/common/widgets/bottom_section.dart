@@ -98,39 +98,43 @@ class _BottomSectionState extends State<BottomSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             spacing: 14,
             children: [
-              !_isOpenGenAlarmMenus
-                  ? CstRoundBtn(
-                    label: '알람 생성',
-                    icon: SvgPicture.asset(
-                      "assets/images/icons/gen_alarm_icon.svg",
-                      width: 18,
-                      height: 18,
-                      fit: BoxFit.contain,
-                      colorFilter: ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
+              Row(
+                spacing: 14,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  !_isOpenGenAlarmMenus
+                      ? CstRoundBtn(
+                        label: '알람 생성',
+                        icon: SvgPicture.asset(
+                          "assets/images/icons/gen_alarm_icon.svg",
+                          width: 18,
+                          height: 18,
+                          fit: BoxFit.contain,
+                          colorFilter: ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        onPressed: () {
+                          setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
+                          setOpenCatMenus(false);
+                        },
+                      )
+                      : CstRoundBtn(
+                        label: '취소',
+                        gaps: Gaps.h20,
+                        onPressed: () {
+                          setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
+                          setOpenCatMenus(false);
+                        },
+                        backgroundColor: Colors.grey.shade800,
+                        foregroundColor: Colors.white,
+                        icon: Icon(Icons.close),
                       ),
-                    ),
-                    onPressed: () {
-                      setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
-                      setOpenCatMenus(false);
-                    },
-                  )
-                  : CstRoundBtn(
-                    label: '취소',
-                    gaps: Gaps.h20,
-                    onPressed: () {
-                      setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
-                      setOpenCatMenus(false);
-                    },
-                    backgroundColor: Colors.grey.shade800,
-                    foregroundColor: Colors.white,
-                    icon: Icon(Icons.close),
-                  ),
+                  getMatchedBtn(currentPath)!,
+                ],
+              ),
 
-              getMatchedBtn(currentPath)!,
-
-              Spacer(),
               _isOpenCatMenus
                   ? IconButton(
                     onPressed: () {
