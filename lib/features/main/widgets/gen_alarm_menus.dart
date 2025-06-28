@@ -1,3 +1,4 @@
+import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -28,7 +29,7 @@ class GenAlarmMenus extends StatelessWidget {
                 spacing: 2,
                 children: [
                   TextButton(
-                    onPressed: () => context.go('/alarms'),
+                    onPressed: () => context.go(AlarmsScreen.routeURL),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -74,7 +75,7 @@ class GenAlarmMenus extends StatelessWidget {
                     child: Divider(),
                   ),
                   TextButton(
-                    onPressed: () => context.go('/alarms'),
+                    onPressed: () => context.go(AlarmsScreen.routeURL),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

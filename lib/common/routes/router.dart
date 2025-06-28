@@ -1,6 +1,7 @@
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/auth/repos/authentication_repo.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
+import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,15 +35,26 @@ final routerProvider = Provider((ref) {
       GoRoute(
         name: MainNavigationScreen.routeName,
         path: '/:tab(main|new|team)', // 패스 파라미터 사용 시 적용
-        builder: (context, state) {
+        // builder: (context, state) {
+        //   final tab = state.pathParameters['tab']!;
+        //   return MainNavigationScreen(tab: tab);
+        // },
+        pageBuilder: (context, state) {
           final tab = state.pathParameters['tab']!;
-          return MainNavigationScreen(tab: tab);
+          return goRouteOpacityPageBuilder(
+            context,
+            state,
+            MainNavigationScreen(tab: tab),
+          );
         },
       ),
       GoRoute(
         name: AlarmsScreen.routeName,
         path: AlarmsScreen.routeURL,
-        builder: (context, state) => const AlarmsScreen(),
+        // builder: (context, state) => const AlarmsScreen(),
+        pageBuilder:
+            (context, state) =>
+                goRouteOpacityPageBuilder(context, state, AlarmsScreen()),
       ),
       GoRoute(
         name: AlarmTestScreen.routeName,

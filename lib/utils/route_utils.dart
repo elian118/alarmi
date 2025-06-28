@@ -46,6 +46,25 @@ void navPush(
   if (kDebugMode) print(result);
 }
 
+CustomTransitionPage<void> goRouteOpacityPageBuilder(
+  BuildContext context,
+  GoRouterState state,
+  Widget target,
+) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: target,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
+        child: child,
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 300), // 애니메이션 지속 시간
+    reverseTransitionDuration: const Duration(milliseconds: 300),
+  );
+}
+
 // 스크린 적용(애니메이션 전환 옵션 추가)
 void navPagePush(
   BuildContext context,
