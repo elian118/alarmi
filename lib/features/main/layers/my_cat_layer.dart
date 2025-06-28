@@ -130,7 +130,7 @@ class _MyCatLayerState extends State<MyCatLayer> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CstTextBtn(
-                                imgIconSrc: 'assets/images/icons/feed_icon.png',
+                                icon: 'assets/images/icons/feed_icon.png',
                                 backgroundColor: Colors.white,
                                 padding: EdgeInsets.symmetric(
                                   vertical: 0.0,
@@ -155,7 +155,7 @@ class _MyCatLayerState extends State<MyCatLayer> {
                               ),
                               Gaps.h36,
                               CstTextBtn(
-                                imgIconSrc:
+                                icon:
                                     'assets/images/icons/fishing_rod_icon.png',
                                 backgroundColor: Colors.white,
                                 padding: EdgeInsets.symmetric(

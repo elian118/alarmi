@@ -1,5 +1,6 @@
 import 'package:alarmi/common/widgets/main_navigation_screen.dart';
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
+import 'package:alarmi/features/alarm/widgets/alarms_header_menus.dart';
 import 'package:alarmi/features/main/widgets/main_header_menus.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _MyHeaderState extends State<MyHeader> {
   Widget? getMatchedHeaderMenus(String currentPath) {
     switch (currentPath) {
       case AlarmsScreen.routeURL:
-        return null;
+        return AlarmsHeaderMenus();
       case MainNavigationScreen.routeURL:
         return MainHeaderMenus(
           isFold: _isFold,

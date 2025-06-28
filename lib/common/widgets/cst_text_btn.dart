@@ -6,7 +6,7 @@ class CstTextBtn extends StatelessWidget {
   final String label;
   final TextStyle style;
   final Double? width;
-  final String? imgIconSrc;
+  final Object? icon;
   final double? spacing;
   final void Function()? onPressed;
   final EdgeInsetsGeometry? padding;
@@ -18,7 +18,7 @@ class CstTextBtn extends StatelessWidget {
     required this.label,
     required this.style,
     this.width,
-    this.imgIconSrc,
+    this.icon,
     this.spacing,
     this.onPressed,
     this.padding,
@@ -28,6 +28,14 @@ class CstTextBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late Widget? _icon;
+
+    if (icon is String) {
+      _icon = Image.asset(icon as String);
+    } else if (icon is Widget) {
+      _icon = icon as Widget;
+    }
+
     return TextButton(
       style: TextButton.styleFrom(
         backgroundColor: backgroundColor,
@@ -37,10 +45,7 @@ class CstTextBtn extends StatelessWidget {
       onPressed: onPressed,
       child: Row(
         spacing: spacing != null ? spacing! : 12,
-        children: [
-          if (imgIconSrc != null) Image.asset(imgIconSrc!),
-          Text(label, style: style),
-        ],
+        children: [_icon ?? Container(), Text(label, style: style)],
       ),
     );
   }

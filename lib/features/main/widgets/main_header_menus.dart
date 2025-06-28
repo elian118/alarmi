@@ -65,7 +65,7 @@ class MainHeaderMenus extends StatelessWidget {
                     Row(
                       children: [
                         CstTextBtn(
-                          imgIconSrc: 'assets/images/icons/fish_icon.png',
+                          icon: 'assets/images/icons/fish_icon.png',
                           padding: EdgeInsets.zero,
                           spacing: 8,
                           label: '보관함',
@@ -76,7 +76,7 @@ class MainHeaderMenus extends StatelessWidget {
                           onPressed: () => callSimpleToast("보관함 클릭"),
                         ),
                         CstTextBtn(
-                          imgIconSrc: 'assets/images/icons/shopping_icon.png',
+                          icon: 'assets/images/icons/shopping_icon.png',
                           padding: EdgeInsets.zero,
                           spacing: 8,
                           label: '상점',
@@ -87,7 +87,7 @@ class MainHeaderMenus extends StatelessWidget {
                           onPressed: () => callSimpleToast("상점 클릭"),
                         ),
                         CstTextBtn(
-                          imgIconSrc: 'assets/images/icons/bell_icon.png',
+                          icon: 'assets/images/icons/bell_icon.png',
                           padding: EdgeInsets.zero,
                           spacing: 8,
                           label: '알림',
