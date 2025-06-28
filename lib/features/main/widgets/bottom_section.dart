@@ -1,4 +1,5 @@
 import 'package:alarmi/common/consts/gaps.dart';
+import 'package:alarmi/common/widgets/cst_round_btn.dart';
 import 'package:alarmi/features/main/widgets/cat_menus.dart';
 import 'package:alarmi/features/main/widgets/gen_alarm_menus.dart';
 import 'package:flutter/material.dart';
@@ -80,97 +81,49 @@ class _BottomSectionState extends State<BottomSection> {
           spacing: 14,
           children: [
             !_isOpenGenAlarmMenus
-                ? ElevatedButton(
+                ? CstRoundBtn(
+                  label: '알람 생성',
+                  icon: SvgPicture.asset(
+                    "assets/images/icons/gen_alarm_icon.svg",
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.contain,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                   onPressed: () {
                     setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
                     setOpenCatMenus(false);
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 13),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/icons/gen_alarm_icon.svg",
-                          width: 18,
-                          height: 18,
-                          fit: BoxFit.contain,
-                          colorFilter: ColorFilter.mode(
-                            Colors.white,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                        Gaps.h12,
-                        Text(
-                          '알람 생성',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 )
-                : ElevatedButton(
+                : CstRoundBtn(
+                  label: '취소',
+                  gaps: Gaps.h20,
                   onPressed: () {
                     setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
                     setOpenCatMenus(false);
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey.shade800,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Container(
-                    width: 82,
-                    padding: EdgeInsets.symmetric(vertical: 13),
-                    child: Row(
-                      children: [
-                        Icon(Icons.close),
-                        Gaps.h20,
-                        Text(
-                          '취소',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  backgroundColor: Colors.grey.shade800,
+                  foregroundColor: Colors.white,
+                  icon: Icon(Icons.close),
                 ),
-            ElevatedButton(
+
+            CstRoundBtn(
+              label: '내 알람',
               onPressed: () => context.push('/alarm-test'),
-              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 13),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      "assets/images/icons/my_alarm_icon.svg",
-                      width: 18,
-                      height: 18,
-                      fit: BoxFit.contain,
-                      colorFilter: ColorFilter.mode(
-                        Colors.black,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    Gaps.h12,
-                    Text(
-                      '내 알람',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              icon: SvgPicture.asset(
+                "assets/images/icons/my_alarm_icon.svg",
+                width: 18,
+                height: 18,
+                fit: BoxFit.contain,
+                colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
               ),
             ),
+
             Spacer(),
             _isOpenCatMenus
                 ? IconButton(
