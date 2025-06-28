@@ -92,7 +92,6 @@ class _BottomSectionState extends State<BottomSection> {
             ),
           ],
         ),
-
         Hero(
           tag: 'bottomSection',
           child: Row(
