@@ -1,7 +1,6 @@
-import 'package:alarmi/common/widgets/cst_text_btn.dart';
-import 'package:alarmi/features/main/screens/notifications_screen.dart';
+import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
+import 'package:alarmi/features/main/widgets/main_header_menus.dart';
 import 'package:alarmi/utils/route_utils.dart';
-import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -23,128 +22,31 @@ class _MyHeaderState extends State<MyHeader> {
     });
   }
 
+  Widget? getMatchedHeaderMenus(String currentPath) {
+    switch (currentPath) {
+      case AlarmsScreen.routeURL:
+        return null;
+      case '/main':
+        return MainHeaderMenus(
+          isFold: _isFold,
+          foldedHeaderWidth: _foldedHeaderWidth,
+          unfoldedHeaderWidth: _unfoldedHeaderWidth,
+          toggleFold: toggleFold,
+        );
+      default:
+        Container();
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    String currentPath = getCurrentPath(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ClipRRect(
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-            width: _isFold ? _foldedHeaderWidth : _unfoldedHeaderWidth,
-            height: 47,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(40.0),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OverflowBox(
-                    maxWidth: _unfoldedHeaderWidth - _foldedHeaderWidth + 120,
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        AnimatedSwitcher(
-                          duration: Duration(milliseconds: 500),
-                          transitionBuilder:
-                              (child, animation) => SizeTransition(
-                                sizeFactor: animation,
-                                axis: Axis.horizontal,
-                                child: FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                ),
-                              ),
-                          child:
-                              _isFold
-                                  ? IconButton(
-                                    key: ValueKey<String>('menu_btn_visible'),
-                                    onPressed: () {},
-                                    icon: Icon(Icons.menu),
-                                  )
-                                  : SizedBox(
-                                    key: ValueKey<String>('menu_btn_hidden'),
-                                    width: 24,
-                                  ),
-                        ),
-                        Row(
-                          children: [
-                            CstTextBtn(
-                              imgIconSrc: 'assets/images/icons/fish_icon.png',
-                              padding: EdgeInsets.zero,
-                              spacing: 8,
-                              label: '보관함',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              onPressed: () => callSimpleToast("보관함 클릭"),
-                            ),
-                            CstTextBtn(
-                              imgIconSrc:
-                                  'assets/images/icons/shopping_icon.png',
-                              padding: EdgeInsets.zero,
-                              spacing: 8,
-                              label: '상점',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              onPressed: () => callSimpleToast("상점 클릭"),
-                            ),
-                            CstTextBtn(
-                              imgIconSrc: 'assets/images/icons/bell_icon.png',
-                              padding: EdgeInsets.zero,
-                              spacing: 8,
-                              label: '알림',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              // onPressed: () => callSimpleToast("알림 클릭"),
-                              onPressed:
-                                  () => navPagePush(
-                                    context,
-                                    NotificationsScreen(),
-                                    true,
-                                  ),
-                            ),
-                          ],
-                        ).animate(target: _isFold ? 0 : 1).fadeIn(),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    onPressed: toggleFold,
-                    icon:
-                        _isFold
-                            ? Icon(Icons.chevron_right)
-                            : Icon(Icons.chevron_left),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ).animate().slideX(begin: -1, end: 0),
-
+        getMatchedHeaderMenus(currentPath) ?? Container(),
         Image.asset('assets/images/characters/thumb.png').animate().scale(
           duration: Duration(milliseconds: 500),
           curve: Curves.easeInOut,

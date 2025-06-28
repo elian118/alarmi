@@ -1,4 +1,5 @@
 import 'package:alarmi/common/widgets/main_navigation_screen.dart';
+import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/auth/repos/authentication_repo.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,6 +38,11 @@ final routerProvider = Provider((ref) {
           final tab = state.pathParameters['tab']!;
           return MainNavigationScreen(tab: tab);
         },
+      ),
+      GoRoute(
+        name: AlarmsScreen.routeName,
+        path: AlarmsScreen.routeURL,
+        builder: (context, state) => const AlarmsScreen(),
       ),
       GoRoute(
         name: AlarmTestScreen.routeName,

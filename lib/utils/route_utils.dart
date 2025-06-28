@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+String getCurrentPath(BuildContext context) =>
+    GoRouterState.of(context).uri.toString();
+
 // 스크린 이동
 void goRoutePush(BuildContext context, String location, {Object? extra}) =>
     context.push(location, extra: extra);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class GenAlarmMenus extends StatelessWidget {
   final Function(bool) setOpenGenAlarmMenus;
@@ -17,88 +18,102 @@ class GenAlarmMenus extends StatelessWidget {
     return Padding(
           padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 0),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.8),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(25),
             ),
             child: Container(
               child: Column(
-                spacing: 8,
+                spacing: 2,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Row(
-                            spacing: 12,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/icons/circle_plus_icon.svg',
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '내 알람 만들기',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
+                  TextButton(
+                    onPressed: () => context.go('/alarms'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Row(
+                              spacing: 12,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/icons/circle_plus_icon.svg',
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '내 알람 만들기',
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    '미션 여부를 자유롭게 설정할 수 있어요',
-                                    style: TextStyle(fontSize: 13),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SvgPicture.asset(
-                        'assets/images/icons/chevron_right_icon.svg',
-                      ),
-                    ],
+                                    Text(
+                                      '미션 여부를 자유롭게 설정할 수 있어요',
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Icon(Icons.chevron_right, color: Colors.black87),
+                      ],
+                    ),
                   ),
-                  Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        spacing: 12,
-                        children: [
-                          Row(
-                            spacing: 12,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/icons/my_alarm_icon.svg',
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '팀 알람 만들기',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Divider(),
+                  ),
+                  TextButton(
+                    onPressed: () => context.go('/alarms'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          spacing: 12,
+                          children: [
+                            Row(
+                              spacing: 12,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/icons/my_alarm_icon.svg',
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '팀 알람 만들기',
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    '목표를 달성하고 더 많은 물고기를 얻을 수 있어요',
-                                    style: TextStyle(fontSize: 13),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SvgPicture.asset(
-                        'assets/images/icons/chevron_right_icon.svg',
-                      ),
-                    ],
+                                    Text(
+                                      '목표를 달성하고 더 많은 물고기를 얻을 수 있어요',
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Icon(Icons.chevron_right, color: Colors.black87),
+                      ],
+                    ),
                   ),
                 ],
               ),
