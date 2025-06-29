@@ -82,6 +82,7 @@ class _BottomSectionState extends State<BottomSection> {
   @override
   Widget build(BuildContext context) {
     String currentPath = getCurrentPath(context);
+    const double maxWidthLimit = 280.0;
 
     return Column(
       children: [
@@ -106,10 +107,12 @@ class _BottomSectionState extends State<BottomSection> {
           tag: 'bottomSection',
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // spacing: 8,
             children: [
-              Container(
-                width: getWinWidth(context) * 0.7,
+              SizedBox(
+                width:
+                    getWinWidth(context) * 0.7 > maxWidthLimit
+                        ? maxWidthLimit
+                        : getWinWidth(context) * 0.7,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,

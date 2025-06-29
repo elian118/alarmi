@@ -9,7 +9,15 @@ class AlarmDatePicker extends StatefulWidget {
 }
 
 class _AlarmDatePickerState extends State<AlarmDatePicker> {
-  DateTime _selectedDateTime = DateTime.now();
+  DateTime now = DateTime.now();
+  late DateTime _selectedDateTime = DateTime(
+    now.year,
+    now.month,
+    now.day,
+    7,
+    0,
+    0,
+  );
 
   void changeDate(DateTime newDateTime) {
     setState(() {
@@ -19,11 +27,11 @@ class _AlarmDatePickerState extends State<AlarmDatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: getWinHeight(context) * 0.3,
       child: CupertinoDatePicker(
         initialDateTime: _selectedDateTime,
-        mode: CupertinoDatePickerMode.dateAndTime,
+        mode: CupertinoDatePickerMode.time,
         use24hFormat: false,
         onDateTimeChanged: changeDate,
       ),
