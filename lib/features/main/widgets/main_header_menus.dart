@@ -26,12 +26,13 @@ class MainHeaderMenus extends StatelessWidget {
         duration: Duration(milliseconds: 500),
         curve: Curves.easeInOut,
         width: isFold ? foldedHeaderWidth : unfoldedHeaderWidth,
-        height: 47,
+        height: 40,
         decoration: BoxDecoration(
           color: Colors.grey.shade100,
           borderRadius: BorderRadius.circular(40.0),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: OverflowBox(
@@ -54,7 +55,7 @@ class MainHeaderMenus extends StatelessWidget {
                           isFold
                               ? IconButton(
                                 key: ValueKey<String>('menu_btn_visible'),
-                                onPressed: () {},
+                                onPressed: toggleFold,
                                 icon: Icon(Icons.menu),
                               )
                               : SizedBox(
@@ -110,27 +111,10 @@ class MainHeaderMenus extends StatelessWidget {
               ),
             ),
 
-            Container(
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: IconButton(
-                onPressed: toggleFold,
-                icon:
-                    isFold
-                        ? Icon(Icons.chevron_right)
-                        : Icon(Icons.chevron_left),
-              ),
+            IconButton(
+              onPressed: toggleFold,
+              icon:
+                  isFold ? Icon(Icons.chevron_right) : Icon(Icons.chevron_left),
             ),
           ],
         ),

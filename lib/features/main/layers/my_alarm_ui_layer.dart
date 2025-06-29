@@ -11,7 +11,7 @@ class MyAlarmUiLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(Sizes.size28),
+        padding: const EdgeInsets.all(Sizes.size22),
         child: Column(
           children: [
             MyHeader(),

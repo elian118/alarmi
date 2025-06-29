@@ -3,6 +3,7 @@ import 'package:alarmi/common/widgets/cst_round_btn.dart';
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/main/widgets/cat_menus.dart';
 import 'package:alarmi/features/main/widgets/gen_alarm_menus.dart';
+import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -98,41 +99,44 @@ class _BottomSectionState extends State<BottomSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             // spacing: 8,
             children: [
-              Row(
-                spacing: 14,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  !_isOpenGenAlarmMenus
-                      ? CstRoundBtn(
-                        label: '알람 생성',
-                        icon: SvgPicture.asset(
-                          "assets/images/icons/gen_alarm_icon.svg",
-                          width: 18,
-                          height: 18,
-                          fit: BoxFit.contain,
-                          colorFilter: ColorFilter.mode(
-                            Colors.white,
-                            BlendMode.srcIn,
+              Container(
+                width: getWinWidth(context) * 0.7,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    !_isOpenGenAlarmMenus
+                        ? CstRoundBtn(
+                          label: '알람 생성',
+                          icon: SvgPicture.asset(
+                            "assets/images/icons/gen_alarm_icon.svg",
+                            width: 18,
+                            height: 18,
+                            fit: BoxFit.contain,
+                            colorFilter: ColorFilter.mode(
+                              Colors.white,
+                              BlendMode.srcIn,
+                            ),
                           ),
+                          onPressed: () {
+                            setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
+                            setOpenCatMenus(false);
+                          },
+                        )
+                        : CstRoundBtn(
+                          label: '취소',
+                          gaps: Gaps.h20,
+                          onPressed: () {
+                            setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
+                            setOpenCatMenus(false);
+                          },
+                          backgroundColor: Colors.grey.shade800,
+                          foregroundColor: Colors.white,
+                          icon: Icon(Icons.close),
                         ),
-                        onPressed: () {
-                          setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
-                          setOpenCatMenus(false);
-                        },
-                      )
-                      : CstRoundBtn(
-                        label: '취소',
-                        gaps: Gaps.h20,
-                        onPressed: () {
-                          setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
-                          setOpenCatMenus(false);
-                        },
-                        backgroundColor: Colors.grey.shade800,
-                        foregroundColor: Colors.white,
-                        icon: Icon(Icons.close),
-                      ),
-                  getMatchedBtn(currentPath)!,
-                ],
+                    getMatchedBtn(currentPath)!,
+                  ],
+                ),
               ),
 
               _isOpenCatMenus

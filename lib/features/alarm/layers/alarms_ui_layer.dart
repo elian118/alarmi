@@ -12,7 +12,7 @@ class AlarmsUiLayer extends StatelessWidget {
     return SafeArea(
       child: Column(
         children: [
-          Padding(padding: EdgeInsets.all(Sizes.size28), child: MyHeader()),
+          Padding(padding: EdgeInsets.all(Sizes.size22), child: MyHeader()),
           Expanded(
             child: Stack(
               children: [
@@ -22,7 +22,7 @@ class AlarmsUiLayer extends StatelessWidget {
                   left: 0,
                   right: 0,
                   child: Padding(
-                    padding: EdgeInsets.all(Sizes.size28),
+                    padding: EdgeInsets.all(Sizes.size22),
                     child: BottomSection(),
                   ),
                 ),
