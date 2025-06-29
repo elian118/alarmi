@@ -9,13 +9,17 @@ import 'package:flutter/material.dart';
 class AlarmSettings extends StatefulWidget {
   final List<Weekday> weekdays;
   final bool isActivatedVirtualMission;
-  final Function() toggleVirtualMission;
+  final Function() toggleWakeUpMission;
+  final bool isActivatedVibrate;
+  final Function() toggleActivatedVibrate;
 
   const AlarmSettings({
     super.key,
     required this.weekdays,
     required this.isActivatedVirtualMission,
-    required this.toggleVirtualMission,
+    required this.toggleWakeUpMission,
+    required this.isActivatedVibrate,
+    required this.toggleActivatedVibrate,
   });
 
   @override
@@ -32,16 +36,24 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   void openSettingsDialog(String type) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Color(0xFF110924),
       builder:
           (context) =>
-              type == 'bell' ? BellSettingsDialog() : VibrateSettingsDialog(),
+              type == 'bell'
+                  ? BellSettingsDialog()
+                  : VibrateSettingsDialog(
+                    isActivatedVibrate: widget.isActivatedVibrate,
+                    toggleActivatedVibrate: widget.toggleActivatedVibrate,
+                  ),
       isScrollControlled: true,
+      barrierColor: Colors.transparent,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white.withValues(alpha: 0.1),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8),
         child: Column(
@@ -51,7 +63,11 @@ class _AlarmSettingsState extends State<AlarmSettings> {
               children: [
                 Text(
                   '요일 설정',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 Gaps.h56,
                 Row(
@@ -61,6 +77,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                     Text(
                       '매일',
                       style: TextStyle(
+                        color: Colors.white,
                         fontSize: Sizes.size16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -85,7 +102,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                         style: TextButton.styleFrom(
                           backgroundColor:
                               day.isSelected
-                                  ? Colors.blueAccent
+                                  ? Theme.of(context).primaryColor
                                   : Colors.grey.shade700,
                           foregroundColor: Colors.white, // 텍스트 색상
                           shape: RoundedRectangleBorder(
@@ -114,7 +131,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                   Text(
                     '알림음',
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -122,8 +139,14 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text('없음', style: TextStyle(color: Colors.black87)),
-                      Icon(Icons.chevron_right, color: Colors.black87),
+                      Text(
+                        '없음',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      Icon(Icons.chevron_right, color: Colors.white),
                     ],
                   ),
                 ],
@@ -144,7 +167,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                   Text(
                     '진동',
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -152,8 +175,14 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text('없음', style: TextStyle(color: Colors.black87)),
-                      Icon(Icons.chevron_right, color: Colors.black87),
+                      Text(
+                        '없음',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      Icon(Icons.chevron_right, color: Colors.white),
                     ],
                   ),
                 ],
@@ -161,7 +190,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
             ),
             Divider(height: 10),
             TextButton(
-              onPressed: widget.toggleVirtualMission,
+              onPressed: widget.toggleWakeUpMission,
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,14 +198,14 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                   Text(
                     '기상 미션',
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Switch(
                     value: widget.isActivatedVirtualMission,
-                    onChanged: (value) => widget.toggleVirtualMission(),
+                    onChanged: (value) => widget.toggleWakeUpMission(),
                   ),
                 ],
               ),

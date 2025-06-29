@@ -27,6 +27,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
     0,
   );
   bool _isActivatedVirtualMission = false;
+  bool _isActivatedVibrate = false;
 
   void changeDate(DateTime newDateTime) {
     setState(() {
@@ -34,9 +35,15 @@ class _CreateAlarmState extends State<CreateAlarm> {
     });
   }
 
-  void toggleVirtualMission() {
+  void toggleWakeUpMission() {
     setState(() {
       _isActivatedVirtualMission = !_isActivatedVirtualMission;
+    });
+  }
+
+  void toggleActivatedVibrate() {
+    setState(() {
+      _isActivatedVibrate = !_isActivatedVibrate;
     });
   }
 
@@ -44,21 +51,25 @@ class _CreateAlarmState extends State<CreateAlarm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+            Gaps.v96,
             AlarmDatePicker(
               selectedDateTime: _selectedDateTime,
               changeDate: changeDate,
             ),
+            Gaps.v16,
             AlarmSettings(
               weekdays: wDays,
               isActivatedVirtualMission: _isActivatedVirtualMission,
-              toggleVirtualMission: toggleVirtualMission,
+              toggleWakeUpMission: toggleWakeUpMission,
+              isActivatedVibrate: _isActivatedVibrate,
+              toggleActivatedVibrate: toggleActivatedVibrate,
             ),
             Spacer(),
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.blue.shade400,
+                backgroundColor: Theme.of(context).primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

@@ -12,10 +12,41 @@ class CreateAlarmScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('${type == 'my' ? '내' : '팀'} 알림 설정')),
-      body: Padding(
-        padding: const EdgeInsets.all(Sizes.size18),
-        child: CreateAlarm(),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          '${type == 'my' ? '내' : '팀'} 알림 설정',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [Color(0xFF182a4e), Color(0xFF0f0923)],
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.all(Sizes.size18),
+              child: CreateAlarm(),
+            ),
+          ),
+        ],
       ),
     );
   }
