@@ -37,7 +37,7 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(22),
-      height: getWinHeight(context) * 0.8,
+      height: getWinHeight(context) * 0.87,
       width: getWinWidth(context),
       child: Column(
         spacing: 12,

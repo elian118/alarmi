@@ -14,7 +14,7 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(22),
-      height: getWinHeight(context) * 0.8,
+      height: getWinHeight(context) * 0.87,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
