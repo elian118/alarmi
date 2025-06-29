@@ -23,6 +23,14 @@ class _BottomSectionState extends State<BottomSection> {
   bool _isOpenGenAlarms = false;
   bool _isOpenGenAlarmMenus = false;
 
+  void init() {
+    setState(() {
+      _isOpenCatMenus = false;
+      _isOpenGenAlarms = false;
+      _isOpenGenAlarmMenus = false;
+    });
+  }
+
   void setOpenCatMenus(value) {
     setState(() {
       _isOpenCatMenus = value;
@@ -54,7 +62,7 @@ class _BottomSectionState extends State<BottomSection> {
       case MainNavigationScreen.routeURL:
         return CstRoundBtn(
           label: '내 알람',
-          onPressed: () => context.push('/alarm-test'),
+          onPressed: () => context.push(AlarmsScreen.routeURL),
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
           icon: SvgPicture.asset(
@@ -68,7 +76,7 @@ class _BottomSectionState extends State<BottomSection> {
       default:
         Container();
     }
-    return null;
+    return Container();
   }
 
   @override
@@ -90,6 +98,7 @@ class _BottomSectionState extends State<BottomSection> {
             GenAlarmMenus(
               setOpenGenAlarmMenus: setOpenGenAlarmMenus,
               isOpenGenAlarmMenus: _isOpenGenAlarmMenus,
+              init: init,
             ),
           ],
         ),

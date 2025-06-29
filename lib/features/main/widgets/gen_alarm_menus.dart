@@ -1,4 +1,4 @@
-import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
+import 'package:alarmi/features/alarm/screens/create_alarm_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,12 +7,22 @@ import 'package:go_router/go_router.dart';
 class GenAlarmMenus extends StatelessWidget {
   final Function(bool) setOpenGenAlarmMenus;
   final bool isOpenGenAlarmMenus;
+  final Function() init;
 
   const GenAlarmMenus({
     super.key,
     required this.setOpenGenAlarmMenus,
     required this.isOpenGenAlarmMenus,
+    required this.init,
   });
+
+  void moveToCreateAlarm(BuildContext context, String type) {
+    init();
+    context.pushNamed(
+      CreateAlarmScreen.routeName,
+      pathParameters: {'type': type},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +39,7 @@ class GenAlarmMenus extends StatelessWidget {
                 spacing: 2,
                 children: [
                   TextButton(
-                    onPressed: () => context.go(AlarmsScreen.routeURL),
+                    onPressed: () => moveToCreateAlarm(context, 'my'),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -75,7 +85,7 @@ class GenAlarmMenus extends StatelessWidget {
                     child: Divider(),
                   ),
                   TextButton(
-                    onPressed: () => context.go(AlarmsScreen.routeURL),
+                    onPressed: () => moveToCreateAlarm(context, 'team'),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

@@ -1,11 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class CstTextBtn extends StatelessWidget {
   final String label;
   final TextStyle style;
-  final Double? width;
+  final double? width;
   final Object? icon;
   final double? spacing;
   final void Function()? onPressed;

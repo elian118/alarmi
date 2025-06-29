@@ -5,6 +5,7 @@ import 'package:alarmi/features/main/widgets/main_header_menus.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 class MyHeader extends StatefulWidget {
   const MyHeader({super.key});
@@ -50,9 +51,14 @@ class _MyHeaderState extends State<MyHeader> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         getMatchedHeaderMenus(currentPath) ?? Container(),
-        Image.asset('assets/images/characters/thumb.png').animate().scale(
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
+        GestureDetector(
+          onTap: () => context.push('/alarm-test'),
+          child: Image.asset(
+            'assets/images/characters/thumb.png',
+          ).animate().scale(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          ),
         ),
       ],
     );
