@@ -2,7 +2,7 @@ import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/widgets/cst_round_btn.dart';
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/main/widgets/cat_menus.dart';
-import 'package:alarmi/features/main/widgets/gen_alarm_menus.dart';
+import 'package:alarmi/features/main/widgets/create_alarm_menus.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +21,13 @@ class BottomSection extends StatefulWidget {
 class _BottomSectionState extends State<BottomSection> {
   bool _isOpenCatMenus = false;
   bool _isOpenGenAlarms = false;
-  bool _isOpenGenAlarmMenus = false;
+  bool _isOpenCreateAlarmMenus = false;
 
   void init() {
     setState(() {
       _isOpenCatMenus = false;
       _isOpenGenAlarms = false;
-      _isOpenGenAlarmMenus = false;
+      _isOpenCreateAlarmMenus = false;
     });
   }
 
@@ -43,9 +43,9 @@ class _BottomSectionState extends State<BottomSection> {
     });
   }
 
-  void setOpenGenAlarmMenus(value) {
+  void setOpenCreateAlarmMenus(value) {
     setState(() {
-      _isOpenGenAlarmMenus = value;
+      _isOpenCreateAlarmMenus = value;
     });
   }
 
@@ -95,9 +95,9 @@ class _BottomSectionState extends State<BottomSection> {
                 isOpenCatMenus: _isOpenCatMenus,
               ),
             ),
-            GenAlarmMenus(
-              setOpenGenAlarmMenus: setOpenGenAlarmMenus,
-              isOpenGenAlarmMenus: _isOpenGenAlarmMenus,
+            CreateAlarmMenus(
+              setOpenCreateAlarmMenus: setOpenCreateAlarmMenus,
+              isOpenCreateAlarmMenus: _isOpenCreateAlarmMenus,
               init: init,
             ),
           ],
@@ -114,7 +114,7 @@ class _BottomSectionState extends State<BottomSection> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    !_isOpenGenAlarmMenus
+                    !_isOpenCreateAlarmMenus
                         ? CstRoundBtn(
                           label: '알람 생성',
                           icon: SvgPicture.asset(
@@ -128,7 +128,7 @@ class _BottomSectionState extends State<BottomSection> {
                             ),
                           ),
                           onPressed: () {
-                            setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
+                            setOpenCreateAlarmMenus(!_isOpenCreateAlarmMenus);
                             setOpenCatMenus(false);
                           },
                         )
@@ -136,7 +136,7 @@ class _BottomSectionState extends State<BottomSection> {
                           label: '취소',
                           gaps: Gaps.h20,
                           onPressed: () {
-                            setOpenGenAlarmMenus(!_isOpenGenAlarmMenus);
+                            setOpenCreateAlarmMenus(!_isOpenCreateAlarmMenus);
                             setOpenCatMenus(false);
                           },
                           backgroundColor: Colors.grey.shade800,
@@ -152,7 +152,7 @@ class _BottomSectionState extends State<BottomSection> {
                   ? IconButton(
                     onPressed: () {
                       setOpenCatMenus(!_isOpenCatMenus);
-                      setOpenGenAlarmMenus(false);
+                      setOpenCreateAlarmMenus(false);
                     },
                     icon: Icon(Icons.close, size: 30),
                     style: IconButton.styleFrom(backgroundColor: Colors.white),
@@ -160,7 +160,7 @@ class _BottomSectionState extends State<BottomSection> {
                   : IconButton(
                     onPressed: () {
                       setOpenCatMenus(!_isOpenCatMenus);
-                      setOpenGenAlarmMenus(false);
+                      setOpenCreateAlarmMenus(false);
                     },
                     icon: SvgPicture.asset(
                       _isOpenCatMenus

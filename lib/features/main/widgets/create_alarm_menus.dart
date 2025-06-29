@@ -4,15 +4,15 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-class GenAlarmMenus extends StatelessWidget {
-  final Function(bool) setOpenGenAlarmMenus;
-  final bool isOpenGenAlarmMenus;
+class CreateAlarmMenus extends StatelessWidget {
+  final Function(bool) setOpenCreateAlarmMenus;
+  final bool isOpenCreateAlarmMenus;
   final Function() init;
 
-  const GenAlarmMenus({
+  const CreateAlarmMenus({
     super.key,
-    required this.setOpenGenAlarmMenus,
-    required this.isOpenGenAlarmMenus,
+    required this.setOpenCreateAlarmMenus,
+    required this.isOpenCreateAlarmMenus,
     required this.init,
   });
 
@@ -131,7 +131,7 @@ class GenAlarmMenus extends StatelessWidget {
             ),
           ),
         )
-        .animate(target: isOpenGenAlarmMenus ? 1 : 0)
+        .animate(target: isOpenCreateAlarmMenus ? 1 : 0)
         .slideY(
           begin: -0.5,
           end: 0.0,
