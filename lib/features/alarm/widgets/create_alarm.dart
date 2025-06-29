@@ -28,6 +28,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
   );
   bool _isActivatedVirtualMission = false;
   bool _isActivatedVibrate = false;
+  bool _isAllDay = false;
 
   void changeDate(DateTime newDateTime) {
     setState(() {
@@ -47,6 +48,12 @@ class _CreateAlarmState extends State<CreateAlarm> {
     });
   }
 
+  void toggleIsAllDay() {
+    setState(() {
+      _isAllDay = !_isAllDay;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -63,6 +70,8 @@ class _CreateAlarmState extends State<CreateAlarm> {
               toggleWakeUpMission: toggleWakeUpMission,
               isActivatedVibrate: _isActivatedVibrate,
               toggleActivatedVibrate: toggleActivatedVibrate,
+              isAllDay: _isAllDay,
+              toggleIsAllDay: toggleIsAllDay,
             ),
             Spacer(),
             ElevatedButton(

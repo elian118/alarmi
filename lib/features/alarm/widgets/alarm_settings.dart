@@ -12,6 +12,8 @@ class AlarmSettings extends StatefulWidget {
   final Function() toggleWakeUpMission;
   final bool isActivatedVibrate;
   final Function() toggleActivatedVibrate;
+  final bool isAllDay;
+  final Function() toggleIsAllDay;
 
   const AlarmSettings({
     super.key,
@@ -20,6 +22,8 @@ class AlarmSettings extends StatefulWidget {
     required this.toggleWakeUpMission,
     required this.isActivatedVibrate,
     required this.toggleActivatedVibrate,
+    required this.isAllDay,
+    required this.toggleIsAllDay,
   });
 
   @override
@@ -70,20 +74,26 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                   ),
                 ),
                 Gaps.h56,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Checkbox(value: true, onChanged: (value) {}),
-                    Text(
-                      '매일',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: Sizes.size16,
-                        fontWeight: FontWeight.w500,
+                GestureDetector(
+                  onTap: widget.toggleIsAllDay,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Checkbox(
+                        value: widget.isAllDay,
+                        onChanged: (value) => widget.toggleIsAllDay(),
                       ),
-                    ),
-                  ],
-                  // dense: true,
+                      Text(
+                        '매일',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: Sizes.size16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                    // dense: true,
+                  ),
                 ),
               ],
             ),
