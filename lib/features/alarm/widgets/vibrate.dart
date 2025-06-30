@@ -1,49 +1,89 @@
+import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
-class BellTab extends StatefulWidget {
+class Vibrate extends StatefulWidget {
   final String title;
-  final bool isPlaying;
-  final VoidCallback onPlayPause;
+  final VibrationPreset preset;
+  final bool canVibrate;
 
-  const BellTab({
+  const Vibrate({
     super.key,
     required this.title,
-    required this.isPlaying,
-    required this.onPlayPause,
+    required this.preset,
+    required this.canVibrate,
   });
 
   @override
-  State<BellTab> createState() => _BellTabState();
+  State<Vibrate> createState() => _VibrateState();
 }
 
-class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
+class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   late final AnimationController _playPauseController = AnimationController(
     vsync: this,
     duration: Duration(milliseconds: 500),
   );
 
-  @override
-  void didUpdateWidget(covariant BellTab oldWidget) {
-    super.didUpdateWidget(oldWidget);
+  bool _isThisPatternPlaying = false; // 현재 이 위젯의 햅틱 패턴 재생 중 여부
 
-    if (widget.isPlaying != oldWidget.isPlaying) {
-      widget.isPlaying
-          ? _playPauseController.forward()
-          : _playPauseController.reverse();
+  // 햅틱 패턴 재생 로직
+  Future<void> _playHapticPattern() async {
+    if (!widget.canVibrate) {
+      callSimpleToast("이 기기는 진동 기능을 지원하지 않습니다.");
+      return;
+    }
+
+    // 현재 진동 중이면 멈추고 토글
+    if (_isThisPatternPlaying) {
+      Vibration.cancel();
+      setState(() {
+        _isThisPatternPlaying = false;
+      });
+      _playPauseController.reverse(); // 애니메이션을 play 아이콘으로
+      print("중지됨: ${widget.title}");
+      return; // 정지했으므로 더 이상 재생하지 않음
+    }
+
+    // 새로운 진동 시작 전, 다른 모든 진동을 취소
+    Vibration.cancel();
+
+    // 이 패턴이 재생 중임을 표시하고 애니메이션 시작
+    setState(() {
+      _isThisPatternPlaying = true;
+    });
+    _playPauseController.forward(); // 애니메이션을 pause 아이콘으로
+
+    print("진동 시작: ${widget.title}");
+
+    try {
+      await Vibration.vibrate(preset: widget.preset, repeat: 0);
+      print("재생 완료: '${widget.title}'");
+    } catch (e) {
+      print("햅틱 재생 중 오류 발생: $e");
+    } finally {
+      // 진동이 끝나거나 오류 발생 후, 이 패턴이 여전히 '재생 중'으로 표시되어 있다면 상태 초기화
+      // `mounted` 확인은 위젯이 dispose된 후 setState 호출 방지
+      if (mounted && _isThisPatternPlaying) {
+        setState(() {
+          _isThisPatternPlaying = false;
+        });
+        _playPauseController.reverse(); // 애니메이션을 play 아이콘으로
+      }
     }
   }
 
-  @override
   void dispose() {
     _playPauseController.dispose();
+    Vibration.cancel(); // 재생중인 모든 진동 취소
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: widget.onPlayPause,
+      onPressed: _playHapticPattern,
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
         minimumSize: Size.zero,

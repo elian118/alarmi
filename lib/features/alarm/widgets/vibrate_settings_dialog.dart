@@ -1,4 +1,5 @@
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/features/alarm/widgets/vibrates.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -17,13 +18,7 @@ class VibrateSettingsDialog extends StatefulWidget {
 }
 
 class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
-  late bool _dialogIsActivatedVibrate;
-
-  @override
-  void initState() {
-    _dialogIsActivatedVibrate = widget.isActivatedVibrate;
-    super.initState();
-  }
+  bool _dialogIsActivatedVibrate = false;
 
   void _onSwitchChanged(bool newValue) {
     setState(() {
@@ -59,6 +54,7 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
               ),
             ],
           ),
+          Expanded(child: Vibrates()),
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(

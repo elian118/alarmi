@@ -1,22 +1,15 @@
-import 'dart:typed_data';
-
-import 'package:alarmi/common/consts/enums/haptics_type.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class HapticPattern {
   final String id;
   final String name;
-  final Int64List pattern;
-  final HapticsType? iosHapticType;
+  // final Int64List pattern;
+  final VibrationPreset preset;
 
-  HapticPattern({
-    required this.id,
-    required this.name,
-    required this.pattern,
-    this.iosHapticType,
-  });
+  HapticPattern({required this.id, required this.name, required this.preset});
 
   @override
   String toString() {
-    return 'HapticPattern(id: $id, name: $name, pattern: $pattern)';
+    return 'HapticPattern(id: $id, name: $name, preset: $preset)';
   }
 }
