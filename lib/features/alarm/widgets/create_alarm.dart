@@ -16,7 +16,7 @@ class CreateAlarm extends StatefulWidget {
 }
 
 class _CreateAlarmState extends State<CreateAlarm> {
-  List<Weekday> wDays = weekdays;
+  List<Weekday> _weekdays = weekdays;
   DateTime now = DateTime.now();
   late DateTime _selectedDateTime = DateTime(
     now.year,
@@ -48,9 +48,26 @@ class _CreateAlarmState extends State<CreateAlarm> {
     });
   }
 
-  void toggleIsAllDay() {
+  void toggleIsAllDay(bool? value) {
+    print(value);
     setState(() {
-      _isAllDay = !_isAllDay;
+      _isAllDay = value ?? !_isAllDay;
+      _weekdays =
+          _weekdays
+              .map((day) => day.copyWith(isSelected: _isAllDay == true))
+              .toList();
+    });
+  }
+
+  void onWeekdaySelected(int idx, bool value) {
+    setState(() {
+      final List<Weekday> updatedWeekdays = List.from(_weekdays);
+
+      updatedWeekdays[idx] = updatedWeekdays[idx].copyWith(isSelected: value);
+
+      _weekdays = updatedWeekdays;
+
+      _isAllDay = _weekdays.every((day) => day.isSelected);
     });
   }
 
@@ -65,13 +82,14 @@ class _CreateAlarmState extends State<CreateAlarm> {
             ),
             Gaps.v16,
             AlarmSettings(
-              weekdays: wDays,
+              weekdays: _weekdays,
               isActivatedVirtualMission: _isActivatedVirtualMission,
               toggleWakeUpMission: toggleWakeUpMission,
               isActivatedVibrate: _isActivatedVibrate,
               toggleActivatedVibrate: toggleActivatedVibrate,
               isAllDay: _isAllDay,
               toggleIsAllDay: toggleIsAllDay,
+              onWeekdaySelected: onWeekdaySelected,
             ),
             Spacer(),
             ElevatedButton(

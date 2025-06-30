@@ -13,7 +13,8 @@ class AlarmSettings extends StatefulWidget {
   final bool isActivatedVibrate;
   final Function() toggleActivatedVibrate;
   final bool isAllDay;
-  final Function() toggleIsAllDay;
+  final Function(bool? value) toggleIsAllDay;
+  final Function(int idx, bool value) onWeekdaySelected;
 
   const AlarmSettings({
     super.key,
@@ -24,6 +25,7 @@ class AlarmSettings extends StatefulWidget {
     required this.toggleActivatedVibrate,
     required this.isAllDay,
     required this.toggleIsAllDay,
+    required this.onWeekdaySelected,
   });
 
   @override
@@ -33,7 +35,7 @@ class AlarmSettings extends StatefulWidget {
 class _AlarmSettingsState extends State<AlarmSettings> {
   void changeSelected(index, value) {
     setState(() {
-      widget.weekdays[index].isSelected = value;
+      widget.onWeekdaySelected(index, value);
     });
   }
 
@@ -75,13 +77,13 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                 ),
                 Gaps.h56,
                 GestureDetector(
-                  onTap: widget.toggleIsAllDay,
+                  onTap: () => widget.toggleIsAllDay(null),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Checkbox(
                         value: widget.isAllDay,
-                        onChanged: (value) => widget.toggleIsAllDay(),
+                        onChanged: (value) => widget.toggleIsAllDay(null),
                       ),
                       Text(
                         '매일',
@@ -97,16 +99,14 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                 ),
               ],
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                spacing: 8,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ...widget.weekdays.mapIndexed(
-                    (idx, day) => SizedBox(
-                      width: 38,
-                      height: 38,
+            Row(
+              spacing: 12,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ...widget.weekdays.mapIndexed(
+                  (idx, day) => Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 1,
                       child: TextButton(
                         onPressed: () => changeSelected(idx, !day.isSelected),
                         style: TextButton.styleFrom(
@@ -125,8 +125,8 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Gaps.v10,
             Divider(height: 10),
