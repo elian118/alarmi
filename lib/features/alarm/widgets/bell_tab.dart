@@ -3,8 +3,15 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 class BellTab extends StatefulWidget {
   final String title;
+  final bool isPlaying;
+  final VoidCallback onPlayPause;
 
-  const BellTab({super.key, required this.title});
+  const BellTab({
+    super.key,
+    required this.title,
+    required this.isPlaying,
+    required this.onPlayPause,
+  });
 
   @override
   State<BellTab> createState() => _BellTabState();
@@ -16,16 +23,33 @@ class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
     duration: Duration(milliseconds: 500),
   );
 
-  void _onPlayPauseTap() {
-    _playPauseController.isCompleted
-        ? _playPauseController.reverse()
-        : _playPauseController.forward();
+  // void _onPlayPauseTap() {
+  //   _playPauseController.isCompleted
+  //       ? _playPauseController.reverse()
+  //       : _playPauseController.forward();
+  // }
+
+  @override
+  void didUpdateWidget(covariant BellTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.isPlaying != oldWidget.isPlaying) {
+      widget.isPlaying
+          ? _playPauseController.forward()
+          : _playPauseController.reverse();
+    }
+  }
+
+  @override
+  void dispose() {
+    _playPauseController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: _onPlayPauseTap,
+      onPressed: widget.onPlayPause,
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
         minimumSize: Size.zero,

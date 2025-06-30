@@ -57,7 +57,7 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
               ),
             ],
           ),
-          Expanded(child: BellTabs()),
+          Expanded(child: BellTabs(volume: _volume)),
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
