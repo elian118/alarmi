@@ -91,7 +91,7 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
         Expanded(
           child: TabBarView(
             controller: _bellTabController,
-            children: <Widget>[
+            children: [
               ...bellCategories.map(
                 (category) => SingleChildScrollView(
                   child: Column(

@@ -23,12 +23,6 @@ class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
     duration: Duration(milliseconds: 500),
   );
 
-  // void _onPlayPauseTap() {
-  //   _playPauseController.isCompleted
-  //       ? _playPauseController.reverse()
-  //       : _playPauseController.forward();
-  // }
-
   @override
   void didUpdateWidget(covariant BellTab oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -58,6 +52,12 @@ class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
         animation: _playPauseController,
         builder: (context, child) {
           final double currentAlpha = 0.07 * _playPauseController.value;
+          final Color iconContainerColor = Colors.white.withValues(
+            alpha:
+                _playPauseController.value < 0.1
+                    ? 0.1
+                    : _playPauseController.value,
+          );
 
           return AnimatedContainer(
             duration: 0.5.ms,
@@ -97,7 +97,7 @@ class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
                   height: 26,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: iconContainerColor,
                     shape: BoxShape.circle,
                   ),
                   child: AnimatedIcon(
