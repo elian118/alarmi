@@ -58,7 +58,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
     print("진동 시작: ${widget.title}");
 
     try {
-      await Vibration.vibrate(preset: widget.preset, repeat: 0);
+      await Vibration.vibrate(preset: widget.preset, repeat: 1000);
       print("재생 완료: '${widget.title}'");
     } catch (e) {
       print("햅틱 재생 중 오류 발생: $e");
