@@ -10,6 +10,14 @@ class BellSettingsDialog extends StatefulWidget {
 }
 
 class _BellSettingsDialogState extends State<BellSettingsDialog> {
+  double _volume = 0.0;
+
+  void onChangeVolume(double value) {
+    setState(() {
+      _volume = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,6 +40,21 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
+          ),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () => onChangeVolume(_volume == 0 ? 0.7 : 0.0),
+                icon: Icon(
+                  _volume > 0 ? Icons.volume_up : Icons.volume_off,
+                  color: Colors.white,
+                ),
+              ),
+
+              Flexible(
+                child: Slider(value: _volume, onChanged: onChangeVolume),
+              ),
+            ],
           ),
           ElevatedButton(
             onPressed: () {},

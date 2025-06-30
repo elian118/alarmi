@@ -9,7 +9,7 @@ AlarmSettings getAlarmSettings(DateTime dt) {
   return AlarmSettings(
     id: 42,
     dateTime: dt,
-    assetAudioPath: 'assets/audios/test.mp3',
+    assetAudioPath: 'assets/audios/default/test.mp3',
     loopAudio: true,
     vibrate: true,
     warningNotificationOnKill: Platform.isIOS,

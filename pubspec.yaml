@@ -43,6 +43,10 @@ flutter:
     - assets/images/fishes/
     - assets/images/backgrounds/
     - assets/audios/
+    - assets/audios/default/
+    - assets/audios/energy/
+    - assets/audios/nature/
+    - assets/audios/signal/
   fonts:
     - family: Pretendard
       fonts:
