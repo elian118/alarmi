@@ -24,7 +24,13 @@ class AlarmTestScreen extends StatelessWidget {
       now.second + delay, // 5초 후
     );
 
-    await Alarm.set(alarmSettings: getAlarmSettings(dateTime));
+    await Alarm.set(
+      alarmSettings: setAlarmSettings(
+        dateTime,
+        0.8,
+        'assets/audios/default/test.mp3',
+      ),
+    );
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('알람 설정됨: ${dateTime.toLocal()}')));

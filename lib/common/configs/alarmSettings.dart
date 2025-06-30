@@ -5,17 +5,17 @@ import 'package:alarm/model/alarm_settings.dart';
 import 'package:alarm/model/notification_settings.dart';
 import 'package:alarm/model/volume_settings.dart';
 
-AlarmSettings getAlarmSettings(DateTime dt) {
+AlarmSettings setAlarmSettings(DateTime dt, double volume, String path) {
   return AlarmSettings(
     id: 42,
     dateTime: dt,
-    assetAudioPath: 'assets/audios/default/test.mp3',
+    assetAudioPath: path,
     loopAudio: true,
     vibrate: true,
     warningNotificationOnKill: Platform.isIOS,
     androidFullScreenIntent: true,
     volumeSettings: VolumeSettings.fade(
-      volume: 0.8,
+      volume: volume,
       fadeDuration: Duration(seconds: 5),
       volumeEnforced: true,
     ),

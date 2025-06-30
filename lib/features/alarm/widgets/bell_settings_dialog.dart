@@ -1,4 +1,5 @@
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/features/alarm/widgets/bell_tabs.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -56,6 +57,7 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
               ),
             ],
           ),
+          Expanded(child: BellTabs()),
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(

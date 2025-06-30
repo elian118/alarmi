@@ -92,23 +92,26 @@ class _CreateAlarmState extends State<CreateAlarm> {
               onWeekdaySelected: onWeekdaySelected,
             ),
             Spacer(),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-              ),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: Sizes.size14),
-                child: Center(
-                  child: Text(
-                    '저장',
-                    style: TextStyle(
-                      fontSize: Sizes.size18,
-                      fontWeight: FontWeight.w600,
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: Sizes.size14),
+                  child: Center(
+                    child: Text(
+                      '저장',
+                      style: TextStyle(
+                        fontSize: Sizes.size18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
