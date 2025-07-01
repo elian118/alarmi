@@ -1,21 +1,38 @@
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/widgets/bell_tabs.dart';
 import 'package:alarmi/utils/helper_utils.dart';
+import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 
 class BellSettingsDialog extends StatefulWidget {
-  const BellSettingsDialog({super.key});
+  final Function(String? bellId, double volmue) onSaveBellSettings;
+
+  const BellSettingsDialog({super.key, required this.onSaveBellSettings});
 
   @override
   State<BellSettingsDialog> createState() => _BellSettingsDialogState();
 }
 
 class _BellSettingsDialogState extends State<BellSettingsDialog> {
+  String? _selectedBellId;
   double _volume = 0.8;
 
   void onChangeVolume(double value) {
     setState(() {
       _volume = value;
+    });
+  }
+
+  void saveAlarm() {
+    callSimpleToast('_selectedBellId: $_selectedBellId');
+
+    widget.onSaveBellSettings(_selectedBellId, _volume);
+    Navigator.pop(context); // 닫기
+  }
+
+  void onChangeCurrentPlyingBellId(String? bellId) {
+    setState(() {
+      _selectedBellId = bellId;
     });
   }
 
@@ -69,9 +86,15 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
               ),
             ],
           ),
-          Expanded(child: BellTabs(volume: _volume)),
+          Expanded(
+            child: BellTabs(
+              selectedBellId: _selectedBellId,
+              onChangeCurrentPlyingBellId: onChangeCurrentPlyingBellId,
+              volume: _volume,
+            ),
+          ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => saveAlarm(),
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Theme.of(context).primaryColor,

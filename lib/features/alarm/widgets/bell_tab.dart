@@ -7,12 +7,14 @@ class BellTab extends StatefulWidget {
   final String title;
   final bool isPlaying;
   final VoidCallback onPlayPause;
+  final Function(String? bellId) onChangeCurrentPlyingBellId;
 
   const BellTab({
     super.key,
     required this.title,
     required this.isPlaying,
     required this.onPlayPause,
+    required this.onChangeCurrentPlyingBellId,
   });
 
   @override

@@ -2,12 +2,21 @@ import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/features/alarm/models/bell.dart';
 import 'package:alarmi/features/alarm/widgets/bell_tab.dart';
+import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 class BellTabs extends StatefulWidget {
+  final String? selectedBellId;
   final double volume;
-  const BellTabs({super.key, required this.volume});
+  final Function(String? bellId) onChangeCurrentPlyingBellId;
+
+  const BellTabs({
+    super.key,
+    required this.volume,
+    required this.selectedBellId,
+    required this.onChangeCurrentPlyingBellId,
+  });
 
   @override
   State<BellTabs> createState() => _BellTabsState();
@@ -20,6 +29,7 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    _currentPlayingBellId = widget.selectedBellId;
     _bellTabController = TabController(length: 4, vsync: this);
     _audioPlayer = AudioPlayer();
     _audioPlayer.setLoopMode(LoopMode.one);
@@ -56,6 +66,9 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
         _currentPlayingBellId = bellToToggle.id;
       }
     });
+
+    widget.onChangeCurrentPlyingBellId(_currentPlayingBellId);
+    callSimpleToast('_currentPlayingBellId: $_currentPlayingBellId');
   }
 
   @override
@@ -105,6 +118,8 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
                               title: b.name,
                               isPlaying: _currentPlayingBellId == b.id,
                               onPlayPause: () => _playPauseBell(b),
+                              onChangeCurrentPlyingBellId:
+                                  widget.onChangeCurrentPlyingBellId,
                             ),
                           ),
                       Gaps.v12,

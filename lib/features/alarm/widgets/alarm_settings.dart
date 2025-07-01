@@ -1,4 +1,5 @@
 import 'package:alarmi/common/consts/gaps.dart';
+import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
 import 'package:alarmi/features/alarm/widgets/bell_settings_dialog.dart';
@@ -33,7 +34,19 @@ class AlarmSettings extends StatefulWidget {
 }
 
 class _AlarmSettingsState extends State<AlarmSettings> {
-  void changeSelected(index, value) {
+  double _selectedBellVolume = 0.0;
+  String? _selectedBellId;
+
+  void onSaveBellSettings(String? bellId, double volume) {
+    print('onSaveBellSettings');
+    setState(() {
+      _selectedBellId = bellId;
+      _selectedBellVolume = volume;
+    });
+    print('_selectedBellId: $_selectedBellId');
+  }
+
+  void changeSelectedWeekday(index, value) {
     setState(() {
       widget.onWeekdaySelected(index, value);
     });
@@ -46,7 +59,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
       builder:
           (context) =>
               type == 'bell'
-                  ? BellSettingsDialog()
+                  ? BellSettingsDialog(onSaveBellSettings: onSaveBellSettings)
                   : VibrateSettingsDialog(
                     isActivatedVibrate: widget.isActivatedVibrate,
                     toggleActivatedVibrate: widget.toggleActivatedVibrate,
@@ -55,6 +68,9 @@ class _AlarmSettingsState extends State<AlarmSettings> {
       barrierColor: Colors.transparent,
     );
   }
+
+  String getBellTitleById(String id) =>
+      bells.where((bell) => bell.id == id).first.name;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +124,8 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: TextButton(
-                        onPressed: () => changeSelected(idx, !day.isSelected),
+                        onPressed:
+                            () => changeSelectedWeekday(idx, !day.isSelected),
                         style: TextButton.styleFrom(
                           backgroundColor:
                               day.isSelected
@@ -150,7 +167,9 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        '없음',
+                        _selectedBellId != null
+                            ? getBellTitleById(_selectedBellId!)
+                            : '없음',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w300,
