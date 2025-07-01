@@ -1,3 +1,4 @@
+import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:marquee/marquee.dart';
@@ -93,6 +94,7 @@ class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
+                            blankSpace: getWinWidth(context) * 0.6,
                           )
                           : Text(
                             widget.title,

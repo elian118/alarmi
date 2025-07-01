@@ -111,12 +111,6 @@ List<Bell> bells = [
     path: 'assets/audios/nature/mountain-path-125573.mp3',
   ),
   Bell(
-    id: '15',
-    category: 'nature',
-    name: 'Jaynrox naturaleza',
-    path: 'assets/audios/nature/jaynrox-naturaleza-282177.mp3',
-  ),
-  Bell(
     id: '17',
     category: 'nature',
     name: 'Nature documentary',
