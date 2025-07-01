@@ -6,11 +6,15 @@ import 'package:flutter/material.dart';
 class VibrateSettingsDialog extends StatefulWidget {
   final bool isActivatedVibrate;
   final Function() toggleActivatedVibrate;
+  final String? selectedVibrateId;
+  final Function(String? patternId) onSaveVibrateSettings;
 
   const VibrateSettingsDialog({
     super.key,
     required this.isActivatedVibrate,
     required this.toggleActivatedVibrate,
+    required this.onSaveVibrateSettings,
+    this.selectedVibrateId,
   });
 
   @override
@@ -18,7 +22,9 @@ class VibrateSettingsDialog extends StatefulWidget {
 }
 
 class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
+  late String? _selectedVibrateId = widget.selectedVibrateId;
   bool _dialogIsActivatedVibrate = false;
+  String? _toUpdateVibrateId;
 
   void _onSwitchChanged(bool newValue) {
     setState(() {
@@ -26,6 +32,23 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
     });
     // 부모 위젯 상태 업데이트
     widget.toggleActivatedVibrate();
+  }
+
+  void setToUpdateVibrateId(String? patternId) {
+    setState(() {
+      _toUpdateVibrateId = patternId;
+    });
+  }
+
+  void saveVibrate() {
+    widget.onSaveVibrateSettings(_toUpdateVibrateId);
+    Navigator.pop(context);
+  }
+
+  void onChangeCurrentPlayingPatternId(String? patternId) {
+    setState(() {
+      _selectedVibrateId = patternId;
+    });
   }
 
   @override
@@ -54,9 +77,15 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
               ),
             ],
           ),
-          Expanded(child: Vibrates()),
+          Expanded(
+            child: Vibrates(
+              selectedVibrateId: _selectedVibrateId,
+              onChangeCurrentPlayingPatternId: onChangeCurrentPlayingPatternId,
+              setToUpdateVibrateId: setToUpdateVibrateId,
+            ),
+          ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => saveVibrate(),
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Theme.of(context).primaryColor,

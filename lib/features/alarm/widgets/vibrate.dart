@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,26 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   bool _isThisPatternPlaying = false; // 현재 이 위젯의 햅틱 패턴 재생 중 여부
   Timer? _hapticOverallTimer; // 5분 전체 재생 시간을 관리하 타이머
 
+  void callVibrate(VibrationPreset preset) async {
+    final int vibrateDurationMs = 6000 * 10 * 5;
+    await Vibration.vibrate(
+      preset: preset,
+      duration: vibrateDurationMs, // 5분
+      repeat: vibrateDurationMs, // 무한 반복
+    );
+
+    _hapticOverallTimer = Timer(Duration(milliseconds: vibrateDurationMs), () {
+      if (mounted && _isThisPatternPlaying) {
+        Vibration.cancel();
+        setState(() {
+          _isThisPatternPlaying = false;
+        });
+        _playPauseController.reverse();
+        widget.onVibrationStateChanged(null);
+      }
+    });
+  }
+
   // 햅틱 패턴 재생 로직
   Future<void> _playHapticPattern() async {
     if (!widget.canVibrate) {
@@ -55,7 +76,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
       });
       _playPauseController.reverse(); // 애니메이션을 play 아이콘으로
       widget.onVibrationStateChanged(null); // 부모에게 아무것도 재생 중이 아님 알림
-      return; // 정지했으므로 더 이상 재생하지 않음
+      return;
     }
 
     // 새로운 진동 시작 전, 다른 모든 진동을 취소
@@ -71,26 +92,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
     _playPauseController.forward(); // 애니메이션을 pause 아이콘으로
 
     try {
-      final int vibrateDurationMs = 6000 * 10 * 5;
-      await Vibration.vibrate(
-        preset: widget.preset,
-        duration: vibrateDurationMs, // 5분
-        repeat: vibrateDurationMs, // 무한 반복
-      );
-
-      _hapticOverallTimer = Timer(
-        Duration(milliseconds: vibrateDurationMs),
-        () {
-          if (mounted && _isThisPatternPlaying) {
-            Vibration.cancel();
-            setState(() {
-              _isThisPatternPlaying = false;
-            });
-            _playPauseController.reverse();
-            widget.onVibrationStateChanged(null);
-          }
-        },
-      );
+      callVibrate(widget.preset);
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -104,16 +106,6 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   }
 
   @override
-  void initState() {
-    _isThisPatternPlaying =
-        (widget.currentlyPlayingPresetId == widget.presetId);
-    if (_isThisPatternPlaying) {
-      _playPauseController.forward();
-    }
-    super.initState();
-  }
-
-  @override
   void didUpdateWidget(covariant Vibrate oldWidget) {
     super.didUpdateWidget(oldWidget);
 
@@ -123,22 +115,36 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
           (widget.currentlyPlayingPresetId == widget.presetId);
 
       if (shouldBePlaying && !_isThisPatternPlaying) {
-        // 이 위젯이 재생되어야 하는데 현재 멈춰있다면 재생 시작
+        // 현재 멈춰있다면 재생 시작
         setState(() {
           _isThisPatternPlaying = true;
         });
         _playPauseController.forward();
         // 실제 진동 시작 로직은 _playHapticPattern에서만 호출되므로 여기서는 UI만 동기화
       } else if (!shouldBePlaying && _isThisPatternPlaying) {
-        // 이 위젯이 멈춰야 하는데 현재 재생 중이라면 멈춤
         setState(() {
           _isThisPatternPlaying = false;
         });
         _playPauseController.reverse();
         _hapticOverallTimer?.cancel(); // 혹시 모를 타이머 취소
-        // Vibration.cancel()은 _playHapticPattern에서만 호출 (중복 방지)
       }
     }
+  }
+
+  @override
+  void initState() {
+    _isThisPatternPlaying =
+        (widget.currentlyPlayingPresetId == widget.presetId);
+    if (_isThisPatternPlaying && widget.currentlyPlayingPresetId != null) {
+      _playPauseController.forward();
+      callVibrate(
+        hapticPatterns
+            .where((p) => p.id == widget.currentlyPlayingPresetId)
+            .first
+            .preset,
+      );
+    }
+    super.initState();
   }
 
   @override

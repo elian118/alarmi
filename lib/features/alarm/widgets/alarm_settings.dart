@@ -1,5 +1,6 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
+import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
 import 'package:alarmi/features/alarm/widgets/bell_settings_dialog.dart';
@@ -36,11 +37,18 @@ class AlarmSettings extends StatefulWidget {
 class _AlarmSettingsState extends State<AlarmSettings> {
   double _selectedBellVolume = 0.0;
   String? _selectedBellId;
+  String? _selectedVibrateId;
 
   void onSaveBellSettings(String? bellId, double volume) {
     setState(() {
       _selectedBellId = bellId;
       _selectedBellVolume = volume;
+    });
+  }
+
+  void onSaveVibrateSettings(String? patternId) {
+    setState(() {
+      _selectedVibrateId = patternId;
     });
   }
 
@@ -64,6 +72,8 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                   : VibrateSettingsDialog(
                     isActivatedVibrate: widget.isActivatedVibrate,
                     toggleActivatedVibrate: widget.toggleActivatedVibrate,
+                    selectedVibrateId: _selectedVibrateId,
+                    onSaveVibrateSettings: onSaveVibrateSettings,
                   ),
       isScrollControlled: true,
       barrierColor: Colors.transparent,
@@ -72,6 +82,9 @@ class _AlarmSettingsState extends State<AlarmSettings> {
 
   String getBellTitleById(String id) =>
       bells.where((bell) => bell.id == id).first.name;
+
+  String getVibrateNameById(String id) =>
+      hapticPatterns.where((pattern) => pattern.id == id).first.name;
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +219,9 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        '없음',
+                        _selectedVibrateId != null
+                            ? getVibrateNameById(_selectedVibrateId!)
+                            : '없음',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w300,
