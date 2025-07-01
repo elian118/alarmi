@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:marquee/marquee.dart';
 
 class BellTab extends StatefulWidget {
   final String title;
@@ -20,7 +21,7 @@ class BellTab extends StatefulWidget {
 class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
   late final AnimationController _playPauseController = AnimationController(
     vsync: this,
-    duration: Duration(milliseconds: 500),
+    duration: 500.ms,
   );
 
   @override
@@ -83,14 +84,26 @@ class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
                   child: Text('🐷'),
                 ),
                 Expanded(
-                  child: Text(
-                    widget.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  child:
+                      widget.isPlaying
+                          ? Marquee(
+                            text: widget.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                          : Text(
+                            widget.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                 ),
                 Container(
                   width: 26,
@@ -101,7 +114,7 @@ class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
                     shape: BoxShape.circle,
                   ),
                   child: AnimatedIcon(
-                    icon: AnimatedIcons.pause_play,
+                    icon: AnimatedIcons.play_pause,
                     progress: _playPauseController,
                     size: 20,
                   ),

@@ -1,6 +1,7 @@
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:marquee/marquee.dart';
 import 'package:vibration/vibration.dart';
 import 'package:vibration/vibration_presets.dart';
 
@@ -58,8 +59,11 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
     print("진동 시작: ${widget.title}");
 
     try {
-      await Vibration.vibrate(preset: widget.preset, repeat: 1000);
-      print("재생 완료: '${widget.title}'");
+      await Vibration.vibrate(
+        preset: widget.preset,
+        duration: 6000 * 10 * 5, // 5분
+      );
+      print("재생: '${widget.title}'");
     } catch (e) {
       print("햅틱 재생 중 오류 발생: $e");
     } finally {
@@ -74,6 +78,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
     }
   }
 
+  @override
   void dispose() {
     _playPauseController.dispose();
     Vibration.cancel(); // 재생중인 모든 진동 취소
@@ -123,14 +128,26 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
                   child: Text('🐷'),
                 ),
                 Expanded(
-                  child: Text(
-                    widget.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  child:
+                      _isThisPatternPlaying
+                          ? Marquee(
+                            text: widget.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                          : Text(
+                            widget.title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                 ),
                 Container(
                   width: 26,
@@ -141,7 +158,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
                     shape: BoxShape.circle,
                   ),
                   child: AnimatedIcon(
-                    icon: AnimatedIcons.pause_play,
+                    icon: AnimatedIcons.play_pause,
                     progress: _playPauseController,
                     size: 20,
                   ),
