@@ -1,20 +1,24 @@
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/widgets/bell_tabs.dart';
 import 'package:alarmi/utils/helper_utils.dart';
-import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 
 class BellSettingsDialog extends StatefulWidget {
   final Function(String? bellId, double volmue) onSaveBellSettings;
+  final String? selectedBellId;
 
-  const BellSettingsDialog({super.key, required this.onSaveBellSettings});
+  const BellSettingsDialog({
+    super.key,
+    required this.onSaveBellSettings,
+    this.selectedBellId,
+  });
 
   @override
   State<BellSettingsDialog> createState() => _BellSettingsDialogState();
 }
 
 class _BellSettingsDialogState extends State<BellSettingsDialog> {
-  String? _selectedBellId;
+  late String? _selectedBellId = widget.selectedBellId;
   double _volume = 0.8;
 
   void onChangeVolume(double value) {
@@ -24,8 +28,6 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
   }
 
   void saveAlarm() {
-    callSimpleToast('_selectedBellId: $_selectedBellId');
-
     widget.onSaveBellSettings(_selectedBellId, _volume);
     Navigator.pop(context); // 닫기
   }

@@ -5,6 +5,8 @@ import 'package:marquee/marquee.dart';
 
 class BellTab extends StatefulWidget {
   final String title;
+  final String? selectedBellId;
+  final String bellId;
   final bool isPlaying;
   final VoidCallback onPlayPause;
   final Function(String? bellId) onChangeCurrentPlyingBellId;
@@ -15,6 +17,8 @@ class BellTab extends StatefulWidget {
     required this.isPlaying,
     required this.onPlayPause,
     required this.onChangeCurrentPlyingBellId,
+    this.selectedBellId,
+    required this.bellId,
   });
 
   @override
@@ -26,6 +30,16 @@ class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
     vsync: this,
     duration: 500.ms,
   );
+
+  @override
+  void initState() {
+    // 선택된 벨소리가 있는 경우 플레이 상태로 변경
+    if (widget.selectedBellId != null &&
+        widget.selectedBellId == widget.bellId) {
+      _playPauseController.forward();
+    }
+    super.initState();
+  }
 
   @override
   void didUpdateWidget(covariant BellTab oldWidget) {

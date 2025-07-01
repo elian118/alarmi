@@ -38,12 +38,10 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   String? _selectedBellId;
 
   void onSaveBellSettings(String? bellId, double volume) {
-    print('onSaveBellSettings');
     setState(() {
       _selectedBellId = bellId;
       _selectedBellVolume = volume;
     });
-    print('_selectedBellId: $_selectedBellId');
   }
 
   void changeSelectedWeekday(index, value) {
@@ -59,7 +57,10 @@ class _AlarmSettingsState extends State<AlarmSettings> {
       builder:
           (context) =>
               type == 'bell'
-                  ? BellSettingsDialog(onSaveBellSettings: onSaveBellSettings)
+                  ? BellSettingsDialog(
+                    onSaveBellSettings: onSaveBellSettings,
+                    selectedBellId: _selectedBellId,
+                  )
                   : VibrateSettingsDialog(
                     isActivatedVibrate: widget.isActivatedVibrate,
                     toggleActivatedVibrate: widget.toggleActivatedVibrate,

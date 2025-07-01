@@ -2,7 +2,6 @@ import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/features/alarm/models/bell.dart';
 import 'package:alarmi/features/alarm/widgets/bell_tab.dart';
-import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -34,6 +33,10 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
     _audioPlayer = AudioPlayer();
     _audioPlayer.setLoopMode(LoopMode.one);
 
+    if (widget.selectedBellId != null) {
+      autoPlayBell(bells.where((b) => b.id == widget.selectedBellId).first);
+    }
+
     super.initState();
   }
 
@@ -52,23 +55,29 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
     }
   }
 
+  void playBell(String filePath) {
+    _audioPlayer.stop();
+    _audioPlayer.setAsset(filePath);
+    _audioPlayer.play();
+    _audioPlayer.setVolume(widget.volume);
+  }
+
+  void autoPlayBell(Bell bellToToggle) {
+    playBell(bellToToggle.path);
+    _currentPlayingBellId = bellToToggle.id;
+  }
+
   Future<void> _playPauseBell(Bell bellToToggle) async {
     setState(() {
       if (_currentPlayingBellId == bellToToggle.id) {
         _audioPlayer.stop();
         _currentPlayingBellId = null;
       } else {
-        _audioPlayer.stop();
-        _audioPlayer.setAsset(bellToToggle.path);
-        _audioPlayer.play();
-        _audioPlayer.setVolume(widget.volume);
-
-        _currentPlayingBellId = bellToToggle.id;
+        autoPlayBell(bellToToggle);
       }
     });
 
     widget.onChangeCurrentPlyingBellId(_currentPlayingBellId);
-    callSimpleToast('_currentPlayingBellId: $_currentPlayingBellId');
   }
 
   @override
@@ -115,7 +124,9 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
                           .where((bell) => bell.category == category)
                           .map(
                             (b) => BellTab(
+                              bellId: b.id,
                               title: b.name,
+                              selectedBellId: widget.selectedBellId,
                               isPlaying: _currentPlayingBellId == b.id,
                               onPlayPause: () => _playPauseBell(b),
                               onChangeCurrentPlyingBellId:
