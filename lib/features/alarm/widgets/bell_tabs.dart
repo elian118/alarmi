@@ -68,8 +68,6 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
                 .category
             : 'default';
 
-    print(bellCategory);
-
     switch (bellCategory) {
       case 'default':
         return 0;
