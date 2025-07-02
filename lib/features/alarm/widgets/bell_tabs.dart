@@ -29,7 +29,11 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
   @override
   void initState() {
     _currentPlayingBellId = widget.selectedBellId;
-    _bellTabController = TabController(length: 4, vsync: this);
+    _bellTabController = TabController(
+      length: 4,
+      vsync: this,
+      initialIndex: getInitialIndex(_currentPlayingBellId),
+    );
     _audioPlayer = AudioPlayer();
     _audioPlayer.setLoopMode(LoopMode.one);
 
@@ -52,6 +56,31 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.volume != widget.volume) {
       _audioPlayer.setVolume(widget.volume);
+    }
+  }
+
+  int getInitialIndex(String? currentPlayingBellId) {
+    String bellCategory =
+        currentPlayingBellId != null
+            ? bells
+                .where((bell) => bell.id == currentPlayingBellId)
+                .first
+                .category
+            : 'default';
+
+    print(bellCategory);
+
+    switch (bellCategory) {
+      case 'default':
+        return 0;
+      case 'signal':
+        return 1;
+      case 'nature':
+        return 2;
+      case 'energy':
+        return 3;
+      default:
+        return 0;
     }
   }
 
