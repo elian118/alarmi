@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
@@ -38,25 +37,17 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   );
 
   bool _isThisPatternPlaying = false; // 현재 이 위젯의 햅틱 패턴 재생 중 여부
-  Timer? _hapticOverallTimer; // 5분 전체 재생 시간을 관리하 타이머
+  Timer? _vibrationRepeatTimer;
 
   void callVibrate(VibrationPreset preset) async {
-    final int vibrateDurationMs = 6000 * 10 * 5;
-    await Vibration.vibrate(
-      preset: preset,
-      duration: vibrateDurationMs, // 5분
-      repeat: vibrateDurationMs, // 무한 반복
-    );
-
-    _hapticOverallTimer = Timer(Duration(milliseconds: vibrateDurationMs), () {
-      if (mounted && _isThisPatternPlaying) {
-        Vibration.cancel();
+    Timer.periodic(1.seconds, (timer) {
+      if (!_isThisPatternPlaying) {
+        timer.cancel();
         setState(() {
           _isThisPatternPlaying = false;
         });
-        _playPauseController.reverse();
-        widget.onVibrationStateChanged(null);
       }
+      Vibration.vibrate(preset: preset, duration: 1000);
     });
   }
 
@@ -69,19 +60,13 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
 
     // 현재 진동 중이면 멈추고 토글
     if (_isThisPatternPlaying) {
-      _hapticOverallTimer?.cancel();
-      Vibration.cancel();
-      setState(() {
-        _isThisPatternPlaying = false;
-      });
-      _playPauseController.reverse(); // 애니메이션을 play 아이콘으로
-      widget.onVibrationStateChanged(null); // 부모에게 아무것도 재생 중이 아님 알림
+      _stopVibration();
       return;
     }
 
     // 새로운 진동 시작 전, 다른 모든 진동을 취소
     Vibration.cancel();
-    _hapticOverallTimer?.cancel();
+    _vibrationRepeatTimer?.cancel(); // 기존 타이머ㅏ 있다면 취소
 
     widget.onVibrationStateChanged(widget.presetId);
 
@@ -92,17 +77,25 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
     _playPauseController.forward(); // 애니메이션을 pause 아이콘으로
 
     try {
-      callVibrate(widget.preset);
+      _vibrationRepeatTimer = Timer.periodic(1.seconds, (timer) {
+        Vibration.vibrate(preset: widget.preset, duration: 1000);
+      });
     } catch (e) {
       if (mounted) {
-        setState(() {
-          _isThisPatternPlaying = false;
-        });
-        _playPauseController.reverse();
+        _stopVibration();
       }
-      _hapticOverallTimer?.cancel();
       widget.onVibrationStateChanged(null);
     }
+  }
+
+  void _stopVibration() {
+    Vibration.cancel();
+    _vibrationRepeatTimer?.cancel();
+    setState(() {
+      _isThisPatternPlaying = false;
+    });
+    _playPauseController.reverse();
+    widget.onVibrationStateChanged(null);
   }
 
   @override
@@ -122,11 +115,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
         _playPauseController.forward();
         // 실제 진동 시작 로직은 _playHapticPattern에서만 호출되므로 여기서는 UI만 동기화
       } else if (!shouldBePlaying && _isThisPatternPlaying) {
-        setState(() {
-          _isThisPatternPlaying = false;
-        });
-        _playPauseController.reverse();
-        _hapticOverallTimer?.cancel(); // 혹시 모를 타이머 취소
+        _stopVibration();
       }
     }
   }
@@ -137,12 +126,9 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
         (widget.currentlyPlayingPresetId == widget.presetId);
     if (_isThisPatternPlaying && widget.currentlyPlayingPresetId != null) {
       _playPauseController.forward();
-      callVibrate(
-        hapticPatterns
-            .where((p) => p.id == widget.currentlyPlayingPresetId)
-            .first
-            .preset,
-      );
+      _vibrationRepeatTimer = Timer.periodic(1.seconds, (timer) {
+        Vibration.vibrate(preset: widget.preset, duration: 1000);
+      });
     }
     super.initState();
   }
@@ -150,7 +136,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   @override
   void dispose() {
     _playPauseController.dispose();
-    _hapticOverallTimer?.cancel();
+    _vibrationRepeatTimer?.cancel(); // 타이머도 취소
     Vibration.cancel(); // 재생중인 모든 진동 취소
     super.dispose();
   }
