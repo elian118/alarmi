@@ -1,7 +1,11 @@
 import 'package:alarm/alarm.dart';
 import 'package:alarmi/common/configs/alarmSettings.dart';
+import 'package:alarmi/common/configs/awesomeNotificationConfig.dart';
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/widgets/cst_divider.dart';
+import 'package:alarmi/features/test/widgets/alarms_dialog.dart';
+import 'package:alarmi/utils/toast_utils.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
 class AlarmTestScreen extends StatelessWidget {
@@ -33,14 +37,6 @@ class AlarmTestScreen extends StatelessWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('알람 설정됨: ${dateTime.toLocal()}')));
-
-    // Alarm이 울릴 때 감지하여 커스텀 알림 발행
-    // Alarm.ringing.listen((alarmSet) {
-    //   print(alarmSet);
-    //   // 이 리스너는 알람이 울리기 시작할 때 호출됩니다.
-    //   // 여기에서 flutter_local_notifications를 사용하여 커스텀 알림을 보냅니다.
-    //   LocalNotificationService.showStopAlarmNotification(42);
-    // });
   }
 
   void onTabStopAlarm(BuildContext context) async {
@@ -81,6 +77,64 @@ class AlarmTestScreen extends StatelessWidget {
             ),
             Gaps.v24,
             CstDivider(width: 100, thickness: 10),
+            Gaps.v24,
+            ElevatedButton(
+              onPressed: () async {
+                await NotificationController.setTestWeeklyAlarm(
+                  soundAssetPath: 'assets/audios/energy/movement-200697.mp3',
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('주기적 테스트 알람이 설정되었습니다.')),
+                );
+              },
+              child: const Text('기상 알람 설정'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                await AwesomeNotifications().cancelAll(); // 모든 알림 취소
+                await NotificationController.stopAlarmSound(); // 혹시 재생 중인 사운드가 있다면 중지
+                callSimpleToast('모든 알람이 취소되었습니다.');
+              },
+              child: const Text('모든 알람 취소'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                final List<NotificationModel> scheduledNotifications =
+                    await AwesomeNotifications().listScheduledNotifications();
+
+                if (scheduledNotifications.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('설정된 알람 없음'),
+                        content: const Text('현재 설정된 알람이 없습니다.'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('확인'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlarmsDialog(
+                        scheduledNotifications: scheduledNotifications,
+                      );
+                    },
+                  );
+                }
+              },
+              child: const Text('설정된 알람 확인'),
+            ),
           ],
         ),
       ),
