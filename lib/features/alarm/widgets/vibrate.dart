@@ -15,6 +15,7 @@ class Vibrate extends StatefulWidget {
   final bool canVibrate;
   final String? currentlyPlayingPresetId;
   final Function(String? id) onVibrationStateChanged;
+  final bool isDialogActivatedVibrate;
 
   const Vibrate({
     super.key,
@@ -24,6 +25,7 @@ class Vibrate extends StatefulWidget {
     required this.onVibrationStateChanged,
     required this.presetId,
     required this.currentlyPlayingPresetId,
+    required this.isDialogActivatedVibrate,
   });
 
   @override
@@ -53,6 +55,13 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
 
   // 햅틱 패턴 재생 로직
   Future<void> _playHapticPattern() async {
+    // 진동 활성화 여부 확인
+    if (!widget.isDialogActivatedVibrate) {
+      callSimpleToast('진동 설정이 비활성화되어 있습니다.');
+      _stopVibration();
+      return;
+    }
+
     if (!widget.canVibrate) {
       callSimpleToast("이 기기는 진동 기능을 지원하지 않습니다.");
       return;
@@ -102,7 +111,14 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   void didUpdateWidget(covariant Vibrate oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // 1. 재생/일시정지 애니메이션 컨트롤
+    // 1. 전역 스위치 변경에 반응
+    if (widget.isDialogActivatedVibrate != oldWidget.isDialogActivatedVibrate &&
+        !widget.isDialogActivatedVibrate) {
+      _stopVibration(); // 끄면 즉시 타이머 중지
+      return;
+    }
+
+    // 2. 재생/일시정지 애니메이션 컨트롤
     if (widget.currentlyPlayingPresetId != oldWidget.currentlyPlayingPresetId) {
       final bool shouldBePlaying =
           (widget.currentlyPlayingPresetId == widget.presetId);
@@ -113,7 +129,13 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
           _isThisPatternPlaying = true;
         });
         _playPauseController.forward();
-        // 실제 진동 시작 로직은 _playHapticPattern에서만 호출되므로 여기서는 UI만 동기화
+        // 진동 활성화 상태에서만 타이머 재시작
+        _vibrationRepeatTimer?.cancel();
+        if (widget.isDialogActivatedVibrate) {
+          _vibrationRepeatTimer = Timer.periodic(1.seconds, (timer) {
+            Vibration.vibrate(preset: widget.preset, duration: 1000);
+          });
+        }
       } else if (!shouldBePlaying && _isThisPatternPlaying) {
         _stopVibration();
       }
@@ -124,7 +146,10 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   void initState() {
     _isThisPatternPlaying =
         (widget.currentlyPlayingPresetId == widget.presetId);
-    if (_isThisPatternPlaying && widget.currentlyPlayingPresetId != null) {
+    // 진동 활성화 상태만 타이머 시작
+    if (_isThisPatternPlaying &&
+        widget.currentlyPlayingPresetId != null &&
+        widget.isDialogActivatedVibrate) {
       _playPauseController.forward();
       _vibrationRepeatTimer = Timer.periodic(1.seconds, (timer) {
         Vibration.vibrate(preset: widget.preset, duration: 1000);

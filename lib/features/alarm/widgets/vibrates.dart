@@ -11,14 +11,14 @@ class Vibrates extends StatefulWidget {
   final String? selectedVibrateId;
   final Function(String? patternId) onChangeCurrentPlayingPatternId;
   final Function(String? patternId) setToUpdateVibrateId;
-  final bool dialogIsActivatedVibrate;
+  final bool isDialogActivatedVibrate;
 
   const Vibrates({
     super.key,
     this.selectedVibrateId,
     required this.onChangeCurrentPlayingPatternId,
     required this.setToUpdateVibrateId,
-    required this.dialogIsActivatedVibrate,
+    required this.isDialogActivatedVibrate,
   });
 
   @override
@@ -71,6 +71,7 @@ class _VibratesState extends State<Vibrates> with TickerProviderStateMixin {
                   canVibrate: _canVibrate,
                   currentlyPlayingPresetId: _currentlyPlayingPresetId,
                   onVibrationStateChanged: onVibrationStateChanged,
+                  isDialogActivatedVibrate: widget.isDialogActivatedVibrate,
                   presetId: h.id,
                 ),
               ),
@@ -78,7 +79,7 @@ class _VibratesState extends State<Vibrates> with TickerProviderStateMixin {
             ],
           ),
         )
-        .animate(target: widget.dialogIsActivatedVibrate ? 1 : 0)
+        .animate(target: widget.isDialogActivatedVibrate ? 1 : 0)
         .fade(begin: 0, end: 1, curve: Curves.easeInOut, duration: 0.6.seconds);
   }
 }

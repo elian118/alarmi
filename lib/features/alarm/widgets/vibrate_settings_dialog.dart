@@ -2,6 +2,7 @@ import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/widgets/vibrates.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 
 class VibrateSettingsDialog extends StatefulWidget {
   final bool isActivatedVibrate;
@@ -23,18 +24,19 @@ class VibrateSettingsDialog extends StatefulWidget {
 
 class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
   late String? _selectedVibrateId = widget.selectedVibrateId;
-  late bool _dialogIsActivatedVibrate = _selectedVibrateId != null;
+  late bool _isDialogActivatedVibrate = _selectedVibrateId != null;
   String? _toUpdateVibrateId;
 
   void _onSwitchChanged(bool newValue) {
     setState(() {
-      _dialogIsActivatedVibrate = newValue;
+      _isDialogActivatedVibrate = newValue;
     });
     // 부모 위젯 상태 업데이트
     widget.toggleActivatedVibrate();
     // 플레이 상태 반영
     if (newValue == false) {
       onChangeCurrentPlayingPatternId(null);
+      Vibration.cancel(); // 재생중인 모든 진동 취소
     }
   }
 
@@ -76,7 +78,7 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
                 ),
               ),
               Switch(
-                value: _dialogIsActivatedVibrate,
+                value: _isDialogActivatedVibrate,
                 onChanged: _onSwitchChanged,
               ),
             ],
@@ -86,7 +88,7 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
               selectedVibrateId: _selectedVibrateId,
               onChangeCurrentPlayingPatternId: onChangeCurrentPlayingPatternId,
               setToUpdateVibrateId: setToUpdateVibrateId,
-              dialogIsActivatedVibrate: _dialogIsActivatedVibrate,
+              isDialogActivatedVibrate: _isDialogActivatedVibrate,
             ),
           ),
           ElevatedButton(
