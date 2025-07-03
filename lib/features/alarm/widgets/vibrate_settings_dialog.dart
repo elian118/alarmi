@@ -23,7 +23,7 @@ class VibrateSettingsDialog extends StatefulWidget {
 
 class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
   late String? _selectedVibrateId = widget.selectedVibrateId;
-  bool _dialogIsActivatedVibrate = false;
+  late bool _dialogIsActivatedVibrate = _selectedVibrateId != null;
   String? _toUpdateVibrateId;
 
   void _onSwitchChanged(bool newValue) {
@@ -32,6 +32,10 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
     });
     // 부모 위젯 상태 업데이트
     widget.toggleActivatedVibrate();
+    // 플레이 상태 반영
+    if (newValue == false) {
+      onChangeCurrentPlayingPatternId(null);
+    }
   }
 
   void setToUpdateVibrateId(String? patternId) {
@@ -82,6 +86,7 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
               selectedVibrateId: _selectedVibrateId,
               onChangeCurrentPlayingPatternId: onChangeCurrentPlayingPatternId,
               setToUpdateVibrateId: setToUpdateVibrateId,
+              dialogIsActivatedVibrate: _dialogIsActivatedVibrate,
             ),
           ),
           ElevatedButton(
