@@ -27,16 +27,20 @@ class Vibrates extends StatefulWidget {
 
 class _VibratesState extends State<Vibrates> with TickerProviderStateMixin {
   bool _canVibrate = false; // 기기 진동 지원 여부
-  String? _currentlyPlayingPresetId;
-  // 내부에서 상태 변경 시 리랜더링 위해 사용하는 별도 변수
+  String? _currentlyPlayingPresetId; // 내부에서 상태 변경 시 리랜더링 위해 사용하는 별도 변수
   bool _isVibrationChecked = false; // 기기 진동 지원 여부 검사 완료 여부
 
   // 기기의 진동 지원 여부 및 커스텀 패턴 지원 여부 확인
   Future<void> _checkVibrationCapabilities() async {
     _canVibrate = (await Vibration.hasVibrator());
-    setState(() {
-      _isVibrationChecked = true;
-      _currentlyPlayingPresetId = widget.selectedVibrateId;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          _isVibrationChecked = true;
+          _currentlyPlayingPresetId = widget.selectedVibrateId;
+        });
+      }
     });
   }
 
@@ -66,6 +70,7 @@ class _VibratesState extends State<Vibrates> with TickerProviderStateMixin {
               Gaps.v12,
               ...hapticPatterns.map(
                 (h) => Vibrate(
+                  key: UniqueKey(),
                   title: h.name,
                   preset: h.preset,
                   canVibrate: _canVibrate,

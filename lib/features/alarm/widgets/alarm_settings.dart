@@ -2,6 +2,7 @@ import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/widgets/cst_switch.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
 import 'package:alarmi/features/alarm/widgets/bell_settings_dialog.dart';
 import 'package:alarmi/features/alarm/widgets/vibrate_settings_dialog.dart';
@@ -248,9 +249,10 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Switch(
+                  CustomImageSwitch(
                     value: widget.isActivatedVirtualMission,
                     onChanged: (value) => widget.toggleWakeUpMission(),
+                    thumbIconPath: 'assets/images/icons/cat_icon.svg',
                   ),
                 ],
               ),
