@@ -2,7 +2,6 @@ import Flutter
 import UIKit
 import UserNotifications
 import alarm
-import flutter_local_notifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -16,11 +15,6 @@ import flutter_local_notifications
     SwiftAlarmPlugin.registerBackgroundTasks()
 
     GeneratedPluginRegistrant.register(with: self)
-
-    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
-        GeneratedPluginRegistrant.register(with: registry)
-    }
-
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
