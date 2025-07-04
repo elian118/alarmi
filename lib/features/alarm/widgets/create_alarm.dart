@@ -94,7 +94,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
   }
 
   void _save() async {
-    final AlarmService alarmService = AlarmService();
+    final AlarmService alarmService = AlarmService.getInstance();
 
     AlarmParams params = await _setParams();
     if (kDebugMode) {

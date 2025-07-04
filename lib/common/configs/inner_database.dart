@@ -69,7 +69,8 @@ class InnerDatabase {
     	vibrateId TEXT,
     	isWakeUpMission INTEGER DEFAULT 0 NOT NULL,
     	alarmTime TEXT NOT NULL,
-    	register TEXT NOT NULL, 
+    	register TEXT NOT NULL,
+    	isDisabled INTEGER DEFAULT 0 NOT NULL,
       createdAt DATETIME,
       updatedAt DATETIME)
     ''');

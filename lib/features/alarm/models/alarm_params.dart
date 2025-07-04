@@ -9,6 +9,7 @@ class AlarmParams {
   final int isWakeUpMission; // 0 false / 1 true
   final String? bellId;
   final String? vibrateId;
+  final int? isDisabled; // 0 false / 1 true
 
   AlarmParams({
     required this.type,
@@ -19,6 +20,7 @@ class AlarmParams {
     required this.isWakeUpMission,
     this.bellId,
     this.vibrateId,
+    this.isDisabled = 0,
   });
 
   AlarmParams.fromJson(Map<String, dynamic> json)
@@ -35,7 +37,8 @@ class AlarmParams {
       alarmTime = json['alarmTime'],
       isWakeUpMission = json['isWakeUpMission'],
       bellId = json['bellId'],
-      vibrateId = json['vibrateId'];
+      vibrateId = json['vibrateId'],
+      isDisabled = json['isDisabled'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -47,11 +50,12 @@ class AlarmParams {
       "weekdays": jsonEncode(weekdays),
       "bellId": bellId,
       "vibrateId": vibrateId,
+      "isDisabled": isDisabled,
     };
   }
 
   @override
   String toString() {
-    return 'AlarmParams(type: $type, register: $register, alarmKeys: $alarmKeys, weekdays: $weekdays, alarmTime: $alarmTime, isWakeUpMission: $isWakeUpMission, bellId: $bellId, vibrateId: $vibrateId)';
+    return 'AlarmParams(type: $type, register: $register, alarmKeys: $alarmKeys, weekdays: $weekdays, alarmTime: $alarmTime, isWakeUpMission: $isWakeUpMission, bellId: $bellId, vibrateId: $vibrateId), isDisabled: $isDisabled';
   }
 }

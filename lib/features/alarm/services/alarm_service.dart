@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 
 class AlarmService {
   static final AlarmService _instance = AlarmService._internal();
-  final AlarmRepository alarmRepository = AlarmRepository();
+  final AlarmRepository alarmRepository = AlarmRepository.getInstance();
 
-  factory AlarmService() {
+  static AlarmService getInstance() {
     return _instance;
   }
 
@@ -35,7 +35,7 @@ class AlarmService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getAlarms() async {
-    return await alarmRepository.getAlarms();
+  Future<List<Map<String, dynamic>>> getAlarms(String type) async {
+    return await alarmRepository.getAlarms(type: type);
   }
 }
