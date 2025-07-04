@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:alarmi/common/configs/notification_controller.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
+import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/features/test/widgets/alarms_dialog.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -26,13 +27,20 @@ class AlarmTestScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 Random random = Random();
-                int randomBellIdx = random.nextInt(bells.length);
+                int randomBellIdx = random.nextInt(bells.length - 1);
+                int hapticPatternIdx = random.nextInt(
+                  hapticPatterns.length - 1,
+                );
                 if (kDebugMode) {
-                  print('soundFilePath: ${bells[randomBellIdx].path}');
+                  print('soundFile: ${bells[randomBellIdx].path}');
+                  print(
+                    'hapticPatternId: ${hapticPatterns[hapticPatternIdx].id}',
+                  );
                 }
 
                 await NotificationController.setTestWeeklyAlarm(
                   soundAssetPath: bells[randomBellIdx].path,
+                  hapticPattern: hapticPatterns[hapticPatternIdx].id,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('주기적 테스트 알람이 설정되었습니다.')),
@@ -45,6 +53,7 @@ class AlarmTestScreen extends StatelessWidget {
               onPressed: () async {
                 await AwesomeNotifications().cancelAll(); // 모든 알림 취소
                 await NotificationController.stopAlarmSound(); // 혹시 재생 중인 사운드가 있다면 중지
+                await NotificationController.stopHaptic(); // 혹시 재생 중인 진동이 있다면 중지
                 callSimpleToast('모든 알람이 취소되었습니다.');
               },
               child: const Text('모든 알람 삭제'),

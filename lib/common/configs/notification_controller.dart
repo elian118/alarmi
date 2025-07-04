@@ -1,16 +1,21 @@
+import 'dart:async';
 import 'dart:isolate';
 
+import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
+import 'package:alarmi/utils/vibrate_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:vibration/vibration_presets.dart';
 
 // 싱글톤 AudioPlayer 인스턴스
 final AudioPlayer _audioPlayer = AudioPlayer();
 
 class NotificationController {
   static ReceivedAction? initialAction;
+  static Timer? hapticTimer;
 
   static Future<void> initAwesomeNotifications() async {
     await AwesomeNotifications().initialize(null, [
@@ -65,6 +70,9 @@ class NotificationController {
         receivedNotification.id != null) {
       final String? soundAssetPath =
           receivedNotification.payload?['soundAssetPath'];
+      final String? hapticPattern =
+          receivedNotification.payload?['hapticPattern'];
+
       if (soundAssetPath != null) {
         if (kDebugMode) {
           print('알람 표시 시 playAlarmSound 호출 시도: $soundAssetPath');
@@ -73,9 +81,15 @@ class NotificationController {
         if (kDebugMode) {
           print('알람 표시 시 playAlarmSound 호출 완료');
         }
-      } else {
+      }
+
+      if (hapticPattern != null) {
         if (kDebugMode) {
-          print('알람 표시 시 soundAssetPath가 payload에 없습니다.');
+          print('알람 표시 시 playHaptic 호출 시도: $hapticPattern');
+        }
+        await playHaptic(receivedNotification.id!, hapticPattern);
+        if (kDebugMode) {
+          print('알람 표시 시 playHaptic 호출 완료');
         }
       }
     }
@@ -98,6 +112,7 @@ class NotificationController {
       }
       await AwesomeNotifications().dismiss(receivedAction.id!); // 알림 제거
       await stopAlarmSound(); // 재생 중지
+      await stopHaptic(); // 진동 중지
     }
   }
 
@@ -118,6 +133,7 @@ class NotificationController {
       Future.delayed((10 * 60).seconds, () async {
         if (_audioPlayer.playing) {
           await stopAlarmSound();
+          await stopHaptic();
           if (kDebugMode) {
             print('5분 경과, 알람 자동 중지');
           }
@@ -131,6 +147,13 @@ class NotificationController {
     }
   }
 
+  @pragma('vm:entry-point')
+  static playHaptic(int alarmId, String hapticPattern) async {
+    VibrationPreset preset =
+        hapticPatterns.where((h) => h.id == hapticPattern).first.preset;
+    hapticTimer = VibrateUtils.playRepeatVibration(preset);
+  }
+
   // stopAlarmSound 함수도 Top-level 유지
   static Future<void> stopAlarmSound() async {
     if (_audioPlayer.playing) {
@@ -138,9 +161,14 @@ class NotificationController {
     }
   }
 
+  static Future<void> stopHaptic() async {
+    VibrateUtils.stopRepeatVibration(hapticTimer);
+  }
+
   // 테스트 알람 설정 매주 월~금 지금부터 5초 뒤 반복 알람
   static Future<void> setTestWeeklyAlarm({
     required String soundAssetPath,
+    required String hapticPattern,
   }) async {
     DateTime testDateTime = DateTime.now().add(5.seconds); // 5초 뒤 시간
 
@@ -157,7 +185,11 @@ class NotificationController {
           channelKey: 'my_alarm_channel',
           title: '(test) 기상 시간입니다!',
           body: '상쾌한 아침을 시작하세요.',
-          payload: {'day': i.toString(), 'soundAssetPath': soundAssetPath},
+          payload: {
+            'day': i.toString(),
+            'soundAssetPath': soundAssetPath,
+            'hapticPattern': hapticPattern,
+          },
           category: NotificationCategory.Alarm,
           wakeUpScreen: true,
           fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트

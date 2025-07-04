@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
+import 'package:alarmi/utils/vibrate_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:marquee/marquee.dart';
@@ -41,18 +42,6 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   bool _isThisPatternPlaying = false; // 현재 이 위젯의 햅틱 패턴 재생 중 여부
   Timer? _vibrationRepeatTimer;
 
-  void callVibrate(VibrationPreset preset) async {
-    Timer.periodic(1.seconds, (timer) {
-      if (!_isThisPatternPlaying) {
-        timer.cancel();
-        setState(() {
-          _isThisPatternPlaying = false;
-        });
-      }
-      Vibration.vibrate(preset: preset, duration: 1000);
-    });
-  }
-
   // 햅틱 패턴 재생 로직
   Future<void> _playHapticPattern() async {
     // 진동 활성화 여부 확인
@@ -75,7 +64,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
 
     // 새로운 진동 시작 전, 다른 모든 진동을 취소
     Vibration.cancel();
-    _vibrationRepeatTimer?.cancel(); // 기존 타이머ㅏ 있다면 취소
+    _vibrationRepeatTimer?.cancel(); // 기존 타이머가 있다면 취소
 
     widget.onVibrationStateChanged(widget.presetId);
 
@@ -86,9 +75,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
     _playPauseController.forward(); // 애니메이션을 pause 아이콘으로
 
     try {
-      _vibrationRepeatTimer = Timer.periodic(1.seconds, (timer) {
-        Vibration.vibrate(preset: widget.preset, duration: 1000);
-      });
+      _vibrationRepeatTimer = VibrateUtils.playRepeatVibration(widget.preset);
     } catch (e) {
       if (mounted) {
         _stopVibration();
@@ -98,8 +85,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   }
 
   void _stopVibration() {
-    Vibration.cancel();
-    _vibrationRepeatTimer?.cancel();
+    VibrateUtils.stopRepeatVibration(_vibrationRepeatTimer);
     setState(() {
       _isThisPatternPlaying = false;
     });
@@ -186,7 +172,7 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
           );
 
           return AnimatedContainer(
-            duration: 0.5.ms,
+            duration: 500.ms,
             curve: Curves.easeInOut,
             height: 60,
             padding: EdgeInsets.symmetric(horizontal: 20),
