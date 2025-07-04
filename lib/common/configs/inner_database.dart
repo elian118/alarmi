@@ -61,9 +61,12 @@ class InnerDatabase {
   static _onCreate(Database db, int version) async {
     await db.execute('''
   	CREATE TABLE alarms (
-    	id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    	id INTEGER PRIMARY KEY AUTOINCREMENT,
+    	type TEXT NOT NULL, 
     	alarmKeys TEXT NOT NULL,
-    	type TEXT NOT NULL,
+    	weekdays TEXT NOT NULL,
+    	bellId TEXT,
+    	vibrateId TEXT,
     	isWakeUpMission INTEGER DEFAULT 0 NOT NULL
     	alarmTime TEXT NOT NULL,
     	register TEXT NOT NULL, 

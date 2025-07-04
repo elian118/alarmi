@@ -5,3 +5,5 @@ String formatDate(String dateString, String format) {
   String formattedDateString = DateFormat(format).format(dateTime);
   return formattedDateString;
 }
+
+String dtFormStr(DateTime dt, String format) => DateFormat(format).format(dt);

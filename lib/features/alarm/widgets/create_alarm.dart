@@ -1,7 +1,10 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/weekdays.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
+import 'package:alarmi/utils/date_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -26,6 +29,8 @@ class _CreateAlarmState extends State<CreateAlarm> {
     0,
     0,
   );
+  String? _bellId;
+  String? _vibrateId;
   bool _isActivatedVirtualMission = false;
   bool _isActivatedVibrate = false;
   bool _isAllDay = false;
@@ -33,6 +38,18 @@ class _CreateAlarmState extends State<CreateAlarm> {
   void changeDate(DateTime newDateTime) {
     setState(() {
       _selectedDateTime = newDateTime;
+    });
+  }
+
+  void onChangeSelectedBellId(String? newId) {
+    setState(() {
+      _bellId = newId;
+    });
+  }
+
+  void onChangeSelectedVibrateId(String? newId) {
+    setState(() {
+      _vibrateId = newId;
     });
   }
 
@@ -49,7 +66,9 @@ class _CreateAlarmState extends State<CreateAlarm> {
   }
 
   void toggleIsAllDay(bool? value) {
-    print(value);
+    if (kDebugMode) {
+      print(value);
+    }
     setState(() {
       _isAllDay = value ?? !_isAllDay;
       _weekdays =
@@ -62,13 +81,35 @@ class _CreateAlarmState extends State<CreateAlarm> {
   void onWeekdaySelected(int idx, bool value) {
     setState(() {
       final List<Weekday> updatedWeekdays = List.from(_weekdays);
-
       updatedWeekdays[idx] = updatedWeekdays[idx].copyWith(isSelected: value);
 
       _weekdays = updatedWeekdays;
-
       _isAllDay = _weekdays.every((day) => day.isSelected);
     });
+  }
+
+  void _save() {
+    AlarmParams params = _setParams();
+    if (kDebugMode) {
+      print(params.toString());
+    }
+  }
+
+  AlarmParams _setParams() {
+    return AlarmParams(
+      alarmKeys: [],
+      weekdays:
+          _weekdays
+              .where((w) => w.isSelected == true)
+              .map((w) => w.id)
+              .toList(),
+      bellId: _bellId,
+      vibrateId: _vibrateId,
+      alarmTime: dtFormStr(_selectedDateTime, 'HH:mm:ss'),
+      register: 'me',
+      isWakeUpMission: _isActivatedVirtualMission ? 1 : 0,
+      type: 'my',
+    );
   }
 
   @override
@@ -90,12 +131,14 @@ class _CreateAlarmState extends State<CreateAlarm> {
               isAllDay: _isAllDay,
               toggleIsAllDay: toggleIsAllDay,
               onWeekdaySelected: onWeekdaySelected,
+              onChangeSelectedBellId: onChangeSelectedBellId,
+              onChangeSelectedVibrateId: onChangeSelectedVibrateId,
             ),
             Spacer(),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 4),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: _save,
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Theme.of(context).primaryColor,

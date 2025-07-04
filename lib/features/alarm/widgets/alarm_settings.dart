@@ -18,6 +18,8 @@ class AlarmSettings extends StatefulWidget {
   final bool isAllDay;
   final Function(bool? value) toggleIsAllDay;
   final Function(int idx, bool value) onWeekdaySelected;
+  final Function(String?) onChangeSelectedBellId;
+  final Function(String?) onChangeSelectedVibrateId;
 
   const AlarmSettings({
     super.key,
@@ -29,6 +31,8 @@ class AlarmSettings extends StatefulWidget {
     required this.isAllDay,
     required this.toggleIsAllDay,
     required this.onWeekdaySelected,
+    required this.onChangeSelectedBellId,
+    required this.onChangeSelectedVibrateId,
   });
 
   @override
@@ -45,12 +49,14 @@ class _AlarmSettingsState extends State<AlarmSettings> {
       _selectedBellId = bellId;
       _selectedBellVolume = volume;
     });
+    widget.onChangeSelectedBellId(bellId);
   }
 
   void onSaveVibrateSettings(String? patternId) {
     setState(() {
       _selectedVibrateId = patternId;
     });
+    widget.onChangeSelectedVibrateId(patternId);
   }
 
   void changeSelectedWeekday(index, value) {
