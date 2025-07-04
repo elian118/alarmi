@@ -19,7 +19,6 @@ class MyAlarms extends StatelessWidget {
                   (a) => Container(
                     margin: EdgeInsets.only(bottom: 10),
                     child: Alarm(
-                      maType: a['maType'],
                       time: a['time'],
                       repeatDays: a['repeatDays'],
                       isDisabled: a['isDisabled'],

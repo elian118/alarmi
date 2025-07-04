@@ -1,18 +1,17 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/common/widgets/cst_image_switch.dart';
+import 'package:alarmi/utils/date_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class Alarm extends StatefulWidget {
-  final String maType;
   final String time;
   final List<String> repeatDays;
   final bool isDisabled;
 
   const Alarm({
     super.key,
-    required this.maType,
     required this.time,
     required this.repeatDays,
     required this.isDisabled,
@@ -41,6 +40,8 @@ class _AlarmState extends State<Alarm> {
 
   @override
   Widget build(BuildContext context) {
+    String _formattedTime = formatTimeToAmPm(widget.time);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -50,7 +51,8 @@ class _AlarmState extends State<Alarm> {
             Row(
               children: [
                 Text(
-                  widget.maType,
+                  // widget.maType,
+                  _formattedTime.split(' ')[0],
                   style: TextStyle(
                     fontSize: Sizes.size16,
                     color: Colors.white,
@@ -59,7 +61,8 @@ class _AlarmState extends State<Alarm> {
                 ),
                 Gaps.h8,
                 Text(
-                  widget.time,
+                  // widget.time,
+                  _formattedTime.split(' ')[1],
                   style: TextStyle(
                     fontSize: Sizes.size24,
                     color: Colors.white,

@@ -102,9 +102,8 @@ class _AlarmTabsState extends State<AlarmTabs> with TickerProviderStateMixin {
                                   vertical: 20,
                                 ),
                                 child: Alarm(
-                                  maType: '오전',
                                   isDisabled: false,
-                                  time: alarm['alarmTime'].substring(0, 5),
+                                  time: alarm['alarmTime'],
                                   repeatDays: repeatDayNames,
                                 ),
                               );
