@@ -29,7 +29,7 @@ class CstRoundBtn extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? Colors.blue,
+        backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
         foregroundColor: foregroundColor ?? Colors.white,
       ),
       child: Container(
