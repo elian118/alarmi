@@ -64,6 +64,7 @@ class InnerDatabase {
     	id INTEGER PRIMARY KEY AUTOINCREMENT, 
     	alarmKeys TEXT NOT NULL,
     	type TEXT NOT NULL,
+    	isWakeUpMission INTEGER DEFAULT 0 NOT NULL
     	alarmTime TEXT NOT NULL,
     	register TEXT NOT NULL, 
       createdAt DATETIME,
