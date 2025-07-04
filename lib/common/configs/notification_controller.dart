@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:alarmi/common/consts/app_uuid.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
@@ -55,9 +54,6 @@ class NotificationController {
     );
   }
 
-  static ReceivePort? receivePort;
-
-  // 알림이 화면에 표시될 때 호출될 메서드 추가
   @pragma('vm:entry-point')
   static Future<void> onNotificationDisplayedMethod(
     ReceivedNotification receivedNotification,
@@ -68,34 +64,9 @@ class NotificationController {
       );
       print('Payload (Displayed): ${receivedNotification.payload}');
     }
-
-    if (receivedNotification.channelKey == 'my_alarm_channel' &&
-        receivedNotification.id != null) {
-      final String? soundAssetPath =
-          receivedNotification.payload?['soundAssetPath'];
-      final String? hapticPattern =
-          receivedNotification.payload?['hapticPattern'];
-
-      if (soundAssetPath != null) {
-        if (kDebugMode) {
-          print('알람 표시 시 playAlarmSound 호출 시도: $soundAssetPath');
-        }
-        await playAlarmSound(receivedNotification.id!, soundAssetPath);
-        if (kDebugMode) {
-          print('알람 표시 시 playAlarmSound 호출 완료');
-        }
-      }
-
-      if (hapticPattern != null) {
-        if (kDebugMode) {
-          print('알람 표시 시 playHaptic 호출 시도: $hapticPattern');
-        }
-        await playHaptic(receivedNotification.id!, hapticPattern);
-        if (kDebugMode) {
-          print('알람 표시 시 playHaptic 호출 완료');
-        }
-      }
-    }
+    // **주의:** 여기서 직접 알람 소리 재생 금지
+    // 여기서 작성한 소리 재생은 사용자에게 "표시"될 때 발생하며, 기기가 잠겨있을 때는 지연될 수 있다.
+    // 소리 재생은 onActionReceivedMethod 에서 처리
   }
 
   @pragma('vm:entry-point') // 백그라운드 실행을 위한 필수 어노테이션
@@ -106,6 +77,32 @@ class NotificationController {
     print(
       'onActionReceivedMethod 호출됨. ID: $alarmId, Channel: ${receivedAction.channelKey}, Button: ${receivedAction.buttonKeyPressed}',
     );
+
+    if (receivedAction.channelKey == 'my_alarm_channel' &&
+        receivedAction.id != null) {
+      final String? soundAssetPath = receivedAction.payload?['soundAssetPath'];
+      final String? hapticPattern = receivedAction.payload?['hapticPattern'];
+
+      if (soundAssetPath != null) {
+        if (kDebugMode) {
+          print('알람 표시 시 playAlarmSound 호출 시도: $soundAssetPath');
+        }
+        await playAlarmSound(receivedAction.id!, soundAssetPath);
+        if (kDebugMode) {
+          print('알람 표시 시 playAlarmSound 호출 완료');
+        }
+      }
+
+      if (hapticPattern != null) {
+        if (kDebugMode) {
+          print('알람 표시 시 playHaptic 호출 시도: $hapticPattern');
+        }
+        await playHaptic(receivedAction.id!, hapticPattern);
+        if (kDebugMode) {
+          print('알람 표시 시 playHaptic 호출 완료');
+        }
+      }
+    }
 
     // '알람 끄기' 버튼이 눌렸을 때
     if (receivedAction.channelKey == 'my_alarm_channel' &&
