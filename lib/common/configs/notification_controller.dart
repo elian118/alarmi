@@ -20,7 +20,7 @@ class NotificationController {
         channelDescription: '사용자 전용 주기적 기상 알람',
         defaultColor: const Color(0xFF9D50DD),
         ledColor: Colors.white,
-        playSound: true,
+        playSound: false,
         enableVibration: true,
         importance: NotificationImportance.Max, // 중요도 최대 설정
         channelShowBadge: true,
@@ -35,10 +35,11 @@ class NotificationController {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-    //
+
     // // 알림 액션 리스너 설정(알림 끄기 버튼 등)
-    AwesomeNotifications().setListeners(
+    await AwesomeNotifications().setListeners(
       onActionReceivedMethod: onActionReceivedMethod,
+      onNotificationDisplayedMethod: onNotificationDisplayedMethod,
     );
 
     initialAction = await AwesomeNotifications().getInitialNotificationAction(
@@ -48,10 +49,36 @@ class NotificationController {
 
   static ReceivePort? receivePort;
 
-  static Future<void> startListeningNotificationEvents() async {
-    AwesomeNotifications().setListeners(
-      onActionReceivedMethod: onActionReceivedMethod,
-    );
+  // 알림이 화면에 표시될 때 호출될 메서드 추가
+  @pragma('vm:entry-point')
+  static Future<void> onNotificationDisplayedMethod(
+    ReceivedNotification receivedNotification,
+  ) async {
+    if (kDebugMode) {
+      print(
+        'onNotificationDisplayedMethod 호출됨. ID: ${receivedNotification.id}',
+      );
+      print('Payload (Displayed): ${receivedNotification.payload}');
+    }
+
+    if (receivedNotification.channelKey == 'my_alarm_channel' &&
+        receivedNotification.id != null) {
+      final String? soundAssetPath =
+          receivedNotification.payload?['soundAssetPath'];
+      if (soundAssetPath != null) {
+        if (kDebugMode) {
+          print('알람 표시 시 playAlarmSound 호출 시도: $soundAssetPath');
+        }
+        await playAlarmSound(receivedNotification.id!, soundAssetPath);
+        if (kDebugMode) {
+          print('알람 표시 시 playAlarmSound 호출 완료');
+        }
+      } else {
+        if (kDebugMode) {
+          print('알람 표시 시 soundAssetPath가 payload에 없습니다.');
+        }
+      }
+    }
   }
 
   @pragma('vm:entry-point') // 백그라운드 실행을 위한 필수 어노테이션
@@ -59,26 +86,9 @@ class NotificationController {
     ReceivedAction receivedAction,
   ) async {
     int alarmId = receivedAction.id!;
-
-    // 알람이 울렸을 때 (content, schedule 유형 알림)
-    if (receivedAction.channelKey == 'my_alarm_channel' &&
-        receivedAction.id != null) {
-      if (kDebugMode) {
-        print('알람이 울렸습니다. ${receivedAction.id}');
-        print(
-          '재생 파일 (just_audio): ${receivedAction.payload?['soundAssetPath']}',
-        );
-      }
-
-      final String? soundAssetPath = receivedAction.payload?['soundAssetPath'];
-      if (soundAssetPath != null) {
-        await playAlarmSound(alarmId, soundAssetPath);
-      } else {
-        if (kDebugMode) {
-          print('soundAssetPath가 전달되지 않았습니다.');
-        }
-      }
-    }
+    print(
+      'onActionReceivedMethod 호출됨. ID: $alarmId, Channel: ${receivedAction.channelKey}, Button: ${receivedAction.buttonKeyPressed}',
+    );
 
     // '알람 끄기' 버튼이 눌렸을 때
     if (receivedAction.channelKey == 'my_alarm_channel' &&
@@ -94,9 +104,11 @@ class NotificationController {
   @pragma('vm:entry-point')
   static Future<void> playAlarmSound(int alarmId, String assetPath) async {
     try {
+      print('playAlarmSound 시작: $assetPath');
       await _audioPlayer.setAsset(assetPath);
       await _audioPlayer.setLoopMode(LoopMode.one); // 반복 재생 설정
       await _audioPlayer.play();
+      print('재생 시작');
 
       // 5분 후 자동 알람 중지
       Future.delayed((10 * 60).seconds, () async {
@@ -146,7 +158,8 @@ class NotificationController {
           wakeUpScreen: true,
           fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
           locked: true, // 알림 스와이프 방지
-          // customSound: soundAssetPath,
+          // customSound: 'resource://raw/$fileName',
+          customSound: null,
         ),
         actionButtons: [
           NotificationActionButton(

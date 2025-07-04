@@ -1,11 +1,11 @@
-import 'package:alarm/alarm.dart';
-import 'package:alarmi/common/configs/alarmSettings.dart';
-import 'package:alarmi/common/configs/awesomeNotificationConfig.dart';
-import 'package:alarmi/common/consts/gaps.dart';
-import 'package:alarmi/common/widgets/cst_divider.dart';
+import 'dart:math';
+
+import 'package:alarmi/common/configs/notification_controller.dart';
+import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/features/test/widgets/alarms_dialog.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AlarmTestScreen extends StatelessWidget {
@@ -15,43 +15,43 @@ class AlarmTestScreen extends StatelessWidget {
 
   const AlarmTestScreen({super.key});
 
-  void onTabAlarmSet(BuildContext context, int delay) async {
-    // 현재 시간 + 5초 후에 알람 설정
-    final now = DateTime.now();
-    final dateTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-      now.second + delay, // 5초 후
-    );
-
-    await Alarm.set(
-      alarmSettings: setAlarmSettings(
-        dateTime,
-        0.8,
-        'assets/audios/default/test.mp3',
-      ),
-    );
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('알람 설정됨: ${dateTime.toLocal()}')));
-  }
-
-  void onTabStopAlarm(BuildContext context) async {
-    await Alarm.stop(42); // ID로 알람 중지
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('알람 중지됨')));
-  }
-
-  void onTabGetAlarmCounts(BuildContext context) async {
-    final alarms = await Alarm.getAlarms();
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('현재 설정된 알람 수: ${alarms.length}')));
-  }
+  // void onTabAlarmSet(BuildContext context, int delay) async {
+  //   // 현재 시간 + 5초 후에 알람 설정
+  //   final now = DateTime.now();
+  //   final dateTime = DateTime(
+  //     now.year,
+  //     now.month,
+  //     now.day,
+  //     now.hour,
+  //     now.minute,
+  //     now.second + delay, // 5초 후
+  //   );
+  //
+  //   await Alarm.set(
+  //     alarmSettings: setAlarmSettings(
+  //       dateTime,
+  //       0.8,
+  //       'assets/audios/default/test.mp3',
+  //     ),
+  //   );
+  //   ScaffoldMessenger.of(
+  //     context,
+  //   ).showSnackBar(SnackBar(content: Text('알람 설정됨: ${dateTime.toLocal()}')));
+  // }
+  //
+  // void onTabStopAlarm(BuildContext context) async {
+  //   await Alarm.stop(42); // ID로 알람 중지
+  //   ScaffoldMessenger.of(
+  //     context,
+  //   ).showSnackBar(const SnackBar(content: Text('알람 중지됨')));
+  // }
+  //
+  // void onTabGetAlarmCounts(BuildContext context) async {
+  //   final alarms = await Alarm.getAlarms();
+  //   ScaffoldMessenger.of(
+  //     context,
+  //   ).showSnackBar(SnackBar(content: Text('현재 설정된 알람 수: ${alarms.length}')));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -61,27 +61,33 @@ class AlarmTestScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () => onTabAlarmSet(context, delay),
-              child: const Text('알람 설정 ($delay)'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => onTabStopAlarm(context),
-              child: const Text('알람 중지'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => onTabGetAlarmCounts(context),
-              child: const Text('설정된 알람 확인'),
-            ),
-            Gaps.v24,
-            CstDivider(width: 100, thickness: 10),
-            Gaps.v24,
+            // ElevatedButton(
+            //   onPressed: () => onTabAlarmSet(context, delay),
+            //   child: const Text('알람 설정 ($delay)'),
+            // ),
+            // const SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () => onTabStopAlarm(context),
+            //   child: const Text('알람 중지'),
+            // ),
+            // const SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () => onTabGetAlarmCounts(context),
+            //   child: const Text('설정된 알람 확인'),
+            // ),
+            // Gaps.v24,
+            // CstDivider(width: 100, thickness: 10),
+            // Gaps.v24,
             ElevatedButton(
               onPressed: () async {
+                Random random = Random();
+                int randomBellIdx = random.nextInt(bells.length);
+                if (kDebugMode) {
+                  print('soundFilePath: ${bells[randomBellIdx].path}');
+                }
+
                 await NotificationController.setTestWeeklyAlarm(
-                  soundAssetPath: 'assets/audios/energy/movement-200697.mp3',
+                  soundAssetPath: bells[randomBellIdx].path,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('주기적 테스트 알람이 설정되었습니다.')),

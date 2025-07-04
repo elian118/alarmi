@@ -1,10 +1,9 @@
-import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'common/configs/awesomeNotificationConfig.dart';
+import 'common/configs/notification_controller.dart';
 import 'common/routes/router.dart';
 
 void main() async {
@@ -19,7 +18,6 @@ void main() async {
   // final personalSettings = await SharedPreferences.getInstance();
   // final setRepository = ConfigRepository(personalSettings);
 
-  await Alarm.init(); // 알람 패키지 초기화
   await NotificationController.initAwesomeNotifications();
 
   runApp(ProviderScope(child: AlarmiApp()));
