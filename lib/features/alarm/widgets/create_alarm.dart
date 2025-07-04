@@ -4,11 +4,14 @@ import 'package:alarmi/common/consts/raw_data/weekdays.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
+import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/alarm/services/alarm_service.dart';
 import 'package:alarmi/utils/date_utils.dart';
+import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 import 'alarm_date_picker.dart';
 import 'alarm_settings.dart';
@@ -97,7 +100,16 @@ class _CreateAlarmState extends State<CreateAlarm> {
     if (kDebugMode) {
       print(params.toString());
     }
-    await alarmService.insertAlarm(params: params);
+    int? id = await alarmService.insertAlarm(params: params);
+
+    if (mounted) {
+      if (id != null) {
+        callSimpleToast('알람이 등록되었습니다.');
+        context.go(AlarmsScreen.routeURL);
+      } else {
+        callSimpleToast('알람 등록에 실패했습니다.');
+      }
+    }
   }
 
   Future<AlarmParams> _setParams() async {
