@@ -1,23 +1,61 @@
 PODS:
+  - audio_session (0.0.1):
+    - FlutterMacOS
+  - awesome_notifications (0.0.1):
+    - FlutterMacOS
+  - device_info_plus (0.0.1):
+    - FlutterMacOS
+  - flutter_localization (0.0.1):
+    - FlutterMacOS
   - FlutterMacOS (1.0.0)
+  - just_audio (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
 
 DEPENDENCIES:
+  - audio_session (from `Flutter/ephemeral/.symlinks/plugins/audio_session/macos`)
+  - awesome_notifications (from `Flutter/ephemeral/.symlinks/plugins/awesome_notifications/macos`)
+  - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
+  - flutter_localization (from `Flutter/ephemeral/.symlinks/plugins/flutter_localization/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
+  - just_audio (from `Flutter/ephemeral/.symlinks/plugins/just_audio/darwin`)
+  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 EXTERNAL SOURCES:
+  audio_session:
+    :path: Flutter/ephemeral/.symlinks/plugins/audio_session/macos
+  awesome_notifications:
+    :path: Flutter/ephemeral/.symlinks/plugins/awesome_notifications/macos
+  device_info_plus:
+    :path: Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos
+  flutter_localization:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_localization/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
+  just_audio:
+    :path: Flutter/ephemeral/.symlinks/plugins/just_audio/darwin
+  path_provider_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
   shared_preferences_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
 
 SPEC CHECKSUMS:
-  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+  audio_session: eaca2512cf2b39212d724f35d11f46180ad3a33e
+  awesome_notifications: 7818a3dbad4836238a68df439c06981d9f0b276c
+  device_info_plus: 4fb280989f669696856f8b129e4a5e3cd6c48f76
+  flutter_localization: 3cda759884c7dab4466fe963d97fba723a492666
+  FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+  just_audio: 4e391f57b79cad2b0674030a00453ca5ce817eed
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
 
-PODFILE CHECKSUM: 7eb978b976557c8c1cd717d8185ec483fd090a82
+PODFILE CHECKSUM: 54d867c82ac51cbd61b565781b9fada492027009
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

@@ -1,3 +1,4 @@
+import 'package:alarmi/common/configs/inner_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,7 +19,8 @@ void main() async {
   // final personalSettings = await SharedPreferences.getInstance();
   // final setRepository = ConfigRepository(personalSettings);
 
-  await NotificationController.initAwesomeNotifications();
+  await InnerDatabase.initialize(); // 내부 DB 초기화
+  await NotificationController.initAwesomeNotifications(); // 알람 제어자 초기화
 
   runApp(ProviderScope(child: AlarmiApp()));
 }

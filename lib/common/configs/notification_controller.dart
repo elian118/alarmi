@@ -25,8 +25,8 @@ class NotificationController {
         channelDescription: '사용자 전용 주기적 기상 알람',
         defaultColor: const Color(0xFF9D50DD),
         ledColor: Colors.white,
-        playSound: false,
-        enableVibration: true,
+        playSound: false, // 기본 벨소리 재생 차단
+        enableVibration: false, // 기본 진동 패턴 재생 차단
         importance: NotificationImportance.Max, // 중요도 최대 설정
         channelShowBadge: true,
         locked: true, // 알림을 스와이프 제거 방지(잠금)
