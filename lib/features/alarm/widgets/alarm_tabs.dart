@@ -86,11 +86,27 @@ class _AlarmTabsState extends State<AlarmTabs> with TickerProviderStateMixin {
                                         ''; // 찾지 못하면 빈 문자열 반환
                                   }).toList();
 
-                              return Alarm(
-                                maType: '오전',
-                                isDisabled: false,
-                                time: alarm['alarmTime'].substring(0, 5),
-                                repeatDays: repeatDayNames,
+                              return Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.2,
+                                      ),
+                                      width: 0.6,
+                                    ),
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 30,
+                                  vertical: 20,
+                                ),
+                                child: Alarm(
+                                  maType: '오전',
+                                  isDisabled: false,
+                                  time: alarm['alarmTime'].substring(0, 5),
+                                  repeatDays: repeatDayNames,
+                                ),
                               );
                             }).toList(),
                       ),

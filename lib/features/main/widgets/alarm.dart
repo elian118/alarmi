@@ -48,9 +48,23 @@ class _AlarmState extends State<Alarm> {
           children: [
             Row(
               children: [
-                Text(widget.maType, style: TextStyle(fontSize: Sizes.size18)),
+                Text(
+                  widget.maType,
+                  style: TextStyle(
+                    fontSize: Sizes.size16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
                 Gaps.h8,
-                Text(widget.time, style: TextStyle(fontSize: Sizes.size32)),
+                Text(
+                  widget.time,
+                  style: TextStyle(
+                    fontSize: Sizes.size24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
             Row(
@@ -58,7 +72,11 @@ class _AlarmState extends State<Alarm> {
                 ...widget.repeatDays.mapIndexed(
                   (idx, r) => Text(
                     '$r${idx == widget.repeatDays.length - 1 ? '' : ', '}',
-                    style: TextStyle(fontSize: Sizes.size14),
+                    style: TextStyle(
+                      fontSize: Sizes.size12,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
