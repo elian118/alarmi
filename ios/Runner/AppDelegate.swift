@@ -1,4 +1,5 @@
 import Flutter
+import awesome_notifications
 import UIKit
 import UserNotifications
 
@@ -13,6 +14,12 @@ import UserNotifications
     }
 
     GeneratedPluginRegistrant.register(with: self)
+
+    SwiftAwesomeNotificationsPlugin.setPluginRegistrantCallback { registry in
+      SwiftAwesomeNotificationsPlugin.register(
+          with: registry.registrar(forPlugin: "io.flutter.plugins.awesomenotifications.AwesomeNotificationsPlugin")!)
+    }
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

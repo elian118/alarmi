@@ -102,7 +102,7 @@ class AlarmTestScreen extends StatelessWidget {
                 await NotificationController.stopAlarmSound(); // 혹시 재생 중인 사운드가 있다면 중지
                 callSimpleToast('모든 알람이 취소되었습니다.');
               },
-              child: const Text('모든 알람 취소'),
+              child: const Text('모든 알람 삭제'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(

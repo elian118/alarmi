@@ -104,11 +104,15 @@ class NotificationController {
   @pragma('vm:entry-point')
   static Future<void> playAlarmSound(int alarmId, String assetPath) async {
     try {
-      print('playAlarmSound 시작: $assetPath');
+      if (kDebugMode) {
+        print('playAlarmSound 시작: $assetPath');
+      }
       await _audioPlayer.setAsset(assetPath);
       await _audioPlayer.setLoopMode(LoopMode.one); // 반복 재생 설정
       await _audioPlayer.play();
-      print('재생 시작');
+      if (kDebugMode) {
+        print('재생 시작');
+      }
 
       // 5분 후 자동 알람 중지
       Future.delayed((10 * 60).seconds, () async {
@@ -158,7 +162,7 @@ class NotificationController {
           wakeUpScreen: true,
           fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
           locked: true, // 알림 스와이프 방지
-          // customSound: 'resource://raw/$fileName',
+          // customSound: 'resource://raw/$fileName', // 불필요
           customSound: null,
         ),
         actionButtons: [
@@ -166,6 +170,7 @@ class NotificationController {
             key: 'stop_alarm',
             label: '알림 끄기',
             autoDismissible: true, // 버튼 클릭 시 알림 자동 닫힘
+            actionType: ActionType.Default,
           ),
         ],
         schedule: NotificationCalendar(

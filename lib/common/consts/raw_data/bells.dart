@@ -112,7 +112,7 @@ List<Bell> bells = [
     id: '17',
     category: 'nature',
     name: 'Mountain path',
-    path: 'assets/audios/nature/mountain_path_125573.mp3',
+    path: 'assets/audios/nature/mountain_path.mp3',
   ),
   Bell(
     id: '18',
