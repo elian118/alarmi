@@ -1,6 +1,4 @@
 PODS:
-  - alarm (0.0.1):
-    - Flutter
   - audio_session (0.0.1):
     - Flutter
   - awesome_notifications (0.10.0):
@@ -9,8 +7,6 @@ PODS:
   - device_info_plus (0.0.1):
     - Flutter
   - Flutter (1.0.0)
-  - flutter_fgbg (0.0.1):
-    - Flutter
   - flutter_localization (0.0.1):
     - Flutter
   - fluttertoast (0.0.2):
@@ -31,12 +27,10 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - alarm (from `.symlinks/plugins/alarm/ios`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Flutter (from `Flutter`)
-  - flutter_fgbg (from `.symlinks/plugins/flutter_fgbg/ios`)
   - flutter_localization (from `.symlinks/plugins/flutter_localization/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/darwin`)
@@ -50,8 +44,6 @@ SPEC REPOS:
     - IosAwnCore
 
 EXTERNAL SOURCES:
-  alarm:
-    :path: ".symlinks/plugins/alarm/ios"
   audio_session:
     :path: ".symlinks/plugins/audio_session/ios"
   awesome_notifications:
@@ -60,8 +52,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/device_info_plus/ios"
   Flutter:
     :path: Flutter
-  flutter_fgbg:
-    :path: ".symlinks/plugins/flutter_fgbg/ios"
   flutter_localization:
     :path: ".symlinks/plugins/flutter_localization/ios"
   fluttertoast:
@@ -78,12 +68,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/vibration/ios"
 
 SPEC CHECKSUMS:
-  alarm: 9ff6d2dae9bd69c4022622f7e0a1e9c1dd70064e
   audio_session: 9bb7f6c970f21241b19f5a3658097ae459681ba0
   awesome_notifications: 0f432b28098d193920b11a44cfa9d2d9313a3888
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_fgbg: d3da78df78454b1808f0829a5da9cd17dfe16444
   flutter_localization: 72299fb6cb4e51cae587bd953ed0b958040b71e6
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
   IosAwnCore: 653786a911089012092ce831f2945cd339855a89
@@ -93,6 +81,6 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   vibration: 69774ad57825b11c951ee4c46155f455d7a592ce
 
-PODFILE CHECKSUM: 1c66703849db6d462540a3fab499decbb8f65a9f
+PODFILE CHECKSUM: 229c96d88080ebff8466b8b5abc6722f4f093651
 
 COCOAPODS: 1.16.2
