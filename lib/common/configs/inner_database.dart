@@ -67,7 +67,7 @@ class InnerDatabase {
     	weekdays TEXT NOT NULL,
     	bellId TEXT,
     	vibrateId TEXT,
-    	isWakeUpMission INTEGER DEFAULT 0 NOT NULL
+    	isWakeUpMission INTEGER DEFAULT 0 NOT NULL,
     	alarmTime TEXT NOT NULL,
     	register TEXT NOT NULL, 
       createdAt DATETIME,

@@ -51,12 +51,12 @@ class AlarmTestScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                await AwesomeNotifications().cancelAll(); // 모든 알림 취소
+                // await AwesomeNotifications().cancelAll(); // 모든 알림 취소
                 await NotificationController.stopAlarmSound(); // 혹시 재생 중인 사운드가 있다면 중지
                 await NotificationController.stopHaptic(); // 혹시 재생 중인 진동이 있다면 중지
                 callSimpleToast('모든 알람이 취소되었습니다.');
               },
-              child: const Text('모든 알람 삭제'),
+              child: const Text('재생 중지'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(

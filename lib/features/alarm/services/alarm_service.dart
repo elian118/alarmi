@@ -3,9 +3,16 @@ import 'package:alarmi/features/alarm/repos/alarm_repository.dart';
 import 'package:flutter/foundation.dart';
 
 class AlarmService {
+  static final AlarmService _instance = AlarmService._internal();
   final AlarmRepository alarmRepository = AlarmRepository();
 
-  Future<int> insertAlarmData({required AlarmParams params}) async {
+  factory AlarmService() {
+    return _instance;
+  }
+
+  AlarmService._internal();
+
+  Future<int> insertAlarm({required AlarmParams params}) async {
     final now = DateTime.now();
 
     final Map<String, dynamic> newAlarm = {
@@ -26,5 +33,9 @@ class AlarmService {
       }
       rethrow;
     }
+  }
+
+  Future<List<Map<String, dynamic>>> getAlarms() async {
+    return await alarmRepository.getAlarms();
   }
 }

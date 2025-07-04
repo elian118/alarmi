@@ -65,7 +65,7 @@ class _AlarmState extends State<Alarm> {
             ),
           ],
         ),
-        Switch(value: _isDisabled, onChanged: (value) => onChanged(value)),
+        Switch(value: !_isDisabled, onChanged: (value) => onChanged(value)),
       ],
     );
   }

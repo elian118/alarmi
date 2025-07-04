@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:alarmi/common/consts/app_uuid.dart';
+import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
+import 'package:alarmi/features/alarm/models/bell.dart';
 import 'package:alarmi/utils/vibrate_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
@@ -175,9 +178,9 @@ class NotificationController {
     DateTime testDateTime = DateTime.now().add(5.seconds); // 5초 뒤 시간
 
     // 기존 알람 있다면 모두 취소해 중복 방지 - 테스트 전용
-    await AwesomeNotifications().cancelSchedulesByChannelKey(
-      'my_alarm_channel',
-    );
+    // await AwesomeNotifications().cancelSchedulesByChannelKey(
+    //   'my_alarm_channel',
+    // );
 
     // 월~금까지 각각 알림 설정
     for (int i = DateTime.monday; i <= DateTime.friday; i++) {
@@ -222,24 +225,28 @@ class NotificationController {
     }
   }
 
-  static Future<void> setWeeklyAlarm({
+  static Future<List<int>> setWeeklyAlarm({
     required List<int> weekdays,
     required DateTime dateTime,
-    required String soundAssetPath,
-    required String hapticPattern,
+    required String? bellId,
+    required String? vibrateId,
   }) async {
+    List<int> alarmKeys = [];
+    Bell? bell = bells.where((bell) => bell.id == bellId).first;
+
     // 반복 주간
     for (int week in weekdays) {
+      int uId = appUuid.v4().hashCode.abs();
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
-          id: week,
+          id: uId,
           channelKey: 'my_alarm_channel',
           title: '기상 시간입니다!',
           body: '상쾌한 아침을 시작하세요.',
           payload: {
             'day': week.toString(),
-            'soundAssetPath': soundAssetPath,
-            'hapticPattern': hapticPattern,
+            'soundAssetPath': bell.path,
+            'hapticPattern': vibrateId,
           },
           category: NotificationCategory.Alarm,
           notificationLayout: NotificationLayout.BigPicture,
@@ -267,6 +274,9 @@ class NotificationController {
           allowWhileIdle: true, // 기기 유휴 상태여도 알림 허용
         ),
       );
+      alarmKeys.add(uId);
     }
+
+    return alarmKeys;
   }
 }

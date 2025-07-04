@@ -1,8 +1,10 @@
+import 'package:alarmi/common/configs/notification_controller.dart';
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/weekdays.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
+import 'package:alarmi/features/alarm/services/alarm_service.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -88,21 +90,31 @@ class _CreateAlarmState extends State<CreateAlarm> {
     });
   }
 
-  void _save() {
-    AlarmParams params = _setParams();
+  void _save() async {
+    final AlarmService alarmService = AlarmService();
+
+    AlarmParams params = await _setParams();
     if (kDebugMode) {
       print(params.toString());
     }
+    await alarmService.insertAlarm(params: params);
   }
 
-  AlarmParams _setParams() {
+  Future<AlarmParams> _setParams() async {
+    List<int> _alarmKeys = [];
+    List<int> _selectedWeekdays =
+        _weekdays.where((w) => w.isSelected == true).map((w) => w.id).toList();
+
+    _alarmKeys = await NotificationController.setWeeklyAlarm(
+      weekdays: _selectedWeekdays,
+      dateTime: _selectedDateTime,
+      bellId: _bellId,
+      vibrateId: _vibrateId,
+    );
+
     return AlarmParams(
-      alarmKeys: [],
-      weekdays:
-          _weekdays
-              .where((w) => w.isSelected == true)
-              .map((w) => w.id)
-              .toList(),
+      alarmKeys: _alarmKeys,
+      weekdays: _selectedWeekdays,
       bellId: _bellId,
       vibrateId: _vibrateId,
       alarmTime: dtFormStr(_selectedDateTime, 'HH:mm:ss'),
