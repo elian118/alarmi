@@ -1,5 +1,5 @@
 import 'package:alarmi/common/consts/sizes.dart';
-import 'package:alarmi/common/widgets/cst_switch.dart';
+import 'package:alarmi/common/widgets/cst_image_switch.dart';
 import 'package:alarmi/features/alarm/widgets/vibrates.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +78,7 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              CustomImageSwitch(
+              CstImageSwitch(
                 value: _isDialogActivatedVibrate,
                 onChanged: _onSwitchChanged,
                 thumbIconPath: 'assets/images/icons/cat_icon.svg',

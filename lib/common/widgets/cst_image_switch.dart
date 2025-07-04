@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CustomImageSwitch extends StatefulWidget {
+class CstImageSwitch extends StatefulWidget {
   final bool value;
   final void Function(bool) onChanged;
   final Color? activeColor;
@@ -10,7 +10,7 @@ class CustomImageSwitch extends StatefulWidget {
   final String thumbIconPath;
   final Color? thumbIconColor; // 아이콘 색상 추가 (옵션)
 
-  const CustomImageSwitch({
+  const CstImageSwitch({
     super.key,
     required this.value,
     required this.onChanged,
@@ -22,10 +22,10 @@ class CustomImageSwitch extends StatefulWidget {
   });
 
   @override
-  State<CustomImageSwitch> createState() => _CustomImageSwitchState();
+  State<CstImageSwitch> createState() => _CstImageSwitchState();
 }
 
-class _CustomImageSwitchState extends State<CustomImageSwitch> {
+class _CstImageSwitchState extends State<CstImageSwitch> {
   final UniqueKey _animatedContainerKey = UniqueKey();
   final UniqueKey _animatedAlignKey = UniqueKey();
 

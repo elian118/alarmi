@@ -1,5 +1,6 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/widgets/cst_image_switch.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -83,7 +84,11 @@ class _AlarmState extends State<Alarm> {
             ),
           ],
         ),
-        Switch(value: !_isDisabled, onChanged: (value) => onChanged(value)),
+        CstImageSwitch(
+          value: !_isDisabled,
+          onChanged: (value) => onChanged(!value),
+          thumbIconPath: 'assets/images/icons/cat_icon.svg',
+        ),
       ],
     );
   }
