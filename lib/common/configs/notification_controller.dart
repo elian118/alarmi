@@ -119,6 +119,8 @@ class NotificationController {
   @pragma('vm:entry-point')
   static Future<void> playAlarmSound(int alarmId, String assetPath) async {
     try {
+      int maxMinutes = 15;
+
       if (kDebugMode) {
         print('playAlarmSound 시작: $assetPath');
       }
@@ -129,13 +131,13 @@ class NotificationController {
         print('재생 시작');
       }
 
-      // 5분 후 자동 알람 중지
-      Future.delayed((10 * 60).seconds, () async {
+      // 15분 후 자동 알람 중지
+      Future.delayed(maxMinutes.minutes, () async {
         if (_audioPlayer.playing) {
           await stopAlarmSound();
           await stopHaptic();
           if (kDebugMode) {
-            print('5분 경과, 알람 자동 중지');
+            print('$maxMinutes분 경과, 알람 자동 중지');
           }
           await AwesomeNotifications().dismiss(alarmId);
         }
@@ -172,7 +174,7 @@ class NotificationController {
   }) async {
     DateTime testDateTime = DateTime.now().add(5.seconds); // 5초 뒤 시간
 
-    // 기존 알람 있다면 모두 취소해 중복 방지
+    // 기존 알람 있다면 모두 취소해 중복 방지 - 테스트 전용
     await AwesomeNotifications().cancelSchedulesByChannelKey(
       'my_alarm_channel',
     );
@@ -191,6 +193,8 @@ class NotificationController {
             'hapticPattern': hapticPattern,
           },
           category: NotificationCategory.Alarm,
+          notificationLayout: NotificationLayout.BigPicture,
+          bigPicture: 'asset://assets/images/backgrounds/alarm_big.png',
           wakeUpScreen: true,
           fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
           locked: true, // 알림 스와이프 방지
@@ -211,6 +215,54 @@ class NotificationController {
           minute: testDateTime.minute,
           second: testDateTime.second,
           millisecond: testDateTime.millisecond,
+          repeats: true, // 매주 반복
+          allowWhileIdle: true, // 기기 유휴 상태여도 알림 허용
+        ),
+      );
+    }
+  }
+
+  static Future<void> setWeeklyAlarm({
+    required List<int> weekdays,
+    required DateTime dateTime,
+    required String soundAssetPath,
+    required String hapticPattern,
+  }) async {
+    // 반복 주간
+    for (int week in weekdays) {
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: week,
+          channelKey: 'my_alarm_channel',
+          title: '기상 시간입니다!',
+          body: '상쾌한 아침을 시작하세요.',
+          payload: {
+            'day': week.toString(),
+            'soundAssetPath': soundAssetPath,
+            'hapticPattern': hapticPattern,
+          },
+          category: NotificationCategory.Alarm,
+          notificationLayout: NotificationLayout.BigPicture,
+          bigPicture: 'asset://assets/images/backgrounds/alarm_big.png',
+          wakeUpScreen: true,
+          fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
+          locked: true, // 알림 스와이프 방지
+          customSound: null,
+        ),
+        actionButtons: [
+          NotificationActionButton(
+            key: 'stop_alarm',
+            label: '알림 끄기',
+            autoDismissible: true, // 버튼 클릭 시 알림 자동 닫힘
+            actionType: ActionType.Default,
+          ),
+        ],
+        schedule: NotificationCalendar(
+          weekday: week,
+          hour: dateTime.hour,
+          minute: dateTime.minute,
+          second: dateTime.second,
+          millisecond: dateTime.millisecond,
           repeats: true, // 매주 반복
           allowWhileIdle: true, // 기기 유휴 상태여도 알림 허용
         ),
