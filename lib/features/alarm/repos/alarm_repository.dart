@@ -20,6 +20,16 @@ class AlarmRepository {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getAlarmsByAlarmKeyContains(
+    String searchKey,
+  ) async {
+    return await db.query(
+      alarms,
+      where: 'alarmKeys LIKE ?',
+      whereArgs: ['%$searchKey%'],
+    );
+  }
+
   Future<int> insertAlarm(Map<String, dynamic> alarm) async {
     final id = await db.insert(
       'alarms',
