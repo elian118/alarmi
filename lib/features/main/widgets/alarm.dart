@@ -1,46 +1,52 @@
 import 'package:alarmi/common/consts/gaps.dart';
+import 'package:alarmi/common/consts/raw_data/weekdays.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/common/widgets/cst_image_switch.dart';
+import 'package:alarmi/features/alarm/models/alarm_params.dart';
+import 'package:alarmi/features/alarm/models/weekday.dart';
+import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/utils/date_utils.dart';
+import 'package:alarmi/utils/toast_utils.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Alarm extends StatefulWidget {
-  final String time;
-  final List<String> repeatDays;
-  final bool isDisabled;
+class Alarm extends ConsumerWidget {
+  final int alarmId;
+  final AlarmParams params;
 
-  const Alarm({
-    super.key,
-    required this.time,
-    required this.repeatDays,
-    required this.isDisabled,
-  });
+  const Alarm({super.key, required this.alarmId, required this.params});
 
   @override
-  State<Alarm> createState() => _AlarmState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    String formattedTime = formatTimeToAmPm(params.alarmTime);
 
-class _AlarmState extends State<Alarm> {
-  bool _isDisabled = false;
+    final List<String> repeatDayNames =
+        params.weekdays.map((wId) {
+          final Weekday? weekday = weekdays.firstWhereOrNull(
+            (wd) => wd.id == wId,
+          );
+          return weekday?.name ?? '';
+        }).toList();
 
-  void onChanged(value) {
-    setState(() {
-      _isDisabled = value;
-    });
-  }
+    void onChanged(bool newValue) async {
+      final alarmNotifier = ref.read(alarmListProvider(params.type).notifier);
 
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      _isDisabled = widget.isDisabled;
-    });
-  }
+      final Map<String, dynamic> updatedAlarmMap = params.toJson();
+      updatedAlarmMap['isDisabled'] = newValue ? 1 : 0;
+      updatedAlarmMap['id'] = alarmId;
 
-  @override
-  Widget build(BuildContext context) {
-    String _formattedTime = formatTimeToAmPm(widget.time);
+      try {
+        await alarmNotifier.updateAlarm(updatedAlarmMap, params.type);
+        callSimpleToast(newValue ? '알람이 비활성화되었습니다.' : '알람이 활성화되었습니다.');
+      } catch (e) {
+        if (kDebugMode) {
+          print('알람 상태 업데이트 실패: $e');
+        }
+        callSimpleToast('알람 상태 변경에 실패했습니다.');
+      }
+    }
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,8 +57,7 @@ class _AlarmState extends State<Alarm> {
             Row(
               children: [
                 Text(
-                  // widget.maType,
-                  _formattedTime.split(' ')[0],
+                  formattedTime.split(' ')[0],
                   style: TextStyle(
                     fontSize: Sizes.size16,
                     color: Colors.white,
@@ -62,7 +67,7 @@ class _AlarmState extends State<Alarm> {
                 Gaps.h8,
                 Text(
                   // widget.time,
-                  _formattedTime.split(' ')[1],
+                  formattedTime.split(' ')[1],
                   style: TextStyle(
                     fontSize: Sizes.size24,
                     color: Colors.white,
@@ -73,9 +78,9 @@ class _AlarmState extends State<Alarm> {
             ),
             Row(
               children: [
-                ...widget.repeatDays.mapIndexed(
+                ...repeatDayNames.mapIndexed(
                   (idx, r) => Text(
-                    '$r${idx == widget.repeatDays.length - 1 ? '' : ', '}',
+                    '$r${idx == params.weekdays.length - 1 ? '' : ', '}',
                     style: TextStyle(
                       fontSize: Sizes.size12,
                       color: Colors.white,
@@ -88,7 +93,7 @@ class _AlarmState extends State<Alarm> {
           ],
         ),
         CstImageSwitch(
-          value: !_isDisabled,
+          value: params.isDisabled == 0,
           onChanged: (value) => onChanged(!value),
           thumbIconPath: 'assets/images/icons/cat_icon.svg',
         ),

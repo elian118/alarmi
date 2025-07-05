@@ -1,4 +1,5 @@
 import 'package:alarmi/common/consts/raw_data/my_alarms.dart';
+import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/main/widgets/alarm.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,8 @@ class MyAlarms extends StatelessWidget {
                   (a) => Container(
                     margin: EdgeInsets.only(bottom: 10),
                     child: Alarm(
-                      time: a['time'],
-                      repeatDays: a['repeatDays'],
-                      isDisabled: a['isDisabled'],
+                      alarmId: a['id'],
+                      params: AlarmParams.fromJson(a),
                     ),
                   ),
                 )

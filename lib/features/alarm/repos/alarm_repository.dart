@@ -1,16 +1,16 @@
 import 'package:alarmi/common/configs/inner_database.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 
+final alarmRepositoryProvider = Provider<AlarmRepository>((ref) {
+  return AlarmRepository(); // Riverpod이 AlarmRepository 인스턴스를 관리합니다.
+});
+
 class AlarmRepository {
-  static final AlarmRepository _instance = AlarmRepository._internal();
   final Database db = InnerDatabase.instance;
   final String alarms = 'alarms';
 
-  static AlarmRepository getInstance() {
-    return _instance;
-  }
-
-  AlarmRepository._internal();
+  AlarmRepository();
 
   Future<List<Map<String, dynamic>>> getAlarms({String? type}) async {
     if (type != null) {

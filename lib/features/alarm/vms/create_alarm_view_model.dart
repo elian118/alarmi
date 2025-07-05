@@ -3,7 +3,7 @@ import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/create_alarm_state.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
-import 'package:alarmi/features/alarm/services/alarm_service.dart';
+import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -74,7 +74,9 @@ class CreateAlarmViewModel extends Notifier<CreateAlarmState> {
   }
 
   Future<void> saveAlarm(BuildContext context) async {
-    final AlarmService alarmService = AlarmService.getInstance();
+    final AlarmListNotifier alarmNotifier = ref.read(
+      alarmListProvider('my').notifier,
+    );
 
     List<int> alarmKeys = [];
     List<int> selectedWeekdayIds =
@@ -106,7 +108,7 @@ class CreateAlarmViewModel extends Notifier<CreateAlarmState> {
         print(params.toString());
       }
 
-      int? id = await alarmService.insertAlarm(params: params);
+      int? id = await alarmNotifier.insertAlarm(params: params);
 
       if (id != null) {
         callSimpleToast('알람이 등록되었습니다.');

@@ -5,25 +5,26 @@ import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
-import 'package:alarmi/features/alarm/services/alarm_service.dart';
+import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'alarm_date_picker.dart';
 import 'alarm_settings.dart';
 
-class CreateAlarm extends StatefulWidget {
+class CreateAlarm extends ConsumerStatefulWidget {
   const CreateAlarm({super.key});
 
   @override
-  State<CreateAlarm> createState() => _CreateAlarmState();
+  ConsumerState<CreateAlarm> createState() => _CreateAlarmState();
 }
 
-class _CreateAlarmState extends State<CreateAlarm> {
+class _CreateAlarmState extends ConsumerState<CreateAlarm> {
   List<Weekday> _weekdays = weekdays;
   DateTime now = DateTime.now();
   late DateTime _selectedDateTime = DateTime(
@@ -94,13 +95,15 @@ class _CreateAlarmState extends State<CreateAlarm> {
   }
 
   void _save() async {
-    final AlarmService alarmService = AlarmService.getInstance();
+    final AlarmListNotifier alarmNotifier = ref.read(
+      alarmListProvider('my').notifier,
+    );
 
     AlarmParams params = await _setParams();
     if (kDebugMode) {
       print(params.toString());
     }
-    int? id = await alarmService.insertAlarm(params: params);
+    int? id = await alarmNotifier.insertAlarm(params: params);
 
     if (mounted) {
       if (id != null) {
