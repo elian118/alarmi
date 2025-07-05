@@ -1,26 +1,28 @@
 import 'package:alarmi/common/widgets/cst_text_btn.dart';
 import 'package:alarmi/features/main/screens/notifications_screen.dart';
+import 'package:alarmi/features/main/vms/header_view_model.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MainHeaderMenus extends StatelessWidget {
-  final bool isFold;
+class MainHeaderMenus extends ConsumerWidget {
   final double foldedHeaderWidth;
   final double unfoldedHeaderWidth;
-  final Function()? toggleFold;
 
   const MainHeaderMenus({
     super.key,
-    required this.isFold,
     required this.foldedHeaderWidth,
     required this.unfoldedHeaderWidth,
-    this.toggleFold,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bool isFold = ref.watch(headerStateProvider);
+    final VoidCallback toggleFold =
+        ref.read(headerStateProvider.notifier).toggleFold;
+
     return ClipRRect(
       child: AnimatedContainer(
         duration: Duration(milliseconds: 500),

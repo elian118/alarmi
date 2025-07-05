@@ -5,52 +5,39 @@ import 'package:alarmi/features/main/widgets/main_header_menus.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class MyHeader extends StatefulWidget {
+class MyHeader extends ConsumerWidget {
   const MyHeader({super.key});
 
   @override
-  State<MyHeader> createState() => _MyHeaderState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    double foldedHeaderWidth = 90.0;
+    double unfoldedHeaderWidth = 260.0;
 
-class _MyHeaderState extends State<MyHeader> {
-  bool _isFold = true;
-  double _foldedHeaderWidth = 90.0;
-  double _unfoldedHeaderWidth = 260.0;
+    String currentPath = getCurrentPath(context);
 
-  void toggleFold() {
-    setState(() {
-      _isFold = !_isFold;
-    });
-  }
+    late Widget? headerMenusWidget;
 
-  Widget? getMatchedHeaderMenus(String currentPath) {
     switch (currentPath) {
       case AlarmsScreen.routeURL:
-        return AlarmsHeaderMenus();
+        headerMenusWidget = AlarmsHeaderMenus();
+        break;
       case MainNavigationScreen.routeURL:
-        return MainHeaderMenus(
-          isFold: _isFold,
-          foldedHeaderWidth: _foldedHeaderWidth,
-          unfoldedHeaderWidth: _unfoldedHeaderWidth,
-          toggleFold: toggleFold,
+        headerMenusWidget = MainHeaderMenus(
+          foldedHeaderWidth: foldedHeaderWidth,
+          unfoldedHeaderWidth: unfoldedHeaderWidth,
         );
-
+        break;
       default:
-        Container();
+        break;
     }
-    return null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    String currentPath = getCurrentPath(context);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        getMatchedHeaderMenus(currentPath) ?? Container(),
+        headerMenusWidget ?? Container(),
         GestureDetector(
           onTap: () => context.push('/alarm-test'),
           child: Image.asset(
