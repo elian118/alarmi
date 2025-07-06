@@ -10,7 +10,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration_presets.dart';
 
@@ -72,7 +72,6 @@ class NotificationController {
   static Future<void> onNotificationDisplayedMethod(
     ReceivedNotification receivedNotification,
   ) async {
-    final container = ProviderContainer(); // ProviderContainer 생성
     int alarmId = receivedNotification.id!;
 
     if (kDebugMode) {
@@ -82,66 +81,64 @@ class NotificationController {
       print('Payload (Displayed): ${receivedNotification.payload}');
     }
     // todo OS 알림 트리거 사용 시 아래 재생 로직 제거하기
-    try {
-      if (receivedNotification.channelKey == 'my_alarm_channel' &&
-          receivedNotification.id != null) {
-        final String? soundAssetPath =
-            receivedNotification.payload?['soundAssetPath'];
-        final String? hapticPattern =
-            receivedNotification.payload?['hapticPattern'];
-        final String? alarmKey = receivedNotification.payload?['alarmKey'];
+    if (receivedNotification.channelKey == 'my_alarm_channel' &&
+        receivedNotification.id != null) {
+      final String? soundAssetPath =
+          receivedNotification.payload?['soundAssetPath'];
+      final String? hapticPattern =
+          receivedNotification.payload?['hapticPattern'];
+      final String? currentVolume =
+          receivedNotification.payload?['currentVolume'];
 
-        if (alarmKey != null) {
-          int? parsedAlarmKeyId = int.tryParse(alarmKey);
+      final double doubleCurrentVolume = double.parse(currentVolume ?? '0.8');
 
-          if (parsedAlarmKeyId != null &&
-              parsedAlarmKeyId >= 1 &&
-              parsedAlarmKeyId <= 7) {
-            if (kDebugMode) {
-              print('알람 ID: $alarmId - 테스트 알람이므로 비활성화 여부와 관계없이 재생합니다.');
-            }
-            // 테스트 알람은 여기서 바로 소리/진동 재생 로직으로 통과
-          } else {
-            final alarmRepository = container.read(alarmRepositoryProvider);
-            final alarmsWithKey = await alarmRepository
-                .getAlarmsByAlarmKeyContains(alarmKey);
-
-            final bool isDisabledAlarm = alarmsWithKey.any(
-              (alarm) => alarm['isDisabled'] == 1,
-            );
-
-            if (isDisabledAlarm) {
-              if (kDebugMode) {
-                print('알람 ID: $alarmId - 비활성화되어 재생을 중단합니다.');
-              }
-              await AwesomeNotifications().dismiss(receivedNotification.id!);
-              return;
-            }
-          }
+      if (alarmId != null && alarmId >= 1 && alarmId <= 7) {
+        if (kDebugMode) {
+          print('알람 ID: $alarmId - 테스트 알람이므로 비활성화 여부와 관계없이 재생합니다.');
         }
+        // 테스트 알람은 여기서 바로 소리/진동 재생 로직으로 통과
+      } else {
+        final alarmRepository = await AlarmRepository.getInstance();
+        final alarmsWithKey = await alarmRepository.getAlarmsByAlarmKeyContains(
+          alarmId.toString(),
+        );
 
-        if (soundAssetPath != null) {
-          if (kDebugMode) {
-            print('알람 표시 시 playAlarmSound 호출 시도: $soundAssetPath');
-          }
-          await playAlarmSound(receivedNotification.id!, soundAssetPath);
-          if (kDebugMode) {
-            print('알람 표시 시 playAlarmSound 호출 완료');
-          }
-        }
+        final bool isDisabledAlarm = alarmsWithKey.any(
+          (alarm) => alarm['isDisabled'] == 1,
+        );
 
-        if (hapticPattern != null) {
+        if (isDisabledAlarm) {
           if (kDebugMode) {
-            print('알람 표시 시 playHaptic 호출 시도: $hapticPattern');
+            print('알람 ID: $alarmId - 비활성화되어 재생을 중단합니다.');
           }
-          await playHaptic(receivedNotification.id!, hapticPattern);
-          if (kDebugMode) {
-            print('알람 표시 시 playHaptic 호출 완료');
-          }
+          await AwesomeNotifications().dismiss(receivedNotification.id!);
+          return;
         }
       }
-    } finally {
-      container.dispose();
+
+      if (soundAssetPath != null) {
+        if (kDebugMode) {
+          print('알람 표시 시 playAlarmSound 호출 시도: $soundAssetPath');
+        }
+        await playAlarmSound(
+          receivedNotification.id!,
+          soundAssetPath,
+          doubleCurrentVolume,
+        );
+        if (kDebugMode) {
+          print('알람 표시 시 playAlarmSound 호출 완료');
+        }
+      }
+
+      if (hapticPattern != null) {
+        if (kDebugMode) {
+          print('알람 표시 시 playHaptic 호출 시도: $hapticPattern');
+        }
+        await playHaptic(receivedNotification.id!, hapticPattern);
+        if (kDebugMode) {
+          print('알람 표시 시 playHaptic 호출 완료');
+        }
+      }
     }
   }
 
@@ -149,9 +146,6 @@ class NotificationController {
   static Future<void> onActionReceivedMethod(
     ReceivedAction receivedAction,
   ) async {
-    // Riverpod 프로바이더 접근 위해 ProviderContainer 생성
-    // 이 컨테이너는 앱 전체 ProviderScope와는 별개로 백그라운드 컨텍스트에서 사용
-    final container = ProviderContainer(); // ProviderContainer 생성
     int alarmId = receivedAction.id!;
 
     if (kDebugMode) {
@@ -159,32 +153,39 @@ class NotificationController {
         'onActionReceivedMethod 호출됨. ID: $alarmId, Channel: ${receivedAction.channelKey}, Button: ${receivedAction.buttonKeyPressed}',
       );
     }
+    final currentVolume = receivedAction.payload?['currentVolume'];
+    final doubleCurrentVolume = double.parse(currentVolume ?? '0.8');
 
-    try {
-      // '알람 끄기' 버튼이 눌렸을 때 또는 메시지 본문이 눌렸을 때
-      if (receivedAction.channelKey == 'my_alarm_channel' &&
-          (receivedAction.buttonKeyPressed == 'stop_alarm' ||
-              receivedAction.actionType == ActionType.Default)) {
-        if (kDebugMode) {
-          if (receivedAction.buttonKeyPressed == 'stop_alarm') {
-            print('알람 중지 버튼이 눌렸습니다.');
-          } else if (receivedAction.actionType == ActionType.Default) {
-            print('알림 메시지 본문이 눌렸습니다. (알람 중지)');
-          }
+    // '알람 끄기' 버튼이 눌렸을 때 또는 메시지 본문이 눌렸을 때
+    if (receivedAction.channelKey == 'my_alarm_channel' &&
+        (receivedAction.buttonKeyPressed == 'stop_alarm' ||
+            receivedAction.actionType == ActionType.Default)) {
+      if (kDebugMode) {
+        if (receivedAction.buttonKeyPressed == 'stop_alarm') {
+          print('알람 중지 버튼이 눌렸습니다.');
+        } else if (receivedAction.actionType == ActionType.Default) {
+          print('알림 메시지 본문이 눌렸습니다. (알람 중지)');
         }
-        await AwesomeNotifications().dismiss(receivedAction.id!); // 알림 제거
-        await stopAlarmSound(); // 재생 중지
-        await stopHaptic(); // 진동 중지
       }
-    } finally {
-      container.dispose();
+
+      await AwesomeNotifications().dismiss(receivedAction.id!); // 알림 제거
+      await stopAlarmSound(doubleCurrentVolume); // 재생 중지
+      await stopHaptic(); // 진동 중지
     }
   }
 
   @pragma('vm:entry-point')
-  static Future<void> playAlarmSound(int alarmId, String assetPath) async {
+  static Future<void> playAlarmSound(
+    int alarmId,
+    String assetPath,
+    double currentVolume,
+  ) async {
     try {
       int maxMinutes = 15;
+      // 1. 현재 볼륨 저장
+      final currentVolume = await FlutterVolumeController.getVolume();
+      // 2. 알람 재생 전에 시스템 볼륨을 최대로 설정
+      await FlutterVolumeController.setVolume(1.0); // 0.0 to 1.0
 
       if (kDebugMode) {
         print('playAlarmSound 시작: $assetPath');
@@ -199,12 +200,15 @@ class NotificationController {
       // 15분 후 자동 알람 중지
       Future.delayed(maxMinutes.minutes, () async {
         if (_audioPlayer.playing) {
-          await stopAlarmSound();
+          await stopAlarmSound(currentVolume ?? 0.8);
           await stopHaptic();
           if (kDebugMode) {
             print('$maxMinutes분 경과, 알람 자동 중지');
           }
           await AwesomeNotifications().dismiss(alarmId);
+          await FlutterVolumeController.setVolume(
+            currentVolume ?? 0.8,
+          ); // 원래 볼륨으로 복원
         }
       });
     } catch (e) {
@@ -222,17 +226,18 @@ class NotificationController {
   }
 
   // stopAlarmSound 함수도 Top-level 유지
-  static Future<void> stopAlarmSound() async {
+  static Future<void> stopAlarmSound(double currentVolume) async {
     if (_audioPlayer.playing) {
       await _audioPlayer.stop();
     }
+    FlutterVolumeController.setVolume(currentVolume);
   }
 
   static Future<void> stopHaptic() async {
     VibrateUtils.stopRepeatVibration(hapticTimer);
   }
 
-  static Future<void> stopTestAlarms() async {
+  static Future<void> stopTestAlarms(double currentVolume) async {
     // ID 1~5 테스트 알람만 제거
     for (int i = DateTime.monday; i <= DateTime.sunday; i++) {
       await AwesomeNotifications().cancel(i); // 특정 ID의 알람 스케줄 취소
@@ -240,6 +245,7 @@ class NotificationController {
         print('테스트 알람 ID $i 스케줄 취소됨.');
       }
     }
+    FlutterVolumeController.setVolume(currentVolume);
   }
 
   // 테스트 알람 설정 매주 월~금 지금부터 5초 뒤 반복 알람
@@ -248,8 +254,11 @@ class NotificationController {
     required String hapticPattern,
   }) async {
     DateTime testDateTime = DateTime.now().add(5.seconds); // 5초 뒤 시간
+    final currentVolume = await FlutterVolumeController.getVolume();
 
-    await NotificationController.stopTestAlarms(); // 중복되는 ID 1~5 테스트 알람만 제거
+    await NotificationController.stopTestAlarms(
+      currentVolume ?? 0.8,
+    ); // 중복되는 ID 1~5 테스트 알람만 제거
     String fileName = soundAssetPath.split('/').last.split('.').first;
 
     print('resource://raw/$fileName');
@@ -265,7 +274,7 @@ class NotificationController {
             'day': i.toString(),
             'soundAssetPath': soundAssetPath,
             'hapticPattern': hapticPattern,
-            'alarmKey': i.toString(),
+            'currentVolume': currentVolume.toString() ?? '0.8',
           },
           category: NotificationCategory.Alarm,
           notificationLayout: NotificationLayout.BigPicture,

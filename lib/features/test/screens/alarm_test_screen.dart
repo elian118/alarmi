@@ -8,6 +8,7 @@ import 'package:alarmi/utils/toast_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 
 class AlarmTestScreen extends StatelessWidget {
   static const String routeName = 'alarm-test';
@@ -51,8 +52,14 @@ class AlarmTestScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                await NotificationController.stopTestAlarms();
-                await NotificationController.stopAlarmSound(); // 혹시 재생 중인 사운드가 있다면 중지
+                final currentVolume = await FlutterVolumeController.getVolume();
+
+                await NotificationController.stopTestAlarms(
+                  currentVolume ?? 0.8,
+                );
+                await NotificationController.stopAlarmSound(
+                  currentVolume ?? 0.8,
+                ); // 혹시 재생 중인 사운드가 있다면 중지
                 await NotificationController.stopHaptic(); // 혹시 재생 중인 진동이 있다면 중지
                 callSimpleToast('모든 테스트 알람이 취소되었습니다.');
               },

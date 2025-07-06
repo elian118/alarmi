@@ -8,8 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class AlarmListNotifier
     extends FamilyAsyncNotifier<List<Map<String, dynamic>>, String> {
   @override
-  FutureOr<List<Map<String, dynamic>>> build(String type) {
-    final alarmRepository = ref.watch(alarmRepositoryProvider);
+  FutureOr<List<Map<String, dynamic>>> build(String type) async {
+    final alarmRepository = await AlarmRepository.getInstance();
     return alarmRepository.getAlarms(type: type);
   }
 
@@ -17,7 +17,7 @@ class AlarmListNotifier
   Future<void> loadAlarms(String type) async {
     state = const AsyncLoading();
     try {
-      final alarmRepository = ref.read(alarmRepositoryProvider);
+      final alarmRepository = await AlarmRepository.getInstance();
       final alarms = await alarmRepository.getAlarms(type: type);
       state = AsyncData(alarms);
     } catch (e, st) {
@@ -39,7 +39,7 @@ class AlarmListNotifier
     };
 
     try {
-      final alarmRepository = ref.read(alarmRepositoryProvider);
+      final alarmRepository = await AlarmRepository.getInstance();
       final id = await alarmRepository.insertAlarm(newAlarm);
       if (kDebugMode) {
         print('새 알람이 등록되었습니다. ID: $id');
@@ -57,7 +57,7 @@ class AlarmListNotifier
   // 알람 삭제
   Future<void> deleteAlarm(int id, String type) async {
     try {
-      final alarmRepository = ref.read(alarmRepositoryProvider);
+      final alarmRepository = await AlarmRepository.getInstance();
       await alarmRepository.deleteAlarm(id);
       if (kDebugMode) {
         print('알람이 삭제되었습니다. ID: $id');
@@ -74,7 +74,7 @@ class AlarmListNotifier
   // 알람 업데이트
   Future<void> updateAlarm(Map<String, dynamic> alarm, String type) async {
     try {
-      final alarmRepository = ref.read(alarmRepositoryProvider);
+      final alarmRepository = await AlarmRepository.getInstance();
       await alarmRepository.updateAlarm(alarm);
       if (kDebugMode) {
         print('알람이 업데이트되었습니다. ID: ${alarm['id']}');
