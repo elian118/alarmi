@@ -4,7 +4,6 @@ import 'package:alarmi/common/consts/app_uuid.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/features/alarm/models/bell.dart';
-import 'package:alarmi/features/alarm/repos/alarm_repository.dart';
 import 'package:alarmi/utils/vibrate_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
@@ -91,30 +90,6 @@ class NotificationController {
           receivedNotification.payload?['currentVolume'];
 
       final double doubleCurrentVolume = double.parse(currentVolume ?? '0.8');
-
-      if (alarmId != null && alarmId >= 1 && alarmId <= 7) {
-        if (kDebugMode) {
-          print('알람 ID: $alarmId - 테스트 알람이므로 비활성화 여부와 관계없이 재생합니다.');
-        }
-        // 테스트 알람은 여기서 바로 소리/진동 재생 로직으로 통과
-      } else {
-        final alarmRepository = await AlarmRepository.getInstance();
-        final alarmsWithKey = await alarmRepository.getAlarmsByAlarmKeyContains(
-          alarmId.toString(),
-        );
-
-        final bool isDisabledAlarm = alarmsWithKey.any(
-          (alarm) => alarm['isDisabled'] == 1,
-        );
-
-        if (isDisabledAlarm) {
-          if (kDebugMode) {
-            print('알람 ID: $alarmId - 비활성화되어 재생을 중단합니다.');
-          }
-          await AwesomeNotifications().dismiss(receivedNotification.id!);
-          return;
-        }
-      }
 
       if (soundAssetPath != null) {
         if (kDebugMode) {
@@ -242,10 +217,20 @@ class NotificationController {
     for (int i = DateTime.monday; i <= DateTime.sunday; i++) {
       await AwesomeNotifications().cancel(i); // 특정 ID의 알람 스케줄 취소
       if (kDebugMode) {
-        print('테스트 알람 ID $i 스케줄 취소됨.');
+        print('스케줄(테스트 알람 ID: $i) 취소됨.');
       }
     }
     FlutterVolumeController.setVolume(currentVolume);
+  }
+
+  // 예약된 알람들 비활성화(취소)하기
+  static void stopScheduledAlarm(List<int> alarmKeys) async {
+    for (var alarmKey in alarmKeys) {
+      AwesomeNotifications().cancel(alarmKey);
+      if (kDebugMode) {
+        print('스케줄(ID: $alarmKey) 취소됨.');
+      }
+    }
   }
 
   // 테스트 알람 설정 매주 월~금 지금부터 5초 뒤 반복 알람

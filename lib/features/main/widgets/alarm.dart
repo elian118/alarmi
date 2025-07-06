@@ -1,3 +1,4 @@
+import 'package:alarmi/common/configs/notification_controller.dart';
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/weekdays.dart';
 import 'package:alarmi/common/consts/sizes.dart';
@@ -36,9 +37,21 @@ class Alarm extends ConsumerWidget {
       final Map<String, dynamic> updatedAlarmMap = params.toJson();
       updatedAlarmMap['isDisabled'] = newValue ? 1 : 0;
       updatedAlarmMap['id'] = alarmId;
+      List<int> alarmKeys = params.alarmKeys;
 
       try {
+        DateTime renewDateTime = getWakeUpTimeFromAlarm(params.alarmTime);
+
         await alarmNotifier.updateAlarm(updatedAlarmMap, params.type);
+        newValue
+            ? NotificationController.stopScheduledAlarm(alarmKeys)
+            : NotificationController.setWeeklyAlarm(
+              weekdays: params.weekdays,
+              dateTime: renewDateTime,
+              bellId: params.bellId,
+              vibrateId: params.vibrateId,
+            );
+
         callSimpleToast(newValue ? '알람이 비활성화되었습니다.' : '알람이 활성화되었습니다.');
       } catch (e) {
         if (kDebugMode) {

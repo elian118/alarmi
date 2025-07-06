@@ -13,3 +13,14 @@ String formatTimeToAmPm(String time24hr) {
   final String formattedTime = DateFormat('a hh:mm', 'ko_KR').format(dateTime);
   return formattedTime;
 }
+
+DateTime getWakeUpTimeFromAlarm(String alarmTime) {
+  DateTime now = DateTime.now();
+  List<String> timeParts = alarmTime.split(':');
+
+  int hour = int.parse(timeParts[0]);
+  int minute = int.parse(timeParts[1]);
+  int second = int.parse(timeParts[2]);
+
+  return DateTime(now.year, now.month, now.day, hour, minute, second);
+}
