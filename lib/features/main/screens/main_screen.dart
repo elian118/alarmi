@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/features/alarm/widgets/alarm_tab_content.dart';
 import 'package:alarmi/features/main/layers/first_main_layer.dart';
 import 'package:alarmi/features/main/layers/second_main_layer.dart';
+import 'package:alarmi/features/main/widgets/create_alarm_button.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -29,7 +32,6 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _pageController.addListener(() {
       if (_pageController.hasClients) {
-        // 애니메이션이 완료된 후 정확한 페이지 인덱스 업데이트
         int newPageIndex = _pageController.page?.round() ?? 0;
         if (_currentPageIndex != newPageIndex) {
           setState(() {
@@ -75,14 +77,14 @@ class _MainScreenState extends State<MainScreen> {
   void _onVerticalDragEnd(DragEndDetails details) {
     final double screenHeight = getWinHeight(context);
     final double startPosition = screenHeight - _initialBottomOffset;
-    final double dragThreshold = screenHeight * 0.15; // 화면 높이의 15% 정도를 임계값으로 설정
+    final double dragThreshold = screenHeight * 0.15; // 화면 높이 15%를 임계값 설정
 
     // 드래그 속도 고려
     final double velocity = details.primaryVelocity ?? 0.0;
     final double minVelocity = 600.0; // 최소 속도 임계값
 
     if (_currentPageIndex == 0) {
-      // 0 페이지에서 1 페이지로 전환 시도 (위로 스와이프)
+      // 0 페이지에서 1 페이지로 (위로 스와이프)
       _pageController.animateToPage(
         _alarmsTopOffset <= startPosition - dragThreshold ||
                 velocity < -minVelocity
@@ -92,7 +94,7 @@ class _MainScreenState extends State<MainScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      // 1 페이지에서 0 페이지로 전환 시도 (아래로 스와이프)
+      // 1 페이지에서 0 페이지로 (아래로 스와이프)
       _pageController.animateToPage(
         _alarmsTopOffset >= dragThreshold || velocity > minVelocity ? 0 : 1,
         duration: 300.ms,
@@ -110,13 +112,14 @@ class _MainScreenState extends State<MainScreen> {
       _alarmsTopOffset = 0.0;
     }
 
-    // PageController.animateToPage에 의해 제어될 때는 0ms로 즉시 이동
-    // 그렇지 않고 사용자 드래그 시에는 300ms 애니메이션 적용
     final Duration animationDuration =
         _pageController.hasClients &&
                 _pageController.page?.round() != _currentPageIndex
-            ? 0.ms
-            : 300.ms;
+            ? 0
+                .ms // PageController로 제어될 때 즉시 이동
+            : 300.ms; // 사용자 드래그 시에는 300ms 애니메이션 적용
+
+    final double blurSigma = _currentPageIndex == 0 ? 1.0 : 0.0; // 블러 강도 조절
 
     return Scaffold(
       body: Stack(
@@ -168,12 +171,24 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                       _currentPageIndex == 1 ? Gaps.v28 : Container(),
                       Expanded(
-                        // AlarmTabContent가 남은 공간을 차지하도록 Expanded 추가
-                        child: AlarmTabContent(type: 'my'),
+                        child: IgnorePointer(
+                          ignoring: _currentPageIndex == 0,
+                          child: AlarmTabContent(type: 'my'),
+                        ),
                       ),
                     ],
                   ),
                 ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 85,
+            left: 0,
+            child: ClipRRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
+                child: CreateAlarmButton(),
               ),
             ),
           ),
