@@ -48,14 +48,6 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                   print(alarmParams.toString());
 
                   return Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Colors.white.withOpacity(0.2),
-                          width: 0.6,
-                        ),
-                      ),
-                    ),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 30,
                       vertical: 20,
