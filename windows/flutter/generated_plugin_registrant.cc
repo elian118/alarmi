@@ -8,7 +8,6 @@
 
 #include <awesome_notifications/awesome_notifications_plugin_c_api.h>
 #include <flutter_localization/flutter_localization_plugin_c_api.h>
-#include <flutter_volume_controller/flutter_volume_controller_plugin_c_api.h>
 #include <permission_handler_windows/permission_handler_windows_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
@@ -16,8 +15,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("AwesomeNotificationsPluginCApi"));
   FlutterLocalizationPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterLocalizationPluginCApi"));
-  FlutterVolumeControllerPluginCApiRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("FlutterVolumeControllerPluginCApi"));
   PermissionHandlerWindowsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("PermissionHandlerWindowsPlugin"));
 }

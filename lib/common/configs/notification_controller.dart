@@ -9,7 +9,6 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibration/vibration_presets.dart';
 
@@ -28,10 +27,12 @@ class NotificationController {
         channelDescription: '사용자 전용 주기적 기상 알람',
         defaultColor: const Color(0xFF9D50DD),
         ledColor: Colors.white,
-        // playSound: true,
-        // enableVibration: true,
-        playSound: false,
-        enableVibration: false,
+        playSound: true,
+        enableVibration: true,
+        // vibrationPattern: , // 진동 패턴
+        // playSound: false,
+        // enableVibration: false,
+        soundSource: 'resource://raw/movement',
         importance: NotificationImportance.Max, // 중요도 최대 설정
         channelShowBadge: true,
         locked: true, // 알림을 스와이프 제거 방지(잠금)
@@ -57,16 +58,6 @@ class NotificationController {
     );
   }
 
-  // 알람이 떴을 때 실행될 로직
-  // 이 로직은 사용자가 알림을 확인하는 순간에 실행되므로,
-  // 기기 화면이 꺼진 상태에서는 알림음을 들을 수 없고 화면을 켜야만 들을 수 있다.
-  /* todo 제일 좋은 방법은 AwesomeNotifications이 OS 트리거를 작동시킬 수 있도록
-    NotificationContent.customSound 에 음원파일을 넣는 방식이다.
-    이렇게 하면 화면이 꺼진 상태에서도 들을 수 있지만,
-    메서드 안에서 재생하는 로직은 전부 제거해야 소리가 중복되는 걸 막을 수 있다.
-    todo 단, 이 경우, 비활성 알림을 판단해 재생을 중간에 차단하는 로직처리도 불가하다.
-    사용자가 비활성 처리하면 실제 예약된 알림 목록에서는 아예 삭제처리하도록 변경해야 한다.
-    */
   @pragma('vm:entry-point')
   static Future<void> onNotificationDisplayedMethod(
     ReceivedNotification receivedNotification,
@@ -78,42 +69,6 @@ class NotificationController {
         'onNotificationDisplayedMethod 호출됨. ID: ${receivedNotification.id}',
       );
       print('Payload (Displayed): ${receivedNotification.payload}');
-    }
-    // todo OS 알림 트리거 사용 시 아래 재생 로직 제거하기
-    if (receivedNotification.channelKey == 'my_alarm_channel' &&
-        receivedNotification.id != null) {
-      final String? soundAssetPath =
-          receivedNotification.payload?['soundAssetPath'];
-      final String? hapticPattern =
-          receivedNotification.payload?['hapticPattern'];
-      final String? currentVolume =
-          receivedNotification.payload?['currentVolume'];
-
-      final double doubleCurrentVolume = double.parse(currentVolume ?? '0.8');
-
-      if (soundAssetPath != null) {
-        if (kDebugMode) {
-          print('알람 표시 시 playAlarmSound 호출 시도: $soundAssetPath');
-        }
-        await playAlarmSound(
-          receivedNotification.id!,
-          soundAssetPath,
-          doubleCurrentVolume,
-        );
-        if (kDebugMode) {
-          print('알람 표시 시 playAlarmSound 호출 완료');
-        }
-      }
-
-      if (hapticPattern != null) {
-        if (kDebugMode) {
-          print('알람 표시 시 playHaptic 호출 시도: $hapticPattern');
-        }
-        await playHaptic(receivedNotification.id!, hapticPattern);
-        if (kDebugMode) {
-          print('알람 표시 시 playHaptic 호출 완료');
-        }
-      }
     }
   }
 
@@ -128,8 +83,6 @@ class NotificationController {
         'onActionReceivedMethod 호출됨. ID: $alarmId, Channel: ${receivedAction.channelKey}, Button: ${receivedAction.buttonKeyPressed}',
       );
     }
-    final currentVolume = receivedAction.payload?['currentVolume'];
-    final doubleCurrentVolume = double.parse(currentVolume ?? '0.8');
 
     // '알람 끄기' 버튼이 눌렸을 때 또는 메시지 본문이 눌렸을 때
     if (receivedAction.channelKey == 'my_alarm_channel' &&
@@ -144,8 +97,8 @@ class NotificationController {
       }
 
       await AwesomeNotifications().dismiss(receivedAction.id!); // 알림 제거
-      await stopAlarmSound(doubleCurrentVolume); // 재생 중지
-      await stopHaptic(); // 진동 중지
+      // await stopAlarmSound(); // 재생 중지
+      // await stopHaptic(); // 진동 중지
     }
   }
 
@@ -156,12 +109,6 @@ class NotificationController {
     double currentVolume,
   ) async {
     try {
-      int maxMinutes = 15;
-      // 1. 현재 볼륨 저장
-      final currentVolume = await FlutterVolumeController.getVolume();
-      // 2. 알람 재생 전에 시스템 볼륨을 최대로 설정
-      await FlutterVolumeController.setVolume(1.0); // 0.0 to 1.0
-
       if (kDebugMode) {
         print('playAlarmSound 시작: $assetPath');
       }
@@ -171,21 +118,6 @@ class NotificationController {
       if (kDebugMode) {
         print('재생 시작');
       }
-
-      // 15분 후 자동 알람 중지
-      Future.delayed(maxMinutes.minutes, () async {
-        if (_audioPlayer.playing) {
-          await stopAlarmSound(currentVolume ?? 0.8);
-          await stopHaptic();
-          if (kDebugMode) {
-            print('$maxMinutes분 경과, 알람 자동 중지');
-          }
-          await AwesomeNotifications().dismiss(alarmId);
-          await FlutterVolumeController.setVolume(
-            currentVolume ?? 0.8,
-          ); // 원래 볼륨으로 복원
-        }
-      });
     } catch (e) {
       if (kDebugMode) {
         print('재생 중 오류 발생: $e');
@@ -201,18 +133,19 @@ class NotificationController {
   }
 
   // stopAlarmSound 함수도 Top-level 유지
-  static Future<void> stopAlarmSound(double currentVolume) async {
+  static Future<void> stopAlarmSound(
+    // double currentVolume
+  ) async {
     if (_audioPlayer.playing) {
       await _audioPlayer.stop();
     }
-    FlutterVolumeController.setVolume(currentVolume);
   }
 
   static Future<void> stopHaptic() async {
     VibrateUtils.stopRepeatVibration(hapticTimer);
   }
 
-  static Future<void> stopTestAlarms(double currentVolume) async {
+  static Future<void> stopTestAlarms() async {
     // ID 1~5 테스트 알람만 제거
     for (int i = DateTime.monday; i <= DateTime.sunday; i++) {
       await AwesomeNotifications().cancel(i); // 특정 ID의 알람 스케줄 취소
@@ -220,7 +153,6 @@ class NotificationController {
         print('스케줄(테스트 알람 ID: $i) 취소됨.');
       }
     }
-    FlutterVolumeController.setVolume(currentVolume);
   }
 
   // 예약된 알람들 비활성화(취소)하기
@@ -239,11 +171,8 @@ class NotificationController {
     required String hapticPattern,
   }) async {
     DateTime testDateTime = DateTime.now().add(5.seconds); // 5초 뒤 시간
-    final currentVolume = await FlutterVolumeController.getVolume();
 
-    await NotificationController.stopTestAlarms(
-      currentVolume ?? 0.8,
-    ); // 중복되는 ID 1~5 테스트 알람만 제거
+    await NotificationController.stopTestAlarms(); // 중복되는 ID 1~5 테스트 알람만 제거
     String fileName = soundAssetPath.split('/').last.split('.').first;
 
     print('resource://raw/$fileName');
@@ -259,7 +188,6 @@ class NotificationController {
             'day': i.toString(),
             'soundAssetPath': soundAssetPath,
             'hapticPattern': hapticPattern,
-            'currentVolume': currentVolume.toString() ?? '0.8',
           },
           category: NotificationCategory.Alarm,
           notificationLayout: NotificationLayout.BigPicture,
@@ -267,8 +195,11 @@ class NotificationController {
           wakeUpScreen: true,
           fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
           locked: true, // 알림 스와이프 방지
-          // customSound: 'resource://raw/$fileName',
-          customSound: null,
+          customSound: 'resource://raw/$fileName',
+          // customSound: 'resource://raw/heavy_rain',
+          // customSound: null,
+          chronometer: Duration.zero, // 카운트 시작 점
+          timeoutAfter: Duration(minutes: 15), // 키운팅 이후 15분 뒤 만료
         ),
         actionButtons: [
           NotificationActionButton(
@@ -324,8 +255,11 @@ class NotificationController {
           wakeUpScreen: true,
           fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
           locked: true, // 알림 스와이프 방지
-          // customSound: 'resource://raw/$fileName',
-          customSound: null,
+          customSound: 'resource://raw/$fileName',
+          // customSound: 'resource://raw/heavy_rain',
+          // customSound: null,
+          chronometer: Duration.zero,
+          timeoutAfter: Duration(minutes: 15),
         ),
         actionButtons: [
           NotificationActionButton(

@@ -11,6 +11,7 @@ import 'package:alarmi/utils/toast_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Alarm extends ConsumerWidget {
@@ -61,6 +62,11 @@ class Alarm extends ConsumerWidget {
       }
     }
 
+    final Color targetColor =
+        params.isDisabled == 1
+            ? Colors.white.withValues(alpha: 0.4)
+            : Colors.white;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -69,36 +75,53 @@ class Alarm extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Text(
-                  formattedTime.split(' ')[0],
-                  style: TextStyle(
-                    fontSize: Sizes.size16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
+                TweenAnimationBuilder<Color?>(
+                  tween: ColorTween(begin: Colors.white, end: targetColor),
+                  curve: Curves.easeInOut,
+                  duration: 0.3.seconds,
+                  builder:
+                      (context, value, child) => Text(
+                        formattedTime.split(' ')[0],
+                        style: TextStyle(
+                          fontSize: Sizes.size16,
+                          color: value,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                 ),
                 Gaps.h8,
-                Text(
-                  // widget.time,
-                  formattedTime.split(' ')[1],
-                  style: TextStyle(
-                    fontSize: Sizes.size24,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+                TweenAnimationBuilder<Color?>(
+                  tween: ColorTween(begin: Colors.white, end: targetColor),
+                  curve: Curves.easeInOut,
+                  duration: 0.3.seconds,
+                  builder:
+                      (context, value, child) => Text(
+                        formattedTime.split(' ')[1],
+                        style: TextStyle(
+                          fontSize: Sizes.size24,
+                          color: value,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                 ),
               ],
             ),
             Row(
               children: [
                 ...repeatDayNames.mapIndexed(
-                  (idx, r) => Text(
-                    '$r${idx == params.weekdays.length - 1 ? '' : ', '}',
-                    style: TextStyle(
-                      fontSize: Sizes.size12,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  (idx, r) => TweenAnimationBuilder(
+                    tween: ColorTween(begin: Colors.white, end: targetColor),
+                    curve: Curves.easeInOut,
+                    duration: 0.3.seconds,
+                    builder:
+                        (context, value, child) => Text(
+                          '$r${idx == params.weekdays.length - 1 ? '' : ', '}',
+                          style: TextStyle(
+                            fontSize: Sizes.size12,
+                            color: value,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                   ),
                 ),
               ],
