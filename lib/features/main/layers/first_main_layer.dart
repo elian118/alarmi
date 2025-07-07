@@ -9,10 +9,23 @@ class FirstMainLayer extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: Image.asset(
-            'assets/images/backgrounds/bg_1.png',
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
+          child: Stack(
+            // fit: StackFit.expand,
+            children: [
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/backgrounds/bg_1.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Transform.scale(
+                scale: 1.1,
+                child: Image.asset(
+                  'assets/images/backgrounds/clouds.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ],
           ),
         ),
         Align(
