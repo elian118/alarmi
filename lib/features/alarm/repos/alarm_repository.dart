@@ -61,12 +61,17 @@ class AlarmRepository {
   }
 
   Future<int> insertAlarm(Map<String, dynamic> alarm) async {
-    final id = await _db.insert(
-      'alarms',
-      alarm,
-      conflictAlgorithm: ConflictAlgorithm.replace, // 충돌 발생 시 교체
-    );
-    return id;
+    try {
+      final id = await _db.insert(
+        'alarms',
+        alarm,
+        conflictAlgorithm: ConflictAlgorithm.replace, // 충돌 발생 시 교체
+      );
+      return id;
+    } catch (e) {
+      print('알람 등록 중 오류 발생: $e');
+      return 0; // 실패 시 절대 등록될 일 없는 시퀀스 0 반환
+    }
   }
 
   Future<int> deleteAlarm(int id) async {

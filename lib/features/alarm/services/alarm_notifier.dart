@@ -98,14 +98,15 @@ class AlarmListNotifier
   }
 
   // 알람 업데이트
-  Future<void> updateAlarm(Map<String, dynamic> alarm, String type) async {
+  Future<bool> updateAlarm(Map<String, dynamic> alarm, String type) async {
     try {
       final alarmRepository = await AlarmRepository.getInstance();
-      await alarmRepository.updateAlarm(alarm);
+      final updatedRows = await alarmRepository.updateAlarm(alarm);
       if (kDebugMode) {
         print('알람이 업데이트되었습니다. ID: ${alarm['id']}');
       }
       await loadAlarms(type); // 업데이트 후 알람 목록 새로고침
+      return updatedRows > 0;
     } catch (e) {
       if (kDebugMode) {
         print('알람 업데이트 중 오류가 발생했습니다. $e');

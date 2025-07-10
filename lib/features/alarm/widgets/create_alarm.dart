@@ -39,6 +39,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
   bool _isActivatedWakeUpMission = false;
   bool _isActivatedVibrate = false;
   bool _isAllDay = false;
+  List<int>? _alarmKeys;
 
   @override
   void initState() {
@@ -75,6 +76,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
                     );
                   }).toList();
               _isAllDay = _weekdays.every((day) => day.isSelected);
+              _alarmKeys = initialParams.alarmKeys;
             } else {
               // 해당 ID의 알람이 없는 경우 기본값으로 초기화
               _selectedDateTime = DateTime(
@@ -177,6 +179,8 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
   }
 
   void _save() async {
+    bool isCreate = _currentAlarmDbId == null;
+    bool isSuccess = false;
     final AlarmListNotifier alarmNotifier = ref.read(
       alarmListProvider('my').notifier,
     );
@@ -185,14 +189,23 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     if (kDebugMode) {
       print(params.toString());
     }
-    int? id = await alarmNotifier.insertAlarm(params: params);
+
+    if (!isCreate) {
+      isSuccess = await alarmNotifier.updateAlarm(params.toJson(), widget.type);
+      if (isSuccess) {
+        NotificationController.stopScheduledAlarm(_alarmKeys!); // 이전 알람 제거
+      }
+    } else {
+      int? id = await alarmNotifier.insertAlarm(params: params);
+      isSuccess = id != 0;
+    }
 
     if (mounted) {
-      if (id != null) {
-        callSimpleToast('알람이 등록되었습니다.');
+      if (isSuccess) {
+        callSimpleToast('알람이 ${isCreate ? '등록' : '저장'}되었습니다.');
         context.go(MainScreen.routeURL);
       } else {
-        callSimpleToast('알람 등록에 실패했습니다.');
+        callSimpleToast('알람 ${isCreate ? '등록' : '저장'}에 실패했습니다.');
       }
     }
   }
@@ -210,6 +223,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     );
 
     return AlarmParams(
+      id: _currentAlarmDbId,
       alarmKeys: _alarmKeys,
       weekdays: _selectedWeekdays,
       bellId: _bellId,

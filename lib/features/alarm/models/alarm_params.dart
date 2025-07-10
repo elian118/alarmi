@@ -7,6 +7,7 @@ class AlarmParams {
   final List<int> weekdays;
   final String alarmTime;
   final int isWakeUpMission; // 0 false / 1 true
+  final int? id;
   final String? bellId;
   final String? vibrateId;
   final int? isDisabled; // 0 false / 1 true
@@ -18,6 +19,7 @@ class AlarmParams {
     required this.weekdays,
     required this.alarmTime,
     required this.isWakeUpMission,
+    this.id,
     this.bellId,
     this.vibrateId,
     this.isDisabled = 0,
@@ -36,6 +38,7 @@ class AlarmParams {
               : [],
       alarmTime = json['alarmTime'],
       isWakeUpMission = json['isWakeUpMission'],
+      id = json['id'],
       bellId = json['bellId'],
       vibrateId = json['vibrateId'],
       isDisabled = json['isDisabled'];
@@ -48,6 +51,7 @@ class AlarmParams {
       "alarmTime": alarmTime,
       "isWakeUpMission": isWakeUpMission,
       "weekdays": jsonEncode(weekdays),
+      "id": id,
       "bellId": bellId,
       "vibrateId": vibrateId,
       "isDisabled": isDisabled,
@@ -56,6 +60,6 @@ class AlarmParams {
 
   @override
   String toString() {
-    return 'AlarmParams(type: $type, register: $register, alarmKeys: $alarmKeys, weekdays: $weekdays, alarmTime: $alarmTime, isWakeUpMission: $isWakeUpMission, bellId: $bellId, vibrateId: $vibrateId), isDisabled: $isDisabled';
+    return 'AlarmParams(id: $id, type: $type, register: $register, alarmKeys: $alarmKeys, weekdays: $weekdays, alarmTime: $alarmTime, isWakeUpMission: $isWakeUpMission, bellId: $bellId, vibrateId: $vibrateId), isDisabled: $isDisabled';
   }
 }
