@@ -64,8 +64,6 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
               _currentAlarmDbId = parsedAlarmId; // DB ID 저장 (업데이트 시 필요)
               _bellId = initialParams.bellId;
               _vibrateId = initialParams.vibrateId;
-              print(_bellId);
-              print(_vibrateId);
               _isActivatedWakeUpMission = initialParams.isWakeUpMission == 1;
               _selectedDateTime = getWakeUpTimeFromAlarm(
                 initialParams.alarmTime,

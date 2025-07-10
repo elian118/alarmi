@@ -17,7 +17,7 @@ class CreateAlarmScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          '${type == 'my' ? '내' : '팀'} 알림 설정',
+          '${type == 'my' ? '내' : '팀'} 알림 ${alarmId == 'null' ? '설정' : '수정'}',
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
