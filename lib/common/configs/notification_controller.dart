@@ -29,7 +29,7 @@ class NotificationController {
         ledColor: Colors.white,
         playSound: true,
         enableVibration: true,
-        // vibrationPattern: , // 진동 패턴
+        // vibrationPattern: hapticPatterns[0].pattern, // 진동 패턴
         // playSound: false,
         // enableVibration: false,
         soundSource: 'resource://raw/movement',
