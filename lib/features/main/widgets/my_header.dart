@@ -2,6 +2,7 @@ import 'package:alarmi/common/widgets/main_navigation_screen.dart';
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/alarm/widgets/alarms_header_menus.dart';
 import 'package:alarmi/features/main/widgets/main_header_menus.dart';
+import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -39,7 +40,7 @@ class MyHeader extends ConsumerWidget {
       children: [
         headerMenusWidget ?? Container(),
         GestureDetector(
-          onTap: () => context.push('/alarm-test'),
+          onTap: () => context.push(AlarmTestScreen.routeURL),
           child: Image.asset(
             'assets/images/characters/thumb.png',
           ).animate().scale(

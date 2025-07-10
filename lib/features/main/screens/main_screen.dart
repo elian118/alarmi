@@ -5,10 +5,12 @@ import 'package:alarmi/features/alarm/widgets/alarm_tab_content.dart';
 import 'package:alarmi/features/main/layers/first_main_layer.dart';
 import 'package:alarmi/features/main/layers/second_main_layer.dart';
 import 'package:alarmi/features/main/widgets/create_alarm_button.dart';
+import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class MainScreen extends StatefulWidget {
   static const String routeName = 'main';
@@ -184,6 +186,19 @@ class _MainScreenState extends State<MainScreen> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
                 child: CreateAlarmButton(),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 50,
+            right: 20,
+            child: GestureDetector(
+              onTap: () => context.push(AlarmTestScreen.routeURL),
+              child: Image.asset(
+                'assets/images/characters/thumb.png',
+              ).animate().scale(
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
               ),
             ),
           ),
