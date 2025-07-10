@@ -63,53 +63,6 @@ class _MainScreenState extends State<MainScreen> {
             currentPageIndex: _currentPageIndex,
             pageController: _pageController,
           ),
-          // AnimatedPositioned(
-          //   duration: animationDuration,
-          //   curve: Curves.easeInOut,
-          //   top: _alarmsTopOffset,
-          //   height: getWinHeight(context),
-          //   child: GestureDetector(
-          //     // ✨ 여기에 GestureDetector 추가
-          //     onVerticalDragStart: _onVerticalDragStart,
-          //     onVerticalDragUpdate: _onVerticalDragUpdate,
-          //     onVerticalDragEnd: _onVerticalDragEnd,
-          //     child: Container(
-          //       padding: const EdgeInsets.symmetric(horizontal: 20),
-          //       width: getWinWidth(context),
-          //       color: Colors.transparent,
-          //       child: SafeArea(
-          //         child: Column(
-          //           children: [
-          //             SvgPicture.asset(
-          //               'assets/images/icons/double_up_arrow_icon.svg',
-          //               height: 30, // 아이콘 크기 적절히 조절
-          //             ).animate().fade(
-          //               begin: _currentPageIndex == 0 ? 0.0 : 1.0,
-          //               end: _currentPageIndex == 0 ? 1.0 : 0.0,
-          //               duration: 300.ms,
-          //               curve: Curves.easeInOut,
-          //             ),
-          //             Text(
-          //               '알림',
-          //               style: TextStyle(
-          //                 fontSize: 16,
-          //                 color: Colors.white,
-          //                 fontWeight: FontWeight.w700,
-          //               ),
-          //             ).animate().fade(
-          //               begin: _currentPageIndex == 0 ? 1.0 : 0.0,
-          //               end: _currentPageIndex == 0 ? 0.0 : 1.0,
-          //               duration: 300.ms,
-          //               curve: Curves.easeInOut,
-          //             ),
-          //             _currentPageIndex == 1 ? Gaps.v28 : Container(),
-          //             Expanded(child: AlarmTabContent(type: 'my')),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
           Positioned(
             bottom: 40,
             left: 0,
