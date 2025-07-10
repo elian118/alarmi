@@ -25,6 +25,16 @@ class AlarmRepository {
     }
   }
 
+  Future<Map<String, dynamic>?> getAlarmById({required String alarmId}) async {
+    final List<Map<String, dynamic>> results = await _db.query(
+      alarms,
+      where: 'id = ?',
+      whereArgs: [alarmId],
+      limit: 1,
+    );
+    return results.isNotEmpty ? results.first : null;
+  }
+
   Future<List<Map<String, dynamic>>> getAlarmsByAlarmKeyContains(
     String searchKey,
   ) async {

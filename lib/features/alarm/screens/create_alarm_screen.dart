@@ -44,7 +44,10 @@ class CreateAlarmScreen extends StatelessWidget {
           Positioned.fill(
             child: Padding(
               padding: const EdgeInsets.all(Sizes.size18),
-              child: CreateAlarm(),
+              child: CreateAlarm(
+                type: 'my',
+                alarmId: alarmId == 'null' ? null : alarmId,
+              ),
             ),
           ),
         ],

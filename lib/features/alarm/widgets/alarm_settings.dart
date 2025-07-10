@@ -20,6 +20,8 @@ class AlarmSettings extends StatefulWidget {
   final Function(int idx, bool value) onWeekdaySelected;
   final Function(String?) onChangeSelectedBellId;
   final Function(String?) onChangeSelectedVibrateId;
+  final String? bellId;
+  final String? vibrateId;
 
   const AlarmSettings({
     super.key,
@@ -33,6 +35,8 @@ class AlarmSettings extends StatefulWidget {
     required this.onWeekdaySelected,
     required this.onChangeSelectedBellId,
     required this.onChangeSelectedVibrateId,
+    this.bellId,
+    this.vibrateId,
   });
 
   @override
@@ -40,14 +44,19 @@ class AlarmSettings extends StatefulWidget {
 }
 
 class _AlarmSettingsState extends State<AlarmSettings> {
-  double _selectedBellVolume = 0.0;
   String? _selectedBellId;
   String? _selectedVibrateId;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.bellId != null) _selectedBellId = widget.bellId;
+    if (widget.vibrateId != null) _selectedVibrateId = widget.bellId;
+  }
 
   void onSaveBellSettings(String? bellId, double volume) {
     setState(() {
       _selectedBellId = bellId;
-      _selectedBellVolume = volume;
     });
     widget.onChangeSelectedBellId(bellId);
   }

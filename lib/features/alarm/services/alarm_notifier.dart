@@ -28,6 +28,18 @@ class AlarmListNotifier
     }
   }
 
+  Future<AlarmParams?> loadAlarm({required String alarmId}) async {
+    final alarmRepository = await AlarmRepository.getInstance();
+    Map<String, dynamic>? json = await alarmRepository.getAlarmById(
+      alarmId: alarmId,
+    );
+
+    if (json != null) {
+      return AlarmParams.fromJson(json);
+    }
+    return null;
+  }
+
   // 알람 등록
   Future<int> insertAlarm({required AlarmParams params}) async {
     final now = DateTime.now();

@@ -18,28 +18,112 @@ import 'alarm_date_picker.dart';
 import 'alarm_settings.dart';
 
 class CreateAlarm extends ConsumerStatefulWidget {
-  const CreateAlarm({super.key});
+  final String type;
+  final String? alarmId;
+
+  const CreateAlarm({super.key, required this.type, this.alarmId});
 
   @override
   ConsumerState<CreateAlarm> createState() => _CreateAlarmState();
 }
 
 class _CreateAlarmState extends ConsumerState<CreateAlarm> {
+  bool _isLoading = true;
+  int? _currentAlarmDbId;
+
   List<Weekday> _weekdays = weekdays;
   DateTime now = DateTime.now();
-  late DateTime _selectedDateTime = DateTime(
-    now.year,
-    now.month,
-    now.day,
-    7,
-    0,
-    0,
-  );
+  late DateTime _selectedDateTime;
   String? _bellId;
   String? _vibrateId;
-  bool _isActivatedVirtualMission = false;
+  bool _isActivatedWakeUpMission = false;
   bool _isActivatedVibrate = false;
   bool _isAllDay = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAlarmData();
+  }
+
+  Future<void> _initializeAlarmData() async {
+    // alarmId가 있다면 기존 알람 데이터를 로드
+    if (widget.alarmId != null) {
+      final alarmNotifier = ref.read(alarmListProvider(widget.type).notifier);
+      final int? parsedAlarmId = int.tryParse(widget.alarmId!);
+
+      if (parsedAlarmId != null) {
+        final AlarmParams? initialParams = await alarmNotifier.loadAlarm(
+          alarmId: widget.alarmId!,
+        );
+
+        if (mounted) {
+          // 위젯이 마운트된 상태인지 확인
+          setState(() {
+            if (initialParams != null) {
+              _currentAlarmDbId = parsedAlarmId; // DB ID 저장 (업데이트 시 필요)
+              _bellId = initialParams.bellId;
+              _vibrateId = initialParams.vibrateId;
+              print(_bellId);
+              print(_vibrateId);
+              _isActivatedWakeUpMission = initialParams.isWakeUpMission == 1;
+              _selectedDateTime = getWakeUpTimeFromAlarm(
+                initialParams.alarmTime,
+              );
+              _weekdays =
+                  _weekdays.map((day) {
+                    return day.copyWith(
+                      isSelected: initialParams.weekdays.contains(day.id),
+                    );
+                  }).toList();
+              _isAllDay = _weekdays.every((day) => day.isSelected);
+            } else {
+              // 해당 ID의 알람이 없는 경우 기본값으로 초기화
+              _selectedDateTime = DateTime(
+                now.year,
+                now.month,
+                now.day,
+                7,
+                0,
+                0,
+              );
+              _bellId = null;
+              _vibrateId = null;
+              _isActivatedWakeUpMission = false;
+              _isActivatedVibrate = false;
+              _weekdays = weekdays;
+              _isAllDay = false;
+            }
+            _isLoading = false;
+          });
+        }
+      } else {
+        // alarmId가 유효한 숫자가 아닌 경우
+        if (mounted) {
+          setState(() {
+            _selectedDateTime = DateTime(now.year, now.month, now.day, 7, 0, 0);
+            _isLoading = false;
+          });
+          callSimpleToast('유효하지 않은 알람 ID입니다.');
+        }
+      }
+    } else {
+      // alarmId가 없는 경우 (새 알람 생성)
+      if (mounted) {
+        setState(() {
+          _selectedDateTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            7,
+            0,
+            0, // 기본 시간
+          );
+          _isLoading = false; // 로딩 종료
+        });
+      }
+    }
+  }
 
   void changeDate(DateTime newDateTime) {
     setState(() {
@@ -61,7 +145,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
 
   void toggleWakeUpMission() {
     setState(() {
-      _isActivatedVirtualMission = !_isActivatedVirtualMission;
+      _isActivatedWakeUpMission = !_isActivatedWakeUpMission;
     });
   }
 
@@ -134,13 +218,17 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
       vibrateId: _vibrateId,
       alarmTime: dtFormStr(_selectedDateTime, 'HH:mm:ss'),
       register: 'me',
-      isWakeUpMission: _isActivatedVirtualMission ? 1 : 0,
+      isWakeUpMission: _isActivatedWakeUpMission ? 1 : 0,
       type: 'my',
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Column(
       children: [
             Gaps.v96,
@@ -151,7 +239,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
             Gaps.v16,
             AlarmSettings(
               weekdays: _weekdays,
-              isActivatedVirtualMission: _isActivatedVirtualMission,
+              isActivatedVirtualMission: _isActivatedWakeUpMission,
               toggleWakeUpMission: toggleWakeUpMission,
               isActivatedVibrate: _isActivatedVibrate,
               toggleActivatedVibrate: toggleActivatedVibrate,
@@ -160,6 +248,8 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
               onWeekdaySelected: onWeekdaySelected,
               onChangeSelectedBellId: onChangeSelectedBellId,
               onChangeSelectedVibrateId: onChangeSelectedVibrateId,
+              bellId: _bellId,
+              vibrateId: _vibrateId,
             ),
             Spacer(),
             Container(
