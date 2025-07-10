@@ -17,7 +17,7 @@ class CreateAlarmButton extends StatelessWidget {
         onPressed:
             () => context.pushNamed(
               CreateAlarmScreen.routeName,
-              pathParameters: {'type': 'my'},
+              pathParameters: {'type': 'my', 'alarmId': 'null'},
             ),
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(horizontal: 0),
@@ -30,7 +30,7 @@ class CreateAlarmButton extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            Container(
+            SizedBox(
               width: 146,
               height: 56,
               child: Row(
@@ -41,8 +41,7 @@ class CreateAlarmButton extends StatelessWidget {
                     width: 18,
                     height: 18,
                     fit: BoxFit.contain,
-                    colorFilter: const ColorFilter.mode(
-                      // const 추가
+                    colorFilter: ColorFilter.mode(
                       Colors.white,
                       BlendMode.srcIn,
                     ),

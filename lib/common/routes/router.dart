@@ -66,13 +66,15 @@ final routerProvider = Provider((ref) {
       ),
       GoRoute(
         name: CreateAlarmScreen.routeName,
-        path: '/:type(my|team)',
+        path: '/:type(my|team)/:alarmId',
         pageBuilder: (context, state) {
           final type = state.pathParameters['type']!;
+          final alarmId = state.pathParameters['alarmId'];
+
           return goRouteOpacityPageBuilder(
             context,
             state,
-            CreateAlarmScreen(type: type),
+            CreateAlarmScreen(type: type, alarmId: alarmId),
           );
         },
       ),

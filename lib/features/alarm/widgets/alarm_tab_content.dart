@@ -1,8 +1,10 @@
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
+import 'package:alarmi/features/alarm/screens/create_alarm_screen.dart';
 import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/features/main/widgets/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class AlarmTabContent extends ConsumerStatefulWidget {
   final String type;
@@ -47,12 +49,35 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                   }
                   print(alarmParams.toString());
 
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 20,
+                  return Dismissible(
+                    key: ValueKey(alarm['id']),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      color: Colors.red.withValues(alpha: 0.9),
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Icon(Icons.delete, color: Colors.white),
                     ),
-                    child: Alarm(alarmId: alarm['id'], params: alarmParams),
+                    onDismissed: (direction) {
+                      // todo: 삭제
+                    },
+                    child: GestureDetector(
+                      onTap:
+                          () => context.pushNamed(
+                            CreateAlarmScreen.routeName,
+                            pathParameters: {
+                              'type': 'my',
+                              'alarmId': alarm['id'].toString(),
+                            },
+                          ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 20,
+                        ),
+                        child: Alarm(alarmId: alarm['id'], params: alarmParams),
+                      ),
+                    ),
                   );
                 }).toList(),
           ),

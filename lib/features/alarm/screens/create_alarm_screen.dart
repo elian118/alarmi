@@ -6,8 +6,9 @@ class CreateAlarmScreen extends StatelessWidget {
   static const String routeName = 'createAlarm';
   static const String routeURL = '/create-alarm';
   final String type;
+  final String? alarmId;
 
-  const CreateAlarmScreen({super.key, required this.type});
+  const CreateAlarmScreen({super.key, required this.type, this.alarmId});
 
   @override
   Widget build(BuildContext context) {

@@ -25,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
   double _alarmsTopOffset = 0.0;
   double _dragStartY = 0.0; // 드래그 시작 시 Y 좌표
   int _currentPageIndex = 0; // 현재 페이지 인덱스
-  static const double _initialBottomOffset = 350.0; // 예: 250 -> 350으로 변경
+  static const double _initialBottomOffset = 250.0; // 예: 250 -> 350으로 변경
 
   @override
   void initState() {
@@ -170,12 +170,7 @@ class _MainScreenState extends State<MainScreen> {
                         curve: Curves.easeInOut,
                       ),
                       _currentPageIndex == 1 ? Gaps.v28 : Container(),
-                      Expanded(
-                        child: IgnorePointer(
-                          ignoring: _currentPageIndex == 0,
-                          child: AlarmTabContent(type: 'my'),
-                        ),
-                      ),
+                      Expanded(child: AlarmTabContent(type: 'my')),
                     ],
                   ),
                 ),
@@ -183,7 +178,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           Positioned(
-            bottom: 85,
+            bottom: 40,
             left: 0,
             child: ClipRRect(
               child: BackdropFilter(
