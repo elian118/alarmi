@@ -2,6 +2,7 @@ import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/screens/create_alarm_screen.dart';
 import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/features/main/widgets/alarm.dart';
+import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -58,8 +59,20 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Icon(Icons.delete, color: Colors.white),
                     ),
-                    onDismissed: (direction) {
-                      // todo: 삭제
+                    onDismissed: (direction) async {
+                      final alarmNotifier = ref.read(
+                        alarmListProvider(widget.type).notifier,
+                      );
+                      final int alarmIdToDelete = alarm['id'] as int;
+
+                      try {
+                        await alarmNotifier.deleteAlarm(
+                          alarmIdToDelete,
+                          widget.type,
+                        );
+                      } catch (e) {
+                        callSimpleToast('알림 삭제가 실패했습니다.');
+                      }
                     },
                     child: GestureDetector(
                       onTap:

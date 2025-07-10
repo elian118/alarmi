@@ -4,8 +4,8 @@ import 'package:alarmi/common/consts/raw_data/weekdays.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
-import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
+import 'package:alarmi/features/main/screens/main_screen.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -190,7 +190,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     if (mounted) {
       if (id != null) {
         callSimpleToast('알람이 등록되었습니다.');
-        context.go(AlarmsScreen.routeURL);
+        context.go(MainScreen.routeURL);
       } else {
         callSimpleToast('알람 등록에 실패했습니다.');
       }

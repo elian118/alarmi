@@ -95,6 +95,17 @@ class AlarmTestScreen extends StatelessWidget {
               },
               child: const Text('설정된 알람 확인'),
             ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                await NotificationController.stopTestAlarms();
+                await NotificationController.stopAlarmSound(); // 혹시 재생 중인 사운드가 있다면 중지
+                await NotificationController.stopHaptic(); // 혹시 재생 중인 진동이 있다면 중지
+                await AwesomeNotifications().cancelAll();
+                callSimpleToast('캐싱된 알람이 모두 삭제되었습니다.');
+              },
+              child: const Text('캐싱 알람 모두 삭제'),
+            ),
           ],
         ),
       ),

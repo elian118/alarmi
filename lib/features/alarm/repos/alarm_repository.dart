@@ -19,7 +19,12 @@ class AlarmRepository {
 
   Future<List<Map<String, dynamic>>> getAlarms({String? type}) async {
     if (type != null) {
-      return await _db.query(alarms, where: 'type = ?', whereArgs: [type]);
+      return await _db.query(
+        alarms,
+        where: 'type = ?',
+        whereArgs: [type],
+        orderBy: 'alarmTime ASC',
+      );
     } else {
       return await _db.query(alarms);
     }
@@ -33,6 +38,16 @@ class AlarmRepository {
       limit: 1,
     );
     return results.isNotEmpty ? results.first : null;
+  }
+
+  Future<String> getAlarmKeysById(int alarmId) async {
+    List<Map<String, dynamic>> results = await _db.query(
+      alarms,
+      where: 'id = ?',
+      whereArgs: [alarmId],
+      limit: 1,
+    );
+    return results.isNotEmpty ? results.first['alarmKeys'] : [];
   }
 
   Future<List<Map<String, dynamic>>> getAlarmsByAlarmKeyContains(

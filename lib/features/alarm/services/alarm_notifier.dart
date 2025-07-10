@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:alarmi/common/configs/notification_controller.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/repos/alarm_repository.dart';
 import 'package:flutter/foundation.dart';
@@ -19,6 +21,7 @@ class AlarmListNotifier
     try {
       final alarmRepository = await AlarmRepository.getInstance();
       final alarms = await alarmRepository.getAlarms(type: type);
+      print(alarms);
       state = AsyncData(alarms);
     } catch (e, st) {
       state = AsyncError(e, st);
@@ -70,10 +73,21 @@ class AlarmListNotifier
   Future<void> deleteAlarm(int id, String type) async {
     try {
       final alarmRepository = await AlarmRepository.getInstance();
-      await alarmRepository.deleteAlarm(id);
+      String strAlarmKeys = await alarmRepository.getAlarmKeysById(id);
+      List<dynamic> alarmKeys = jsonDecode(
+        strAlarmKeys.trim().replaceAll(' ', ''),
+      );
+      alarmKeys = alarmKeys.map((key) => key as int).toList();
+      int deletedRowCount = await alarmRepository.deleteAlarm(id);
+      print('deletedRowCount: $deletedRowCount, alarmKeys: $alarmKeys');
+      // 삭제 성공 시
+      if (deletedRowCount > 0 && alarmKeys.isNotEmpty) {
+        NotificationController.stopScheduledAlarm(alarmKeys as List<int>);
+      }
       if (kDebugMode) {
         print('알람이 삭제되었습니다. ID: $id');
       }
+      // 관련 메시징 스케쥴 로컬 알람 삭제
       await loadAlarms(type); // 삭제 후 알람 목록 새로고침
     } catch (e) {
       if (kDebugMode) {

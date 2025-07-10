@@ -1,10 +1,9 @@
 import 'package:alarmi/common/consts/gaps.dart';
+import 'package:alarmi/features/alarm/widgets/alarm_tab_content.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
-
-import '../../alarm/widgets/alarm_tab_content.dart';
 
 class MyAlarmsLayer extends StatefulWidget {
   final PageController pageController;

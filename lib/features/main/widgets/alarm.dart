@@ -32,6 +32,23 @@ class Alarm extends ConsumerWidget {
           return weekday?.name ?? '';
         }).toList();
 
+    void updateWeeklyAlarm({
+      required DateTime renewDateTime,
+      required Map<String, dynamic> updatedAlarmMap,
+    }) async {
+      final alarmNotifier = ref.read(alarmListProvider(params.type).notifier);
+      List<int> newAlarmKeys = await NotificationController.setWeeklyAlarm(
+        weekdays: params.weekdays,
+        dateTime: renewDateTime,
+        bellId: params.bellId,
+        vibrateId: params.vibrateId,
+      );
+      if (newAlarmKeys.isNotEmpty) {
+        updatedAlarmMap['alarmKeys'] = newAlarmKeys.toString();
+        await alarmNotifier.updateAlarm(updatedAlarmMap, params.type);
+      }
+    }
+
     void onChanged(bool newValue) async {
       final alarmNotifier = ref.read(alarmListProvider(params.type).notifier);
 
@@ -46,13 +63,11 @@ class Alarm extends ConsumerWidget {
         await alarmNotifier.updateAlarm(updatedAlarmMap, params.type);
         newValue
             ? NotificationController.stopScheduledAlarm(alarmKeys)
-            : NotificationController.setWeeklyAlarm(
-              weekdays: params.weekdays,
-              dateTime: renewDateTime,
-              bellId: params.bellId,
-              vibrateId: params.vibrateId,
+            // 기존 알람 alarmKeys와 연결이 모두 끊어지게 되므로, 새로 생성된 alarmKeys로 내부 DB 정보 업뎃.
+            : updateWeeklyAlarm(
+              renewDateTime: renewDateTime,
+              updatedAlarmMap: updatedAlarmMap,
             );
-
         callSimpleToast(newValue ? '알람이 비활성화되었습니다.' : '알람이 활성화되었습니다.');
       } catch (e) {
         if (kDebugMode) {
