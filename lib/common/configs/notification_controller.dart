@@ -19,7 +19,23 @@ class NotificationController {
   static Timer? hapticTimer;
 
   static Future<void> initAwesomeNotifications() async {
-    await AwesomeNotifications().initialize(null, getChannels(), debug: true);
+    await AwesomeNotifications().initialize(null, [
+      NotificationChannel(
+        channelKey: '0_channel', // 첫 번째 벨의 ID를 사용한 채널 키
+        channelName: 'Test',
+        channelDescription: 'Test',
+        defaultColor: const Color(0xFF9D50DD),
+        ledColor: Colors.white,
+        playSound: true,
+        enableVibration: true, // 기본적으로 진동 활성화 (패턴은 나중에 설정)
+        vibrationPattern: null, // 초기에는 진동 패턴을 지정하지 않습니다.
+        soundSource: 'resource://raw/test',
+        importance: NotificationImportance.Max,
+        channelShowBadge: true,
+        locked: true,
+        criticalAlerts: true,
+      ),
+    ], debug: true);
 
     // 알림 권한 요청
     await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
@@ -39,50 +55,54 @@ class NotificationController {
     );
   }
 
-  static List<NotificationChannel> getChannels() {
+  // 알람 채널 존재 여부 확인 - 알림을 보내기 직전에 호출
+  static Future<void> ensureNotificationChannelExists({
+    required Bell bell,
+    HapticPattern? hapticPattern, // 진동 패턴은 선택 사항
+  }) async {
     String getBellFileName(bell) => bell.path.split('/').last.split('.').first;
 
-    // 진동 패턴이 없는 경우를 나타내는 가상의 HapticPattern 객체 추가
-    final allHapticPatterns = [
-      HapticPattern(
-        preset: null, // 프리셋 없음
-        id: 'no_pattern',
-        name: '',
-        pattern: Int64List(0), // 비어있는 진동 패턴
+    String channelKey;
+    String channelName;
+    String channelDescription;
+    Int64List? vibrationPattern;
+    bool enableVibration;
+
+    if (hapticPattern != null) {
+      // 진동 패턴이 있는 경우의 채널
+      channelKey = '${bell.id}_${hapticPattern.id}_channel';
+      channelName = '${bell.name}_${hapticPattern.name}';
+      channelDescription = '${bell.name}_${hapticPattern.name}';
+      vibrationPattern = hapticPattern.pattern;
+      enableVibration = true;
+    } else {
+      // 진동 패턴이 없는 경우의 채널 (기본 채널)
+      channelKey = '${bell.id}_channel';
+      channelName = bell.name;
+      channelDescription = bell.name;
+      vibrationPattern = null; // 진동 패턴 없음
+      enableVibration = true; // 소리와 함께 기본 진동은 활성화
+    }
+
+    // 채널이 이미 존재하는지 확인
+    // Awesome Notifications는 내부적으로 채널이 없으면 새로 생성
+    await AwesomeNotifications().setChannel(
+      NotificationChannel(
+        channelKey: channelKey,
+        channelName: channelName,
+        channelDescription: channelDescription,
+        defaultColor: const Color(0xFF9D50DD),
+        ledColor: Colors.white,
+        playSound: true,
+        enableVibration: enableVibration,
+        vibrationPattern: vibrationPattern,
+        soundSource: 'resource://raw/${getBellFileName(bell)}',
+        importance: NotificationImportance.Max,
+        channelShowBadge: true,
+        locked: true,
+        criticalAlerts: true,
       ),
-      ...hapticPatterns, // 기존의 진동 패턴들
-    ];
-
-    return bells.expand((bell) {
-      final bellFileName = getBellFileName(bell); // 한 번만 호출하여 변수에 저장
-
-      return allHapticPatterns.map((pattern) {
-        // 'no_pattern'의 경우 채널 이름과 키에서 패턴 관련 부분 제외
-        final channelKeySuffix =
-            pattern.id == 'no_pattern' ? '' : '_${pattern.id}';
-        final channelNameSuffix =
-            pattern.id == 'no_pattern' ? '' : '_${pattern.name}';
-
-        return NotificationChannel(
-          channelKey: '${bell.id}${channelKeySuffix}_channel',
-          channelName: '${bell.name}$channelNameSuffix',
-          channelDescription: '${bell.name}$channelNameSuffix',
-          defaultColor: const Color(0xFF9D50DD),
-          ledColor: Colors.white,
-          playSound: true,
-          enableVibration: pattern.id != 'no_pattern', // 패턴이 있을 때만 진동 활성화
-          vibrationPattern:
-              pattern.id == 'no_pattern'
-                  ? null
-                  : pattern.pattern, // 'no_pattern'일 경우 진동 패턴 없음
-          soundSource: 'resource://raw/$bellFileName',
-          importance: NotificationImportance.Max,
-          channelShowBadge: true,
-          locked: true,
-          criticalAlerts: true,
-        );
-      });
-    }).toList();
+    );
   }
 
   @pragma('vm:entry-point')
@@ -174,6 +194,8 @@ class NotificationController {
   }) async {
     DateTime testDateTime = DateTime.now().add(5.seconds); // 5초 뒤 시간
     Bell? bell = bells.where((bell) => bell.id == bellId).first;
+    HapticPattern? pattern =
+        hapticPatterns.where((p) => p.id == vibrateId).first;
     String fileName = bell.path.split('/').last.split('.').first;
     await NotificationController.stopTestAlarms(); // 중복되는 ID 1~5 테스트 알람만 제거
 
@@ -183,6 +205,9 @@ class NotificationController {
       print('resource://raw/$fileName');
       print('channelKey: $bellId${channelKeySuffix}_channel');
     }
+
+    // 알림 채널이 존재하는지 확인하고 필요하면 생성
+    await ensureNotificationChannelExists(bell: bell, hapticPattern: pattern);
 
     // 월~일까지 각각 알림 설정
     for (int i = DateTime.monday; i <= DateTime.sunday; i++) {
@@ -236,6 +261,8 @@ class NotificationController {
   }) async {
     List<int> alarmKeys = [];
     Bell? bell = bells.where((bell) => bell.id == bellId).first;
+    HapticPattern? pattern =
+        hapticPatterns.where((p) => p.id == vibrateId).first;
     String fileName = bell.path.split('/').last.split('.').first;
 
     final channelKeySuffix = vibrateId != null ? '_$vibrateId' : '';
@@ -244,6 +271,9 @@ class NotificationController {
       print('resource://raw/$fileName');
       print('channelKey: $bellId${channelKeySuffix}_channel');
     }
+
+    // 알림 채널이 존재하는지 확인하고 필요하면 생성
+    await ensureNotificationChannelExists(bell: bell, hapticPattern: pattern);
 
     // 반복 주간
     for (int week in weekdays) {
