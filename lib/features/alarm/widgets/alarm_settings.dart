@@ -51,7 +51,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   void initState() {
     super.initState();
     if (widget.bellId != null) _selectedBellId = widget.bellId;
-    if (widget.vibrateId != null) _selectedVibrateId = widget.bellId;
+    if (widget.vibrateId != null) _selectedVibrateId = widget.vibrateId;
   }
 
   void onSaveBellSettings(String? bellId, double volume) {

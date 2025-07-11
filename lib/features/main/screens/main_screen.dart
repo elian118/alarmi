@@ -4,7 +4,10 @@ import 'package:alarmi/features/main/layers/first_main_layer.dart';
 import 'package:alarmi/features/main/layers/my_alarms_layer.dart';
 import 'package:alarmi/features/main/layers/second_main_layer.dart';
 import 'package:alarmi/features/main/widgets/create_alarm_button.dart';
+import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 class MainScreen extends StatefulWidget {
   static const String routeName = 'main';
@@ -20,7 +23,6 @@ class _MainScreenState extends State<MainScreen> {
   final PageController _pageController = PageController(initialPage: 0);
 
   int _currentPageIndex = 0; // 현재 페이지 인덱스
-  // 예: 250 -> 350으로 변경
 
   @override
   void initState() {
@@ -71,19 +73,19 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
           // 테스트 스크린으로 이동하는 버튼
-          // Positioned(
-          //   top: 50,
-          //   right: 20,
-          //   child: GestureDetector(
-          //     onTap: () => context.push(AlarmTestScreen.routeURL),
-          //     child: Image.asset(
-          //       'assets/images/characters/thumb.png',
-          //     ).animate().scale(
-          //       duration: Duration(milliseconds: 500),
-          //       curve: Curves.easeInOut,
-          //     ),
-          //   ),
-          // ),
+          Positioned(
+            top: 50,
+            right: 20,
+            child: GestureDetector(
+              onTap: () => context.push(AlarmTestScreen.routeURL),
+              child: Image.asset(
+                'assets/images/characters/thumb.png',
+              ).animate().scale(
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              ),
+            ),
+          ),
         ],
       ),
     );
