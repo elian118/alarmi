@@ -89,8 +89,6 @@ class NotificationController {
   static Future<void> onNotificationDisplayedMethod(
     ReceivedNotification receivedNotification,
   ) async {
-    int alarmId = receivedNotification.id!;
-
     if (kDebugMode) {
       print(
         'onNotificationDisplayedMethod 호출됨. ID: ${receivedNotification.id}',
