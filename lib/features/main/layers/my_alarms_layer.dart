@@ -91,9 +91,8 @@ class _MyAlarmsLayerState extends State<MyAlarmsLayer> {
     final Duration animationDuration =
         widget.pageController.hasClients &&
                 widget.pageController.page?.round() != widget.currentPageIndex
-            ? 0
-                .ms // PageController로 제어될 때 즉시 이동
-            : 300.ms; // 사용자 드래그 시에는 300ms 애니메이션 적용
+            ? 0.ms
+            : 300.ms;
 
     return AnimatedPositioned(
       duration: animationDuration,
@@ -106,7 +105,7 @@ class _MyAlarmsLayerState extends State<MyAlarmsLayer> {
         onVerticalDragUpdate: _onVerticalDragUpdate,
         onVerticalDragEnd: _onVerticalDragEnd,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          // padding: const EdgeInsets.symmetric(horizontal: 20),
           width: getWinWidth(context),
           color: Colors.transparent,
           child: SafeArea(
