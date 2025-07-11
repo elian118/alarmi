@@ -9,10 +9,6 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:just_audio/just_audio.dart';
-
-// 싱글톤 AudioPlayer 인스턴스
-final AudioPlayer _audioPlayer = AudioPlayer();
 
 class NotificationController {
   static ReceivedAction? initialAction;
@@ -27,8 +23,8 @@ class NotificationController {
         defaultColor: const Color(0xFF9D50DD),
         ledColor: Colors.white,
         playSound: true,
-        enableVibration: true, // 기본적으로 진동 활성화 (패턴은 나중에 설정)
-        vibrationPattern: null, // 초기에는 진동 패턴을 지정하지 않습니다.
+        enableVibration: false,
+        // vibrationPattern: null,
         soundSource: 'resource://raw/test',
         importance: NotificationImportance.Max,
         channelShowBadge: true,
@@ -81,7 +77,7 @@ class NotificationController {
       channelName = bell.name;
       channelDescription = bell.name;
       vibrationPattern = null; // 진동 패턴 없음
-      enableVibration = true; // 소리와 함께 기본 진동은 활성화
+      enableVibration = false;
     }
 
     // 채널이 이미 존재하는지 확인
@@ -141,29 +137,6 @@ class NotificationController {
       }
 
       await AwesomeNotifications().dismiss(receivedAction.id!); // 알림 제거
-    }
-  }
-
-  @pragma('vm:entry-point')
-  static Future<void> playAlarmSound(
-    int alarmId,
-    String assetPath,
-    double currentVolume,
-  ) async {
-    try {
-      if (kDebugMode) {
-        print('playAlarmSound 시작: $assetPath');
-      }
-      await _audioPlayer.setAsset(assetPath);
-      await _audioPlayer.setLoopMode(LoopMode.one); // 반복 재생 설정
-      await _audioPlayer.play();
-      if (kDebugMode) {
-        print('재생 시작');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('재생 중 오류 발생: $e');
-      }
     }
   }
 

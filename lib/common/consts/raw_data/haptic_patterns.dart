@@ -4,22 +4,22 @@ import 'package:alarmi/features/alarm/models/haptic_pattern.dart';
 import 'package:vibration/vibration_presets.dart';
 
 List<HapticPattern> hapticPatterns = [
-  HapticPattern(
-    preset: VibrationPreset.countdownTimerAlert,
-    id: 'countdownTimerAlert',
-    name: '카운트다운',
-    pattern: Int64List.fromList([
-      0,
-      100,
-      100,
-      100,
-      100,
-      100,
-      200,
-      300,
-      400,
-    ]), // 점점 길고 강해지는 카운트다운 느낌
-  ),
+  // HapticPattern(
+  //   preset: VibrationPreset.countdownTimerAlert,
+  //   id: 'countdownTimerAlert',
+  //   name: '카운트다운',
+  //   pattern: Int64List.fromList([
+  //     0,
+  //     100,
+  //     100,
+  //     100,
+  //     100,
+  //     100,
+  //     200,
+  //     300,
+  //     400,
+  //   ]), // 점점 길고 강해지는 카운트다운 느낌
+  // ),
   HapticPattern(
     preset: VibrationPreset.doubleBuzz,
     id: 'doubleBuzz',
@@ -108,18 +108,18 @@ List<HapticPattern> hapticPatterns = [
       200,
     ]), // 일정한 간격의 펄스
   ),
-  HapticPattern(
-    preset: VibrationPreset.quickSuccessAlert,
-    id: 'quickSuccessAlert',
-    name: '빠른 성공',
-    pattern: Int64List.fromList([0, 100, 50, 100]), // 짧고 빠르게 두 번
-  ),
-  HapticPattern(
-    preset: VibrationPreset.rapidTapFeedback,
-    id: 'rapidTapFeedback',
-    name: '급한 탭 피드백',
-    pattern: Int64List.fromList([0, 50, 50, 50, 50, 50]), // 아주 짧게 여러 번 반복
-  ),
+  // HapticPattern(
+  //   preset: VibrationPreset.quickSuccessAlert,
+  //   id: 'quickSuccessAlert',
+  //   name: '빠른 성공',
+  //   pattern: Int64List.fromList([0, 100, 50, 100]), // 짧고 빠르게 두 번
+  // ),
+  // HapticPattern(
+  //   preset: VibrationPreset.rapidTapFeedback,
+  //   id: 'rapidTapFeedback',
+  //   name: '급한 탭 피드백',
+  //   pattern: Int64List.fromList([0, 50, 50, 50, 50, 50]), // 아주 짧게 여러 번 반복
+  // ),
   HapticPattern(
     preset: VibrationPreset.rhythmicBuzz,
     id: 'rhythmicBuzz',
@@ -138,40 +138,31 @@ List<HapticPattern> hapticPatterns = [
     name: '짧게 한 번',
     pattern: Int64List.fromList([0, 200]), // 짧게 한 번
   ),
-  HapticPattern(
-    preset: VibrationPreset.tripleBuzz,
-    id: 'tripleBuzz',
-    name: '세 번',
-    pattern: Int64List.fromList([0, 200, 100, 200, 100, 200]), // 짧게 세 번
-  ),
-  HapticPattern(
-    preset: VibrationPreset.urgentBuzzWave,
-    id: 'urgentBuzzWave',
-    name: '긴급 울림',
-    pattern: Int64List.fromList([
-      0,
-      300,
-      100,
-      300,
-      100,
-      300,
-      500,
-      500,
-    ]), // 반복적이고 긴급한 느낌
-  ),
+  // HapticPattern(
+  //   preset: VibrationPreset.tripleBuzz,
+  //   id: 'tripleBuzz',
+  //   name: '세 번',
+  //   pattern: Int64List.fromList([0, 200, 100, 200, 100, 200]), // 짧게 세 번
+  // ),
+  // HapticPattern(
+  //   preset: VibrationPreset.urgentBuzzWave,
+  //   id: 'urgentBuzzWave',
+  //   name: '긴급 울림',
+  //   pattern: Int64List.fromList([
+  //     0,
+  //     300,
+  //     100,
+  //     300,
+  //     100,
+  //     300,
+  //     500,
+  //     500,
+  //   ]), // 반복적이고 긴급한 느낌
+  // ),
   HapticPattern(
     preset: VibrationPreset.zigZagAlert,
     id: 'zigZagAlert',
     name: '지그재그',
-    pattern: Int64List.fromList([
-      0,
-      100,
-      50,
-      150,
-      50,
-      100,
-      50,
-      150,
-    ]), // 불규칙적인 리듬으로 지그재그 느낌
+    pattern: Int64List.fromList([0, 100, 50, 150, 50, 100, 50, 150]),
   ),
 ];
