@@ -39,8 +39,8 @@ class AlarmTestScreen extends StatelessWidget {
                 }
 
                 await NotificationController.setTestWeeklyAlarm(
-                  soundAssetPath: bells[randomBellIdx].path,
-                  hapticPattern: hapticPatterns[hapticPatternIdx].id,
+                  bellId: bells[randomBellIdx].id,
+                  vibrateId: hapticPatterns[hapticPatternIdx].id,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('주기적 테스트 알람이 설정되었습니다.')),
@@ -52,8 +52,6 @@ class AlarmTestScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 await NotificationController.stopTestAlarms();
-                await NotificationController.stopAlarmSound(); // 혹시 재생 중인 사운드가 있다면 중지
-                await NotificationController.stopHaptic(); // 혹시 재생 중인 진동이 있다면 중지
                 callSimpleToast('모든 테스트 알람이 취소되었습니다.');
               },
               child: const Text('재생 중지'),
@@ -99,8 +97,6 @@ class AlarmTestScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 await NotificationController.stopTestAlarms();
-                await NotificationController.stopAlarmSound(); // 혹시 재생 중인 사운드가 있다면 중지
-                await NotificationController.stopHaptic(); // 혹시 재생 중인 진동이 있다면 중지
                 await AwesomeNotifications().cancelAll();
                 callSimpleToast('캐싱된 알람이 모두 삭제되었습니다.');
               },

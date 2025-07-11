@@ -4,13 +4,12 @@ import 'package:alarmi/common/consts/app_uuid.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/features/alarm/models/bell.dart';
-import 'package:alarmi/utils/vibrate_utils.dart';
+import 'package:alarmi/features/alarm/models/haptic_pattern.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:vibration/vibration_presets.dart';
 
 // 싱글톤 AudioPlayer 인스턴스
 final AudioPlayer _audioPlayer = AudioPlayer();
@@ -20,25 +19,7 @@ class NotificationController {
   static Timer? hapticTimer;
 
   static Future<void> initAwesomeNotifications() async {
-    await AwesomeNotifications().initialize(null, [
-      NotificationChannel(
-        channelKey: 'my_alarm_channel',
-        channelName: '내 알람',
-        channelDescription: '사용자 전용 주기적 기상 알람',
-        defaultColor: const Color(0xFF9D50DD),
-        ledColor: Colors.white,
-        playSound: true,
-        enableVibration: true,
-        // vibrationPattern: hapticPatterns[0].pattern, // 진동 패턴
-        // playSound: false,
-        // enableVibration: false,
-        soundSource: 'resource://raw/movement',
-        importance: NotificationImportance.Max, // 중요도 최대 설정
-        channelShowBadge: true,
-        locked: true, // 알림을 스와이프 제거 방지(잠금)
-        criticalAlerts: true, // Android 12 이상 - 전체 화면 인텐트 활성화
-      ),
-    ], debug: true);
+    await AwesomeNotifications().initialize(null, getChannels(), debug: true);
 
     // 알림 권한 요청
     await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
@@ -56,6 +37,52 @@ class NotificationController {
     initialAction = await AwesomeNotifications().getInitialNotificationAction(
       removeFromActionEvents: false,
     );
+  }
+
+  static List<NotificationChannel> getChannels() {
+    String getBellFileName(bell) => bell.path.split('/').last.split('.').first;
+
+    // 진동 패턴이 없는 경우를 나타내는 가상의 HapticPattern 객체 추가
+    final allHapticPatterns = [
+      HapticPattern(
+        preset: null, // 프리셋 없음
+        id: 'no_pattern',
+        name: '',
+        pattern: Int64List(0), // 비어있는 진동 패턴
+      ),
+      ...hapticPatterns, // 기존의 진동 패턴들
+    ];
+
+    return bells.expand((bell) {
+      final bellFileName = getBellFileName(bell); // 한 번만 호출하여 변수에 저장
+
+      return allHapticPatterns.map((pattern) {
+        // 'no_pattern'의 경우 채널 이름과 키에서 패턴 관련 부분 제외
+        final channelKeySuffix =
+            pattern.id == 'no_pattern' ? '' : '_${pattern.id}';
+        final channelNameSuffix =
+            pattern.id == 'no_pattern' ? '' : '_${pattern.name}';
+
+        return NotificationChannel(
+          channelKey: '${bell.id}${channelKeySuffix}_channel',
+          channelName: '${bell.name}$channelNameSuffix',
+          channelDescription: '${bell.name}$channelNameSuffix',
+          defaultColor: const Color(0xFF9D50DD),
+          ledColor: Colors.white,
+          playSound: true,
+          enableVibration: pattern.id != 'no_pattern', // 패턴이 있을 때만 진동 활성화
+          vibrationPattern:
+              pattern.id == 'no_pattern'
+                  ? null
+                  : pattern.pattern, // 'no_pattern'일 경우 진동 패턴 없음
+          soundSource: 'resource://raw/$bellFileName',
+          importance: NotificationImportance.Max,
+          channelShowBadge: true,
+          locked: true,
+          criticalAlerts: true,
+        );
+      });
+    }).toList();
   }
 
   @pragma('vm:entry-point')
@@ -85,9 +112,8 @@ class NotificationController {
     }
 
     // '알람 끄기' 버튼이 눌렸을 때 또는 메시지 본문이 눌렸을 때
-    if (receivedAction.channelKey == 'my_alarm_channel' &&
-        (receivedAction.buttonKeyPressed == 'stop_alarm' ||
-            receivedAction.actionType == ActionType.Default)) {
+    if (receivedAction.buttonKeyPressed == 'stop_alarm' ||
+        receivedAction.actionType == ActionType.Default) {
       if (kDebugMode) {
         if (receivedAction.buttonKeyPressed == 'stop_alarm') {
           print('알람 중지 버튼이 눌렸습니다.');
@@ -97,8 +123,6 @@ class NotificationController {
       }
 
       await AwesomeNotifications().dismiss(receivedAction.id!); // 알림 제거
-      // await stopAlarmSound(); // 재생 중지
-      // await stopHaptic(); // 진동 중지
     }
   }
 
@@ -125,26 +149,6 @@ class NotificationController {
     }
   }
 
-  @pragma('vm:entry-point')
-  static playHaptic(int alarmId, String hapticPattern) async {
-    VibrationPreset preset =
-        hapticPatterns.where((h) => h.id == hapticPattern).first.preset;
-    hapticTimer = VibrateUtils.playRepeatVibration(preset);
-  }
-
-  // stopAlarmSound 함수도 Top-level 유지
-  static Future<void> stopAlarmSound(
-    // double currentVolume
-  ) async {
-    if (_audioPlayer.playing) {
-      await _audioPlayer.stop();
-    }
-  }
-
-  static Future<void> stopHaptic() async {
-    VibrateUtils.stopRepeatVibration(hapticTimer);
-  }
-
   static Future<void> stopTestAlarms() async {
     // ID 1~5 테스트 알람만 제거
     for (int i = DateTime.monday; i <= DateTime.sunday; i++) {
@@ -167,27 +171,33 @@ class NotificationController {
 
   // 테스트 알람 설정 매주 월~금 지금부터 5초 뒤 반복 알람
   static Future<void> setTestWeeklyAlarm({
-    required String soundAssetPath,
-    required String hapticPattern,
+    required String? bellId,
+    required String? vibrateId,
   }) async {
     DateTime testDateTime = DateTime.now().add(5.seconds); // 5초 뒤 시간
-
+    Bell? bell = bells.where((bell) => bell.id == bellId).first;
+    String fileName = bell.path.split('/').last.split('.').first;
     await NotificationController.stopTestAlarms(); // 중복되는 ID 1~5 테스트 알람만 제거
-    String fileName = soundAssetPath.split('/').last.split('.').first;
 
-    print('resource://raw/$fileName');
+    final channelKeySuffix = vibrateId != null ? '_$vibrateId' : '';
+
+    if (kDebugMode) {
+      print('resource://raw/$fileName');
+      print('channelKey: $bellId${channelKeySuffix}_channel');
+    }
+
     // 월~일까지 각각 알림 설정
     for (int i = DateTime.monday; i <= DateTime.sunday; i++) {
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: i,
-          channelKey: 'my_alarm_channel',
+          channelKey: '$bellId${channelKeySuffix}_channel',
           title: '(test) 기상 시간입니다!',
           body: '상쾌한 아침을 시작하세요.',
           payload: {
             'day': i.toString(),
-            'soundAssetPath': soundAssetPath,
-            'hapticPattern': hapticPattern,
+            'soundAssetPath': bell.path,
+            'hapticPattern': vibrateId,
           },
           category: NotificationCategory.Alarm,
           notificationLayout: NotificationLayout.BigPicture,
@@ -196,8 +206,6 @@ class NotificationController {
           fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
           locked: true, // 알림 스와이프 방지
           customSound: 'resource://raw/$fileName',
-          // customSound: 'resource://raw/heavy_rain',
-          // customSound: null,
           chronometer: Duration.zero, // 카운트 시작 점
           timeoutAfter: Duration(minutes: 15), // 키운팅 이후 15분 뒤 만료
         ),
@@ -232,7 +240,12 @@ class NotificationController {
     Bell? bell = bells.where((bell) => bell.id == bellId).first;
     String fileName = bell.path.split('/').last.split('.').first;
 
-    print('resource://raw/$fileName');
+    final channelKeySuffix = vibrateId != null ? '_$vibrateId' : '';
+
+    if (kDebugMode) {
+      print('resource://raw/$fileName');
+      print('channelKey: $bellId${channelKeySuffix}_channel');
+    }
 
     // 반복 주간
     for (int week in weekdays) {
@@ -240,7 +253,7 @@ class NotificationController {
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: uId,
-          channelKey: 'my_alarm_channel',
+          channelKey: '$bellId${channelKeySuffix}_channel',
           title: '기상 시간입니다!',
           body: '상쾌한 아침을 시작하세요.',
           payload: {
@@ -256,8 +269,6 @@ class NotificationController {
           fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
           locked: true, // 알림 스와이프 방지
           customSound: 'resource://raw/$fileName',
-          // customSound: 'resource://raw/heavy_rain',
-          // customSound: null,
           chronometer: Duration.zero,
           timeoutAfter: Duration(minutes: 15),
         ),

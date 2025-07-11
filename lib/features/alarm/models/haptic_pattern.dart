@@ -5,7 +5,7 @@ import 'package:vibration/vibration_presets.dart';
 class HapticPattern {
   final String id;
   final String name;
-  final VibrationPreset preset;
+  final VibrationPreset? preset;
   final Int64List pattern;
 
   HapticPattern({

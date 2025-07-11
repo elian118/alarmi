@@ -72,7 +72,7 @@ class _VibratesState extends State<Vibrates> with TickerProviderStateMixin {
                 (h) => Vibrate(
                   key: UniqueKey(),
                   title: h.name,
-                  preset: h.preset,
+                  preset: h.preset!,
                   canVibrate: _canVibrate,
                   currentlyPlayingPresetId: _currentlyPlayingPresetId,
                   onVibrationStateChanged: onVibrationStateChanged,
