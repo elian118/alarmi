@@ -1,14 +1,14 @@
-import 'package:alarmi/common/configs/inner_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'common/configs/notification_controller.dart';
+import 'common/configs/inner_database.dart';
+import 'common/configs/notification_initialize.dart';
 import 'common/routes/router.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // runApp() 실행 전에 위젯 바인딩
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
 
   // 세로모드 고정
   SystemChrome.setPreferredOrientations([
@@ -16,39 +16,86 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // final personalSettings = await SharedPreferences.getInstance();
-  // final setRepository = ConfigRepository(personalSettings);
-
-  await InnerDatabase.initialize(); // 내부 DB 초기화
-  await NotificationController.initAwesomeNotifications(); // 알람 제어자 초기화
-
   runApp(ProviderScope(child: AlarmiApp()));
 }
 
-class AlarmiApp extends ConsumerWidget {
+class AlarmiApp extends ConsumerStatefulWidget {
   const AlarmiApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp.router(
-      localizationsDelegates: <LocalizationsDelegate<Object>>[
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('en', 'US'), Locale('ko', 'KR')],
-      routerConfig: ref.watch(routerProvider),
-      debugShowCheckedModeBanner: false,
-      title: 'Alarmi',
-      // themeMode: ref.watch(configProvider).darkMode ? ThemeMode.dark : ThemeMode.light,
-      themeMode: ThemeMode.system,
-      theme: ThemeData(
-        fontFamily: "Pretendard",
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Color(0xFF558EFF),
-        ),
-      ),
+  ConsumerState<AlarmiApp> createState() => _AlarmiAppState();
+}
+
+class _AlarmiAppState extends ConsumerState<AlarmiApp> {
+  late Future<void> _initialization;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialization = _initializeDependencies();
+  }
+
+  Future<void> _initializeDependencies() async {
+    // final personalSettings = await SharedPreferences.getInstance();
+    // final setRepository = ConfigRepository(personalSettings);
+
+    await InnerDatabase.initialize();
+    await NotificationInitialize.initAwesomeNotifications();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _initialization,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return MaterialApp(
+              home: Scaffold(
+                body: Center(
+                  child: Text('앱 초기화 중 오류가 발생했습니다: ${snapshot.error}'),
+                ),
+              ),
+            );
+          } else {
+            // 오류 없이 완료되면 앱 라우터 설정 반환
+            return MaterialApp.router(
+              localizationsDelegates: <LocalizationsDelegate<Object>>[
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [Locale('en', 'US'), Locale('ko', 'KR')],
+              routerConfig: ref.watch(routerProvider),
+              debugShowCheckedModeBanner: false,
+              title: 'Alarmi',
+              themeMode: ThemeMode.system,
+              theme: ThemeData(
+                fontFamily: "Pretendard",
+                colorScheme: ColorScheme.fromSwatch().copyWith(
+                  primary: const Color(0xFF558EFF),
+                ),
+              ),
+            );
+          }
+        } else {
+          // 초기화가 아직 진행 중일 때는 로딩 스플래시
+          return MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(), // 로딩 인디케이터
+                    SizedBox(height: 20),
+                    Text('알람 준비 중...'),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }
