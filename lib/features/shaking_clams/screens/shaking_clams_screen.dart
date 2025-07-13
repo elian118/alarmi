@@ -31,16 +31,14 @@ class ShakingClamsScreen extends ConsumerWidget {
               child: SizedBox(
                     width: 330,
                     height: 360,
-                    child: Positioned.fill(
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            'assets/images/backgrounds/seashell.png',
-                            fit: BoxFit.contain,
-                          ),
-                          Gaps.v24,
-                        ],
-                      ),
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'assets/images/backgrounds/seashell.png',
+                          fit: BoxFit.contain,
+                        ),
+                        Gaps.v24,
+                      ],
                     ),
                   )
                   .animate(target: shakingClamsState.isStart ? 1 : 0)

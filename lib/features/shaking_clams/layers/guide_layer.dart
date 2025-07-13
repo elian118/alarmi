@@ -61,36 +61,39 @@ class _GuideLayerState extends ConsumerState<GuideLayer>
               ? Stack(
                 alignment: Alignment.center,
                 children: [
-                  SizedBox(
-                    width: 152,
-                    height: 152,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: AnimatedBuilder(
-                            animation: _progressAnimationController,
-                            builder:
-                                (context, child) => CustomPaint(
-                                  painter: CountdownPainter(
-                                    countdownProgress: _countdownProgress.value,
+                  Positioned(
+                    child: SizedBox(
+                      width: 152,
+                      height: 152,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: AnimatedBuilder(
+                              animation: _progressAnimationController,
+                              builder:
+                                  (context, child) => CustomPaint(
+                                    painter: CountdownPainter(
+                                      countdownProgress:
+                                          _countdownProgress.value,
+                                    ),
                                   ),
-                                ),
+                            ),
                           ),
-                        ),
-                        Positioned.fill(
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Text(
-                              shakingClamsState.countdown.toString(),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 72,
-                                fontWeight: FontWeight.w400,
+                          Positioned.fill(
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                shakingClamsState.countdown.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 72,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
