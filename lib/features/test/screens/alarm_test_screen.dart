@@ -1,8 +1,12 @@
 import 'dart:math';
 
 import 'package:alarmi/common/configs/notification_controller.dart';
+import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
+import 'package:alarmi/common/routes/router.dart';
+import 'package:alarmi/common/widgets/cst_divider.dart';
+import 'package:alarmi/features/shaking_clams/screens/shaking_clams_screen.dart';
 import 'package:alarmi/features/test/widgets/alarms_dialog.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -49,7 +53,7 @@ class AlarmTestScreen extends StatelessWidget {
               },
               child: const Text('기상 알람 설정'),
             ),
-            const SizedBox(height: 20),
+            Gaps.v20,
             ElevatedButton(
               onPressed: () async {
                 await NotificationController.stopTestAlarms();
@@ -57,7 +61,7 @@ class AlarmTestScreen extends StatelessWidget {
               },
               child: const Text('재생 중지'),
             ),
-            const SizedBox(height: 20),
+            Gaps.v20,
             ElevatedButton(
               onPressed: () async {
                 final List<NotificationModel> scheduledNotifications =
@@ -94,7 +98,7 @@ class AlarmTestScreen extends StatelessWidget {
               },
               child: const Text('설정된 알람 확인'),
             ),
-            const SizedBox(height: 20),
+            Gaps.v20,
             ElevatedButton(
               onPressed: () async {
                 await NotificationController.stopTestAlarms();
@@ -102,6 +106,15 @@ class AlarmTestScreen extends StatelessWidget {
                 callSimpleToast('캐싱된 알람이 모두 삭제되었습니다.');
               },
               child: const Text('캐싱 알람 모두 삭제'),
+            ),
+            Gaps.v20,
+            CstDivider(thickness: 10, width: 120),
+            Gaps.v20,
+            ElevatedButton(
+              onPressed: () {
+                appRouter.push(ShakingClamsScreen.routeURL);
+              },
+              child: const Text('조개 흔들기로 이동'),
             ),
           ],
         ),

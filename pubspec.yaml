@@ -47,6 +47,7 @@ flutter:
     - assets/images/characters/
     - assets/images/fishes/
     - assets/images/backgrounds/
+    - assets/images/etc/
     - assets/audios/
     - assets/audios/default/
     - assets/audios/energy/

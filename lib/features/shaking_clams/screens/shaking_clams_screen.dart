@@ -1,3 +1,4 @@
+import 'package:alarmi/features/shaking_clams/layers/guide_layer.dart';
 import 'package:flutter/material.dart';
 
 class ShakingClamsScreen extends StatelessWidget {
@@ -8,6 +9,18 @@ class ShakingClamsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('조개 흔들기')));
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/backgrounds/mission_bg.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          GuideLayer(),
+        ],
+      ),
+    );
   }
 }
