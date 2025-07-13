@@ -1,8 +1,6 @@
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
-import 'package:alarmi/common/routes/router.dart';
 import 'package:alarmi/features/alarm/models/haptic_pattern.dart';
-import 'package:alarmi/features/shaking_clams/screens/shaking_clams_screen.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -116,10 +114,6 @@ class NotificationInitialize {
           print('알람 중지 버튼이 눌렸습니다.');
         } else if (receivedAction.actionType == ActionType.Default) {
           print('알림 메시지 본문이 눌렸습니다. (알람 중지)');
-        }
-
-        if (isWakeUpMission) {
-          appRouter.go(ShakingClamsScreen.routeURL);
         }
       }
 

@@ -4,7 +4,6 @@ import 'package:alarmi/common/configs/notification_controller.dart';
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
-import 'package:alarmi/common/routes/router.dart';
 import 'package:alarmi/common/widgets/cst_divider.dart';
 import 'package:alarmi/features/shaking_clams/screens/shaking_clams_screen.dart';
 import 'package:alarmi/features/test/widgets/alarms_dialog.dart';
@@ -12,6 +11,7 @@ import 'package:alarmi/utils/toast_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AlarmTestScreen extends StatelessWidget {
   static const String routeName = 'alarm-test';
@@ -112,7 +112,7 @@ class AlarmTestScreen extends StatelessWidget {
             Gaps.v20,
             ElevatedButton(
               onPressed: () {
-                appRouter.push(ShakingClamsScreen.routeURL);
+                context.push(ShakingClamsScreen.routeURL);
               },
               child: const Text('조개 흔들기로 이동'),
             ),
