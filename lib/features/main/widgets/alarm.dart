@@ -42,6 +42,7 @@ class Alarm extends ConsumerWidget {
         dateTime: renewDateTime,
         bellId: params.bellId,
         vibrateId: params.vibrateId,
+        isWakeUpMission: params.isWakeUpMission == 1,
       );
       if (newAlarmKeys.isNotEmpty) {
         updatedAlarmMap['alarmKeys'] = newAlarmKeys.toString();

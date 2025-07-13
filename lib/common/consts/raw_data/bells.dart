@@ -84,6 +84,18 @@ List<Bell> bells = [
     name: 'Warm campfire',
     path: 'assets/audios/nature/res_warm_campfire.mp3',
   ),
+  Bell(
+    id: 'heavy_ocean_waves_during_storm',
+    category: 'nature',
+    name: 'Heavy ocean waves during storm',
+    path: 'assets/audios/nature/res_heavy_ocean_waves_during_storm.mp3',
+  ),
+  Bell(
+    id: 'heavy_rain',
+    category: 'nature',
+    name: 'Heavy rain',
+    path: 'assets/audios/nature/res_heavy_rain.wav',
+  ),
 
   // 'energy'
   Bell(
@@ -115,6 +127,12 @@ List<Bell> bells = [
     category: 'energy',
     name: 'Street customs',
     path: 'assets/audios/energy/res_street_customs.mp3',
+  ),
+  Bell(
+    id: 'we_are_powerful',
+    category: 'energy',
+    name: 'We are powerful!',
+    path: 'assets/audios/energy/res_we_are_powerful.mp3',
   ),
 ];
 

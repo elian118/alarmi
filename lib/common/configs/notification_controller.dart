@@ -89,6 +89,7 @@ class NotificationController {
   static Future<void> setTestWeeklyAlarm({
     required String? bellId,
     required String? vibrateId,
+    required bool isWakeUpMission,
   }) async {
     DateTime testDateTime = DateTime.now().add(5.seconds); // 5초 뒤 시간
     Bell? bell = bells.where((bell) => bell.id == bellId).first;
@@ -124,20 +125,24 @@ class NotificationController {
             'day': i.toString(),
             'soundAssetPath': bell.path,
             'hapticPattern': vibrateId,
+            'isWakeUpMission': isWakeUpMission.toString(),
           },
           category: NotificationCategory.Alarm,
           notificationLayout: NotificationLayout.BigPicture,
           bigPicture: 'asset://assets/images/backgrounds/alarm_big.png',
-          wakeUpScreen: true,
-          fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
           locked: true, // 알림 스와이프 방지
           chronometer: Duration.zero, // 카운트 시작 점
           timeoutAfter: Duration(minutes: 15), // 키운팅 이후 15분 뒤 만료
+          wakeUpScreen: true,
+          fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
+          autoDismissible: false,
+          displayOnForeground: true,
+          displayOnBackground: true,
         ),
         actionButtons: [
           NotificationActionButton(
             key: 'stop_alarm',
-            label: '알림 끄기',
+            label: isWakeUpMission ? '기상미션 시작하기' : '알림 끄기',
             autoDismissible: true, // 버튼 클릭 시 알림 자동 닫힘
             actionType: ActionType.Default,
           ),
@@ -160,6 +165,7 @@ class NotificationController {
     required DateTime dateTime,
     required String? bellId,
     required String? vibrateId,
+    required bool isWakeUpMission,
   }) async {
     List<int> alarmKeys = [];
     Bell? bell = bells.where((bell) => bell.id == bellId).first;
@@ -196,15 +202,19 @@ class NotificationController {
             'soundAssetPath': bell.path,
             'hapticPattern': vibrateId,
             'alarmKey': uId.toString(),
+            'isWakeUpMission': isWakeUpMission.toString(),
           },
           category: NotificationCategory.Alarm,
           notificationLayout: NotificationLayout.BigPicture,
           bigPicture: 'asset://assets/images/backgrounds/alarm_big.png',
-          wakeUpScreen: true,
-          fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
           locked: true, // 알림 스와이프 방지
           chronometer: Duration.zero,
           timeoutAfter: Duration(minutes: 15),
+          wakeUpScreen: true,
+          fullScreenIntent: true, // 안드로이드 12 이상 전용 - 전체화면 인텐트
+          autoDismissible: false,
+          displayOnForeground: true,
+          displayOnBackground: true,
         ),
         actionButtons: [
           NotificationActionButton(

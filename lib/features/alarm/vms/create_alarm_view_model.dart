@@ -91,6 +91,7 @@ class CreateAlarmViewModel extends Notifier<CreateAlarmState> {
         dateTime: state.selectedDateTime,
         bellId: state.bellId,
         vibrateId: state.vibrateId,
+        isWakeUpMission: state.isActivatedWakeUpMission,
       );
 
       final AlarmParams params = AlarmParams(

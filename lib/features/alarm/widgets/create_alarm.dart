@@ -220,6 +220,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
       dateTime: _selectedDateTime,
       bellId: _bellId,
       vibrateId: _vibrateId,
+      isWakeUpMission: _isActivatedWakeUpMission,
     );
 
     return AlarmParams(

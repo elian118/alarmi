@@ -2,16 +2,29 @@ import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/alarm/screens/create_alarm_screen.dart';
 import 'package:alarmi/features/auth/repos/authentication_repo.dart';
 import 'package:alarmi/features/main/screens/main_screen.dart';
+import 'package:alarmi/features/shaking_clams/screens/shaking_clams_screen.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:alarmi/utils/route_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/sign_up_screen.dart';
 
+GoRouter? _appRouterInstance; // riverpod 거치지 않고도 참조 가능하게 해줄 전역 싱글톤 인스턴스
+
+GoRouter get appRouter {
+  if (_appRouterInstance == null) {
+    if (kDebugMode) {
+      print('경고: appRouter 인스턴스가 아직 초기화되지 않았습니다!');
+    }
+  }
+  return _appRouterInstance!;
+}
+
 final routerProvider = Provider((ref) {
-  return GoRouter(
+  final router = GoRouter(
     initialLocation: MainScreen.routeURL,
     redirect: (context, state) {
       final isLoggedIn = ref.read(authRepo).isLoggedIn;
@@ -78,6 +91,13 @@ final routerProvider = Provider((ref) {
           );
         },
       ),
+      GoRoute(
+        name: ShakingClamsScreen.routeName,
+        path: ShakingClamsScreen.routeURL,
+        builder: (context, state) => const ShakingClamsScreen(),
+      ),
     ],
   );
+  _appRouterInstance = router; // 전역 인스턴스에 부여
+  return router;
 });

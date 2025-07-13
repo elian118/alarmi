@@ -41,6 +41,7 @@ class AlarmTestScreen extends StatelessWidget {
                 await NotificationController.setTestWeeklyAlarm(
                   bellId: bells[randomBellIdx].id,
                   vibrateId: hapticPatterns[hapticPatternIdx].id,
+                  isWakeUpMission: true,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('주기적 테스트 알람이 설정되었습니다.')),
