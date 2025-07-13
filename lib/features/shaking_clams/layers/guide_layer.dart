@@ -55,41 +55,45 @@ class _GuideLayerState extends ConsumerState<GuideLayer>
     }
 
     return Container(
-      color: Colors.black87.withValues(alpha: 0.6),
       alignment: Alignment.center,
       child:
           shakingClamsState.isStart
-              ? SizedBox(
-                width: 152,
-                height: 152,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: AnimatedBuilder(
-                        animation: _progressAnimationController,
-                        builder:
-                            (context, child) => CustomPaint(
-                              painter: CountdownPainter(
-                                countdownProgress: _countdownProgress.value,
-                              ),
-                            ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          shakingClamsState.countdown.toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 72,
-                            fontWeight: FontWeight.w400,
+              ? Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    width: 152,
+                    height: 152,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: AnimatedBuilder(
+                            animation: _progressAnimationController,
+                            builder:
+                                (context, child) => CustomPaint(
+                                  painter: CountdownPainter(
+                                    countdownProgress: _countdownProgress.value,
+                                  ),
+                                ),
                           ),
                         ),
-                      ),
+                        Positioned.fill(
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              shakingClamsState.countdown.toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 72,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               )
               : Container(
                 alignment: Alignment.topCenter,
@@ -105,7 +109,7 @@ class _GuideLayerState extends ConsumerState<GuideLayer>
                   ),
                   child: Guide(),
                 ),
-              ),
+              ).animate().scale(duration: 0.5.seconds, curve: Curves.easeInOut),
     );
   }
 }
