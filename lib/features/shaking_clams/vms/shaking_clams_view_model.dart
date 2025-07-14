@@ -25,6 +25,14 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     state = state.copyWith(countdown: value);
   }
 
+  void setShowMission(bool value) {
+    state = state.copyWith(showMission: value);
+  }
+
+  void setMessage(String value) {
+    state = state.copyWith(message: value);
+  }
+
   // 카운트다운 시작
   void startCountdown() {
     _countdownTimer?.cancel();
@@ -37,7 +45,8 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
         setCountdown(state.countdown - 1);
       } else {
         timer.cancel();
-        setIsStart(false); // 임시
+        // setIsStart(false); // 임시
+        setShowMission(true);
         if (kDebugMode) {
           print('Countdown finished!');
         }

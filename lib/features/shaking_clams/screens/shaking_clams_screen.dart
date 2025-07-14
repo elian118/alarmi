@@ -1,5 +1,6 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/features/shaking_clams/layers/guide_layer.dart';
+import 'package:alarmi/features/shaking_clams/layers/mission_layer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,13 +51,16 @@ class ShakingClamsScreen extends ConsumerWidget {
             ),
           ),
           Positioned.fill(
-            child: Container(
-              color: Colors.black.withValues(
-                alpha: 0.6,
-              ), // 검은색으로 50% 투명도 적용 (0.0~1.0)
-            ),
-          ),
-          GuideLayer(),
+                child: Container(color: Colors.black.withValues(alpha: 0.6)),
+              )
+              .animate(target: shakingClamsState.showMission ? 1 : 0)
+              .fadeOut(begin: 1.0),
+          GuideLayer()
+              .animate(target: shakingClamsState.showMission ? 1 : 0)
+              .fadeOut(begin: 1.0),
+          MissionLayer()
+              .animate(target: shakingClamsState.showMission ? 1 : 0)
+              .fadeIn(begin: 0.0),
         ],
       ),
     );
