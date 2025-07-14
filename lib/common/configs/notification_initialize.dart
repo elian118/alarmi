@@ -1,7 +1,7 @@
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/features/alarm/models/haptic_pattern.dart';
-import 'package:alarmi/features/shaking_clams/services/mission_status_service.dart';
+import 'package:alarmi/features/missions/services/mission_status_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

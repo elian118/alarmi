@@ -1,5 +1,5 @@
 import 'package:alarmi/common/consts/sizes.dart';
-import 'package:alarmi/features/shaking_clams/vms/shaking_clams_view_model.dart';
+import 'package:alarmi/features/missions/vms/shaking_clams_view_model.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -5,7 +5,7 @@ import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/common/widgets/cst_divider.dart';
-import 'package:alarmi/features/shaking_clams/screens/shaking_clams_screen.dart';
+import 'package:alarmi/features/missions/screens/shaking_clams_screen.dart';
 import 'package:alarmi/features/test/widgets/alarms_dialog.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';

@@ -1,6 +1,6 @@
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/main/screens/main_screen.dart';
-import 'package:alarmi/features/shaking_clams/services/mission_status_service.dart';
+import 'package:alarmi/features/missions/services/mission_status_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

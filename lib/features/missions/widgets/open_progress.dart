@@ -1,5 +1,5 @@
 import 'package:alarmi/common/widgets/cst_rounded_slider.dart';
-import 'package:alarmi/features/shaking_clams/vms/shaking_clams_view_model.dart';
+import 'package:alarmi/features/missions/vms/shaking_clams_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shake/shake.dart';
@@ -22,7 +22,6 @@ class _OpenProgressState extends ConsumerState<OpenProgress> {
 
     _sliderProgressNotifier = ValueNotifier(
       ref.read(shakingClamsViewProvider).openCount,
-      // 5.0,
     );
 
     shake = ShakeDetector.waitForStart(

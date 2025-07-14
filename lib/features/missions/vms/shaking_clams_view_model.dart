@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:alarmi/features/shaking_clams/models/ShakingClamsState.dart';
+import 'package:alarmi/features/missions/models/ShakingClamsState.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

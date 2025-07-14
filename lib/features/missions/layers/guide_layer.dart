@@ -1,6 +1,6 @@
-import 'package:alarmi/features/shaking_clams/vms/shaking_clams_view_model.dart';
-import 'package:alarmi/features/shaking_clams/widgets/countdown_painter.dart';
-import 'package:alarmi/features/shaking_clams/widgets/guide.dart';
+import 'package:alarmi/features/missions/vms/shaking_clams_view_model.dart';
+import 'package:alarmi/features/missions/widgets/countdown_painter.dart';
+import 'package:alarmi/features/missions/widgets/guide.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';

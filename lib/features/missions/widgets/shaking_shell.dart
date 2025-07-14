@@ -1,5 +1,5 @@
 import 'package:alarmi/common/consts/gaps.dart';
-import 'package:alarmi/features/shaking_clams/vms/shaking_clams_view_model.dart';
+import 'package:alarmi/features/missions/vms/shaking_clams_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,20 +12,37 @@ class ShakingShell extends ConsumerStatefulWidget {
   ConsumerState<ShakingShell> createState() => _ShakingShellState();
 }
 
-class _ShakingShellState extends ConsumerState<ShakingShell> {
+class _ShakingShellState extends ConsumerState<ShakingShell>
+    with SingleTickerProviderStateMixin {
   late final ShakingClamsViewModel shakingClamsNotifier;
-  late ShakeDetector shake;
+  late ShakeDetector shakeDetector;
   AnimationController? _shakeAnimateController;
 
   @override
   void initState() {
     shakingClamsNotifier = ref.read(shakingClamsViewProvider.notifier);
+    _shakeAnimateController = AnimationController(vsync: this);
+
+    shakeDetector = ShakeDetector.autoStart(
+      onPhoneShake: (event) {
+        final shakingClamsState = ref.read(shakingClamsViewProvider);
+        bool isPlayingMission =
+            shakingClamsState.showMission &&
+            !shakingClamsState.isCompleted &&
+            !shakingClamsState.isFailed;
+
+        if (isPlayingMission && _shakeAnimateController?.isAnimating == false) {
+          _shakeAnimateController?.forward(from: 0.0); // 💡 애니메이션 시작
+        }
+      },
+      shakeThresholdGravity: 1.5, // 필요에 따라 조절 (흔들림 감도)
+    );
     super.initState();
   }
 
   @override
   void dispose() {
-    shake.stopListening();
+    shakeDetector.stopListening();
     _shakeAnimateController?.dispose();
 
     super.dispose();
@@ -58,7 +75,7 @@ class _ShakingShellState extends ConsumerState<ShakingShell> {
                       controller: _shakeAnimateController,
                     )
                     .shake(
-                      duration: 150.ms,
+                      duration: 0.5.seconds,
                       hz: 10,
                       offset: Offset(5, 0),
                       curve: Curves.elasticOut,

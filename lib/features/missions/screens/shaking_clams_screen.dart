@@ -1,7 +1,7 @@
-import 'package:alarmi/features/shaking_clams/layers/guide_layer.dart';
-import 'package:alarmi/features/shaking_clams/layers/mission_completed_layer.dart';
-import 'package:alarmi/features/shaking_clams/layers/mission_layer.dart';
-import 'package:alarmi/features/shaking_clams/widgets/shaking_shell.dart';
+import 'package:alarmi/features/missions/layers/guide_layer.dart';
+import 'package:alarmi/features/missions/layers/mission_completed_layer.dart';
+import 'package:alarmi/features/missions/layers/mission_layer.dart';
+import 'package:alarmi/features/missions/widgets/shaking_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
