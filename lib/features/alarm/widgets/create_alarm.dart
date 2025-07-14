@@ -186,9 +186,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     );
 
     AlarmParams params = await _setParams();
-    if (kDebugMode) {
-      print(params.toString());
-    }
+    debugPrint(params.toString());
 
     if (!isCreate) {
       isSuccess = await alarmNotifier.updateAlarm(params.toJson(), widget.type);

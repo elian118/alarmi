@@ -82,20 +82,16 @@ class NotificationInitialize {
   static Future<void> onNotificationDisplayedMethod(
     ReceivedNotification receivedNotification,
   ) async {
-    if (kDebugMode) {
-      print(
-        'onNotificationDisplayedMethod 호출됨. ID: ${receivedNotification.id}',
-      );
+    final bool isWakeUpMission =
+        receivedNotification.payload?['isWakeUpMission'] == 'true';
+    debugPrint(
+      'onNotificationDisplayedMethod 호출됨. ID: ${receivedNotification.id}',
+    );
 
-      final bool isWakeUpMission =
-          receivedNotification.payload?['isWakeUpMission'] == 'true';
-
-      print('기상미션 여부: $isWakeUpMission');
-
-      if (isWakeUpMission) {
-        MissionStatusService.setWakeUpMissionCompleted(false);
-        print('기상미션을 미완료 상태로 설정합니다');
-      }
+    debugPrint('기상미션 여부: $isWakeUpMission');
+    if (isWakeUpMission) {
+      MissionStatusService.setWakeUpMissionCompleted(false);
+      debugPrint('새로운 기상 미션 알림이 표시되었습니다. 기상미션을 미완료 상태로 설정합니다');
     }
   }
 
@@ -105,11 +101,9 @@ class NotificationInitialize {
   ) async {
     int alarmId = receivedAction.id!;
 
-    if (kDebugMode) {
-      print(
-        'onActionReceivedMethod 호출됨. ID: $alarmId, Channel: ${receivedAction.channelKey}, Button: ${receivedAction.buttonKeyPressed}',
-      );
-    }
+    debugPrint(
+      'onActionReceivedMethod 호출됨. ID: $alarmId, Channel: ${receivedAction.channelKey}, Button: ${receivedAction.buttonKeyPressed}',
+    );
 
     // '알람 끄기' 버튼이 눌렸을 때 또는 메시지 본문이 눌렸을 때
     if (receivedAction.buttonKeyPressed == 'stop_alarm' ||
@@ -117,14 +111,12 @@ class NotificationInitialize {
       final bool isWakeUpMission =
           receivedAction.payload?['isWakeUpMission'] == 'true';
 
-      if (kDebugMode) {
-        print(isWakeUpMission ? '기상미션이 있습니다.' : '기상미션이 없습니다.');
+      debugPrint(isWakeUpMission ? '기상미션이 있습니다.' : '기상미션이 없습니다.');
 
-        if (receivedAction.buttonKeyPressed == 'stop_alarm') {
-          print('알람 중지 버튼이 눌렸습니다.');
-        } else if (receivedAction.actionType == ActionType.Default) {
-          print('알림 메시지 본문이 눌렸습니다. (알람 중지)');
-        }
+      if (receivedAction.buttonKeyPressed == 'stop_alarm') {
+        debugPrint('알람 중지 버튼이 눌렸습니다.');
+      } else if (receivedAction.actionType == ActionType.Default) {
+        debugPrint('알림 메시지 본문이 눌렸습니다. (알람 중지)');
       }
 
       await AwesomeNotifications().dismiss(receivedAction.id!); // 알림 제거

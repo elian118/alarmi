@@ -48,7 +48,7 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                   if (alarmParams == null) {
                     return const SizedBox.shrink(); // 또는 오류 메시지 표시
                   }
-                  print(alarmParams.toString());
+                  debugPrint(alarmParams.toString());
 
                   return Dismissible(
                     key: ValueKey(alarm['id']),

@@ -9,7 +9,6 @@ import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,9 +70,7 @@ class Alarm extends ConsumerWidget {
             );
         callSimpleToast(newValue ? '알람이 비활성화되었습니다.' : '알람이 활성화되었습니다.');
       } catch (e) {
-        if (kDebugMode) {
-          print('알람 상태 업데이트 실패: $e');
-        }
+        debugPrint('알람 상태 업데이트 실패: $e');
         callSimpleToast('알람 상태 변경에 실패했습니다.');
       }
     }

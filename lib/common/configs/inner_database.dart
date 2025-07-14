@@ -42,9 +42,7 @@ class InnerDatabase {
         onDowngrade: _onDowngrade,
       );
     } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
+      debugPrint(e.toString());
       rethrow; // 초기화 실패 시 예외 다시 던지기
     }
   }
@@ -74,30 +72,22 @@ class InnerDatabase {
       createdAt DATETIME,
       updatedAt DATETIME)
     ''');
-    if (kDebugMode) {
-      print('alarms table created.');
-    }
+    debugPrint('alarms table created.');
   }
 
   static _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (kDebugMode) {
-      print('Database upgraded from version $oldVersion to $newVersion');
-    }
+    debugPrint('Database upgraded from version $oldVersion to $newVersion');
   }
 
   static _onDowngrade(Database db, int oldVersion, int newVersion) async {
-    if (kDebugMode) {
-      print('Database downgraded from version $oldVersion to $newVersion');
-    }
+    debugPrint('Database downgraded from version $oldVersion to $newVersion');
   }
 
   static Future<void> close() async {
     if (_db != null) {
       await _db!.close();
       _db = null;
-      if (kDebugMode) {
-        print('Database closed');
-      }
+      debugPrint('Database closed');
     }
   }
 }

@@ -6,7 +6,6 @@ import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -21,17 +20,9 @@ class CreateAlarmViewModel extends Notifier<CreateAlarmState> {
     state = state.copyWith(selectedDateTime: newDateTime);
   }
 
-  // void onChangeSelectedBellId(String? newId) {
-  //   state = state.copyWith(bellId: newId);
-  // }
-
   void onSaveBellSettings(String? bellId, double volume) {
     state = state.copyWith(bellId: bellId, selectedBellVolume: volume);
   }
-
-  // void onChangeSelectedVibrateId(String? newId) {
-  //   state = state.copyWith(vibrateId: newId);
-  // }
 
   void onSaveVibrateSettings(String? patternId) {
     state = state.copyWith(vibrateId: patternId);
@@ -105,9 +96,7 @@ class CreateAlarmViewModel extends Notifier<CreateAlarmState> {
         type: 'my',
       );
 
-      if (kDebugMode) {
-        print(params.toString());
-      }
+      debugPrint(params.toString());
 
       int? id = await alarmNotifier.insertAlarm(params: params);
 
@@ -118,9 +107,7 @@ class CreateAlarmViewModel extends Notifier<CreateAlarmState> {
         callSimpleToast('알람 등록에 실패했습니다.');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('알람 저장 중 오류 발생: $e');
-      }
+      debugPrint('알람 저장 중 오류 발생: $e');
       callSimpleToast('알람 저장 중 오류가 발생했습니다.');
     }
   }

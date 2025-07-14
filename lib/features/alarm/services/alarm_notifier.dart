@@ -21,13 +21,11 @@ class AlarmListNotifier
     try {
       final alarmRepository = await AlarmRepository.getInstance();
       final alarms = await alarmRepository.getAlarms(type: type);
-      print(alarms);
+      debugPrint(alarms.toString());
       state = AsyncData(alarms);
     } catch (e, st) {
       state = AsyncError(e, st);
-      if (kDebugMode) {
-        print('알람을 불러오는 데 오류가 발생했습니다. $e');
-      }
+      debugPrint('알람을 불러오는 데 오류가 발생했습니다. $e');
     }
   }
 
@@ -56,15 +54,11 @@ class AlarmListNotifier
     try {
       final alarmRepository = await AlarmRepository.getInstance();
       final id = await alarmRepository.insertAlarm(newAlarm);
-      if (kDebugMode) {
-        print('새 알람이 등록되었습니다. ID: $id');
-      }
+      debugPrint('새 알람이 등록되었습니다. ID: $id');
       await loadAlarms(params.type);
       return id;
     } catch (e) {
-      if (kDebugMode) {
-        print('알람 등록 중 오류가 발생했습니다. $e');
-      }
+      debugPrint('알람 등록 중 오류가 발생했습니다. $e');
       rethrow;
     }
   }
@@ -79,20 +73,16 @@ class AlarmListNotifier
       );
       alarmKeys = alarmKeys.map((key) => key as int).toList();
       int deletedRowCount = await alarmRepository.deleteAlarm(id);
-      print('deletedRowCount: $deletedRowCount, alarmKeys: $alarmKeys');
+      debugPrint('deletedRowCount: $deletedRowCount, alarmKeys: $alarmKeys');
       // 삭제 성공 시
       if (deletedRowCount > 0 && alarmKeys.isNotEmpty) {
         NotificationController.stopScheduledAlarm(alarmKeys as List<int>);
       }
-      if (kDebugMode) {
-        print('알람이 삭제되었습니다. ID: $id');
-      }
+      debugPrint('알람이 삭제되었습니다. ID: $id');
       // 관련 메시징 스케쥴 로컬 알람 삭제
       await loadAlarms(type); // 삭제 후 알람 목록 새로고침
     } catch (e) {
-      if (kDebugMode) {
-        print('알람 삭제 중 오류가 발생했습니다. $e');
-      }
+      debugPrint('알람 삭제 중 오류가 발생했습니다. $e');
       rethrow;
     }
   }
@@ -102,15 +92,11 @@ class AlarmListNotifier
     try {
       final alarmRepository = await AlarmRepository.getInstance();
       final updatedRows = await alarmRepository.updateAlarm(alarm);
-      if (kDebugMode) {
-        print('알람이 업데이트되었습니다. ID: ${alarm['id']}');
-      }
+      debugPrint('알람이 업데이트되었습니다. ID: ${alarm['id']}');
       await loadAlarms(type); // 업데이트 후 알람 목록 새로고침
       return updatedRows > 0;
     } catch (e) {
-      if (kDebugMode) {
-        print('알람 업데이트 중 오류가 발생했습니다. $e');
-      }
+      debugPrint('알람 업데이트 중 오류가 발생했습니다. $e');
       rethrow;
     }
   }

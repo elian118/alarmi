@@ -132,9 +132,7 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
         // _lastShakeTime이 0.0이면 (미션 시작 후 첫 체크) 또는 불활성 기간 초과 여부 확인.
         if (_lastShakeTime == 0.0 ||
             (currentTime - _lastShakeTime) >= _inactivityDuration) {
-          if (kDebugMode) {
-            print('$_inactivityDuration초 동안 흔들림 없음 감지! 감소 타이머 시작.');
-          }
+          debugPrint('$_inactivityDuration초 동안 흔들림 없음 감지! 감소 타이머 시작.');
           _stopInactivityCheckTimer(); // 체크 타이머 중지
           _startInactivityDecrementTimer(); // 감소 타이머 시작
         }
@@ -153,17 +151,13 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
         if (state.openCount > 0) {
           // openCount가 0보다 클 때만 감소
           setOpenCount(state.openCount - 0.02);
-          if (kDebugMode) {
-            print('불활성 상태! openCount 감소: ${state.openCount}');
-          }
+          debugPrint('불활성 상태! openCount 감소: ${state.openCount}');
         } else {
           // openCount가 0 이하가 되면 감소 타이머 중지 및 미션 실패 처리
           setOpenCount(0); // 0 미만으로 내려가지 않도록 보정
           setIsFailed(true);
           _stopInactivityDecrementTimer();
-          if (kDebugMode) {
-            print('미션 실패: openCount 0 도달.');
-          }
+          debugPrint('미션 실패: openCount 0 도달.');
         }
       },
     );
@@ -194,9 +188,7 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
         _lastShakeTime = DateTime.now().millisecondsSinceEpoch / 1000.0;
         setShowMission(true);
         _startInactivityCheckTimer();
-        if (kDebugMode) {
-          print('Countdown finished! Mission started.');
-        }
+        debugPrint('Countdown finished! Mission started.');
       }
     });
   }

@@ -1,4 +1,5 @@
 import 'package:alarmi/common/configs/inner_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AlarmRepository {
@@ -69,7 +70,9 @@ class AlarmRepository {
       );
       return id;
     } catch (e) {
-      print('알람 등록 중 오류 발생: $e');
+      if (kDebugMode) {
+        print('알람 등록 중 오류 발생: $e');
+      }
       return 0; // 실패 시 절대 등록될 일 없는 시퀀스 0 반환
     }
   }

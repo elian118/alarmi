@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -43,7 +42,7 @@ void navPush(
       fullscreenDialog: isFullScreenDialog ?? false,
     ),
   );
-  if (kDebugMode) print(result);
+  debugPrint(result);
 }
 
 CustomTransitionPage<void> goRouteOpacityPageBuilder(
@@ -91,5 +90,5 @@ void navPagePush(
       fullscreenDialog: isFullScreenDialog ?? false,
     ),
   );
-  if (kDebugMode) print(result);
+  debugPrint(result);
 }

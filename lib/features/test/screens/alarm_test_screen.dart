@@ -9,7 +9,6 @@ import 'package:alarmi/features/shaking_clams/screens/shaking_clams_screen.dart'
 import 'package:alarmi/features/test/widgets/alarms_dialog.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -35,12 +34,10 @@ class AlarmTestScreen extends StatelessWidget {
                 int hapticPatternIdx = random.nextInt(
                   hapticPatterns.length - 1,
                 );
-                if (kDebugMode) {
-                  print('soundFile: ${bells[randomBellIdx].path}');
-                  print(
-                    'hapticPatternId: ${hapticPatterns[hapticPatternIdx].id}',
-                  );
-                }
+                debugPrint('soundFile: ${bells[randomBellIdx].path}');
+                debugPrint(
+                  'hapticPatternId: ${hapticPatterns[hapticPatternIdx].id}',
+                );
 
                 await NotificationController.setTestWeeklyAlarm(
                   bellId: bells[randomBellIdx].id,

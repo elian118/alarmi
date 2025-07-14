@@ -39,9 +39,7 @@ final routerProvider = Provider((ref) {
         if (isWakeUpMissionNotification && !missionAlreadyCompleted) {
           // 리다이렉트 후 initialAction을 null로 설정 - 중복 처리 방지
           NotificationInitialize.initialAction = null;
-          if (kDebugMode) {
-            print('미완료 기상 미션 감지. ${ShakingClamsScreen.routeURL}로 리다이렉트');
-          }
+          debugPrint('미완료 기상 미션 감지. ${ShakingClamsScreen.routeURL}로 리다이렉트');
           return ShakingClamsScreen.routeURL;
         }
         // 초기화

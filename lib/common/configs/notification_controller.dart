@@ -39,10 +39,8 @@ class NotificationController {
       enableVibration = false;
     }
 
-    if (kDebugMode) {
-      print('알람 채널 존재 여부 확인 - $channelKey');
-      print('설정될 알람음 - $soundSource');
-    }
+    debugPrint('알람 채널 존재 여부 확인 - $channelKey');
+    debugPrint('설정될 알람음 - $soundSource');
 
     // 채널이 이미 존재하는지 확인
     // Awesome Notifications는 내부적으로 채널이 없으면 새로 생성
@@ -69,9 +67,7 @@ class NotificationController {
     // ID 1~5 테스트 알람만 제거
     for (int i = DateTime.monday; i <= DateTime.sunday; i++) {
       await AwesomeNotifications().cancel(i); // 특정 ID의 알람 스케줄 취소
-      if (kDebugMode) {
-        print('스케줄(테스트 알람 ID: $i) 취소됨.');
-      }
+      debugPrint('스케줄(테스트 알람 ID: $i) 취소됨.');
     }
   }
 
@@ -79,9 +75,7 @@ class NotificationController {
   static void stopScheduledAlarm(List<int> alarmKeys) async {
     for (var alarmKey in alarmKeys) {
       AwesomeNotifications().cancel(alarmKey);
-      if (kDebugMode) {
-        print('스케줄(ID: $alarmKey) 취소됨.');
-      }
+      debugPrint('스케줄(ID: $alarmKey) 취소됨.');
     }
   }
 
@@ -99,9 +93,7 @@ class NotificationController {
 
     final channelKeySuffix = vibrateId != null ? '_$vibrateId' : '';
 
-    if (kDebugMode) {
-      print('channelKey: $bellId${channelKeySuffix}_channel');
-    }
+    debugPrint('channelKey: $bellId${channelKeySuffix}_channel');
 
     String soundSource =
         'resource://raw/${bell.path.split('/').last.split('.').first}';
@@ -174,9 +166,7 @@ class NotificationController {
 
     final channelKeySuffix = vibrateId != null ? '_$vibrateId' : '';
 
-    if (kDebugMode) {
-      print('channelKey: $bellId${channelKeySuffix}_channel');
-    }
+    debugPrint('channelKey: $bellId${channelKeySuffix}_channel');
 
     String soundSource =
         'resource://raw/${bell.path.split('/').last.split('.').first}';
