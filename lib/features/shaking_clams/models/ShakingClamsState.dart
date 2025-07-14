@@ -4,6 +4,8 @@ class ShakingClamsState {
   final bool showMission;
   final double openCount;
   final String message;
+  final bool isCompleted;
+  final bool isFailed;
 
   ShakingClamsState({
     this.isStart = false,
@@ -11,6 +13,8 @@ class ShakingClamsState {
     this.showMission = false,
     this.openCount = 0.0,
     this.message = '흔들어 주세요',
+    this.isCompleted = false,
+    this.isFailed = false,
   });
 
   ShakingClamsState copyWith({
@@ -19,6 +23,8 @@ class ShakingClamsState {
     bool? showMission,
     double? openCount,
     String? message,
+    bool? isCompleted,
+    bool? isFailed,
   }) {
     return ShakingClamsState(
       isStart: isStart ?? this.isStart,
@@ -26,6 +32,8 @@ class ShakingClamsState {
       showMission: showMission ?? this.showMission,
       openCount: openCount ?? this.openCount,
       message: message ?? this.message,
+      isCompleted: isCompleted ?? this.isCompleted,
+      isFailed: isFailed ?? this.isFailed,
     );
   }
 }

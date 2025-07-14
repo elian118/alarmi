@@ -19,30 +19,24 @@ class _OpenProgressState extends ConsumerState<OpenProgress> {
   @override
   void initState() {
     shakingClamsNotifier = ref.read(shakingClamsViewProvider.notifier);
-    shake = ShakeDetector.waitForStart(
-      onPhoneShake: (event) => _incrementCounter(),
-    );
-    shake.startListening();
+
     _sliderProgressNotifier = ValueNotifier(
       ref.read(shakingClamsViewProvider).openCount,
       // 5.0,
     );
 
-    super.initState();
-  }
-
-  void _incrementCounter() {
-    final currentShakingClamsState = ref.read(shakingClamsViewProvider);
-
-    shakingClamsNotifier.setOpenCount(
-      currentShakingClamsState.openCount + 0.01,
+    shake = ShakeDetector.waitForStart(
+      onPhoneShake: (event) => shakingClamsNotifier.onPhoneShakeDetected(),
     );
+    shake.startListening();
+    super.initState();
   }
 
   @override
   void dispose() {
     shake.stopListening();
     _sliderProgressNotifier.dispose();
+    shakingClamsNotifier.disposeViewModel();
     super.dispose();
   }
 
@@ -53,7 +47,12 @@ class _OpenProgressState extends ConsumerState<OpenProgress> {
 
     // 값 동기화
     if (_sliderProgressNotifier.value != sliderValue) {
-      _sliderProgressNotifier.value = sliderValue;
+      _sliderProgressNotifier.value =
+          sliderValue > 1
+              ? 1
+              : sliderValue < 0
+              ? 0
+              : sliderValue;
     }
 
     return Row(
