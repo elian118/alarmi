@@ -6,6 +6,7 @@ import 'package:alarmi/features/auth/screens/login_screen.dart';
 import 'package:alarmi/features/auth/screens/sign_up_screen.dart';
 import 'package:alarmi/features/main/screens/main_screen.dart';
 import 'package:alarmi/features/shaking_clams/screens/shaking_clams_screen.dart';
+import 'package:alarmi/features/shaking_clams/services/mission_status_service.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -15,7 +16,7 @@ import 'package:go_router/go_router.dart';
 final routerProvider = Provider((ref) {
   return GoRouter(
     initialLocation: MainScreen.routeURL,
-    redirect: (context, state) {
+    redirect: (context, state) async {
       final isLoggedIn = ref.read(authRepo).isLoggedIn;
 
       if (!isLoggedIn) {
@@ -25,16 +26,21 @@ final routerProvider = Provider((ref) {
         }
       }
 
+      // 기상 미션 알림이 왔는지 확인
       if (NotificationInitialize.initialAction != null) {
-        final bool isWakeUpMission =
+        final bool isWakeUpMissionNotification =
             NotificationInitialize.initialAction!.payload?['isWakeUpMission'] ==
             'true';
 
-        if (isWakeUpMission) {
+        // 미션 완료 여부 확인
+        final bool missionAlreadyCompleted =
+            await MissionStatusService.isWakeUpMissionCompleted();
+
+        if (isWakeUpMissionNotification && !missionAlreadyCompleted) {
           // 리다이렉트 후 initialAction을 null로 설정 - 중복 처리 방지
           NotificationInitialize.initialAction = null;
           if (kDebugMode) {
-            print('기상 미션 알림 감지. ${ShakingClamsScreen.routeURL}로 리다이렉트');
+            print('미완료 기상 미션 감지. ${ShakingClamsScreen.routeURL}로 리다이렉트');
           }
           return ShakingClamsScreen.routeURL;
         }

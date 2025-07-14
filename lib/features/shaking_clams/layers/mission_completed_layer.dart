@@ -1,5 +1,6 @@
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/main/screens/main_screen.dart';
+import 'package:alarmi/features/shaking_clams/services/mission_status_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -46,7 +47,10 @@ class MissionCompletedLayer extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () => context.go(MainScreen.routeURL),
+                    onPressed: () {
+                      MissionStatusService.setWakeUpMissionCompleted(true);
+                      context.go(MainScreen.routeURL);
+                    },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Theme.of(context).primaryColor,

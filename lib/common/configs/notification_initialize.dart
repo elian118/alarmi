@@ -1,6 +1,7 @@
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/features/alarm/models/haptic_pattern.dart';
+import 'package:alarmi/features/shaking_clams/services/mission_status_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,16 @@ class NotificationInitialize {
       print(
         'onNotificationDisplayedMethod 호출됨. ID: ${receivedNotification.id}',
       );
-      print('Payload (Displayed): ${receivedNotification.payload}');
+
+      final bool isWakeUpMission =
+          receivedNotification.payload?['isWakeUpMission'] == 'true';
+
+      print('기상미션 여부: $isWakeUpMission');
+
+      if (isWakeUpMission) {
+        MissionStatusService.setWakeUpMissionCompleted(false);
+        print('기상미션을 미완료 상태로 설정합니다');
+      }
     }
   }
 
