@@ -73,7 +73,7 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
       message: shellMessages[progressStage],
       showMission: value >= 0 && value < 1,
       isFailed: value < 0,
-      isCompleted: value == 1,
+      isCompleted: value >= 1,
     );
   }
 
