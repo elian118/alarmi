@@ -1,5 +1,6 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/features/shaking_clams/vms/shaking_clams_view_model.dart';
+import 'package:alarmi/features/shaking_clams/widgets/open_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,6 +28,7 @@ class MissionLayer extends ConsumerWidget {
                   ),
                   child: Text(
                     shakingClamsState.message,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -42,24 +44,7 @@ class MissionLayer extends ConsumerWidget {
                     color: Colors.white.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.all(Radius.circular(14)),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        'assets/images/etc/close_seashell.png',
-                        width: 46,
-                        height: 46,
-                      ),
-                      Slider(
-                        // value: shakingClamsState.openCount,
-                        value: 0.5,
-                        activeColor: Colors.white,
-                        inactiveColor: Colors.black87.withValues(alpha: 0.4),
-                        onChanged: (value) {},
-                      ),
-                      Image.asset('assets/images/etc/open_seashell.png'),
-                    ],
-                  ),
+                  child: OpenProgress(),
                 ),
               ],
             ),

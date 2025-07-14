@@ -9,7 +9,7 @@ class ShakingClamsState {
     this.isStart = false,
     this.countdown = 3,
     this.showMission = false,
-    this.openCount = 0,
+    this.openCount = 0.0,
     this.message = '흔들어 주세요',
   });
 
