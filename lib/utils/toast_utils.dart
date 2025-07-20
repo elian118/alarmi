@@ -10,3 +10,44 @@ void callSimpleToast(String msg) => Fluttertoast.showToast(
   textColor: Colors.white,
   fontSize: 16.0, // 폰트 크기
 );
+
+void callToast(BuildContext context, String msg) =>
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        duration: Duration(seconds: 3), // 3초 동안 표시
+        behavior: SnackBarBehavior.floating, // 바닥에 붙지 않고 플로팅
+        content: Center(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            decoration: BoxDecoration(
+              color: Color(0xFF2C3E50),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.check, color: Colors.white, size: 16),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  msg,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );

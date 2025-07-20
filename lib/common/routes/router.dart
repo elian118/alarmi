@@ -7,6 +7,7 @@ import 'package:alarmi/features/auth/screens/sign_up_screen.dart';
 import 'package:alarmi/features/main/screens/main_screen.dart';
 import 'package:alarmi/features/missions/screens/shaking_clams_screen.dart';
 import 'package:alarmi/features/missions/services/mission_status_service.dart';
+import 'package:alarmi/features/onboarding/screens/onboard_screen.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -15,7 +16,8 @@ import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider((ref) {
   return GoRouter(
-    initialLocation: MainScreen.routeURL,
+    // initialLocation: MainScreen.routeURL,
+    initialLocation: OnboardScreen.routeURL,
     redirect: (context, state) async {
       final isLoggedIn = ref.read(authRepo).isLoggedIn;
 
@@ -76,6 +78,13 @@ final routerProvider = Provider((ref) {
         pageBuilder:
             (context, state) =>
                 goRouteOpacityPageBuilder(context, state, MainScreen()),
+      ),
+      GoRoute(
+        name: OnboardScreen.routeName,
+        path: OnboardScreen.routeURL,
+        pageBuilder:
+            (context, state) =>
+                goRouteOpacityPageBuilder(context, state, OnboardScreen()),
       ),
       GoRoute(
         name: AlarmsScreen.routeName,
