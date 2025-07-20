@@ -31,7 +31,10 @@ class CharacterLayer extends ConsumerWidget {
     return Positioned.fill(
       child: GestureDetector(
         onTap: () => onboardNotifier.setStage(onboardState.stage + 1),
-        child: Container(alignment: Alignment.center, child: character),
+        child:
+            onboardState.stage < 12
+                ? Container(alignment: Alignment.center, child: character)
+                : Container(),
       ),
     );
   }
