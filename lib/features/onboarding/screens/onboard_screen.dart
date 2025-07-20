@@ -3,8 +3,10 @@ import 'package:alarmi/features/onboarding/layers/button_layer.dart';
 import 'package:alarmi/features/onboarding/layers/character_layer.dart';
 import 'package:alarmi/features/onboarding/layers/message_layer.dart';
 import 'package:alarmi/features/onboarding/layers/naming_layer.dart';
+import 'package:alarmi/features/onboarding/models/onboard_state.dart';
 import 'package:alarmi/features/onboarding/vms/onboard_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OnboardScreen extends ConsumerWidget {
@@ -15,9 +17,15 @@ class OnboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final onboardNotifier = ref.read(
-      onboardViewProvider.notifier,
-    ); // onboardNotifier 접근
+    final onboardNotifier = ref.read(onboardViewProvider.notifier);
+
+    ref.listen<OnboardState>(onboardViewProvider, (previous, next) {
+      if (next.stage == 12 && previous?.stage != 12) {
+        Future.delayed(3.seconds, () {
+          onboardNotifier.setStage(next.stage + 1);
+        });
+      }
+    });
 
     return Scaffold(
       extendBodyBehindAppBar: true,

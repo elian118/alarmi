@@ -1,4 +1,5 @@
 import 'package:alarmi/features/onboarding/vms/onboard_view_model.dart';
+import 'package:alarmi/features/onboarding/widgets/go_home_btn.dart';
 import 'package:alarmi/features/onboarding/widgets/next_btn.dart';
 import 'package:alarmi/features/onboarding/widgets/set_name_btn.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,8 @@ class ButtonLayer extends ConsumerWidget {
                     duration: 200.ms,
                     curve: Curves.easeInOut,
                   )
+              : onboardState.stage == 13
+              ? GoHomeBtn()
               : Container(),
     );
   }
