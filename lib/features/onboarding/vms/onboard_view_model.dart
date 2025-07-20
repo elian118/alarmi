@@ -21,7 +21,7 @@ class OnboardViewModel extends Notifier<OnboardState> {
         stage: value,
         message:
             value == 4
-                ? '${state.name}\n${messages[value]}..'
+                ? '${state.name}..\n${messages[value]}'
                 : messages[value],
         isNarration: !(value >= 2 && value <= 6) && value < 9,
       );
