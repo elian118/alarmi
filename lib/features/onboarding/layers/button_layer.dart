@@ -23,10 +23,15 @@ class ButtonLayer extends ConsumerWidget {
                             : 0,
                   )
                   .fadeIn(begin: 0)
-              : onboardState.stage == 3
+              : onboardState.stage == 2
               ? SetNameBtn()
-                  .animate(target: onboardState.stage == 3 ? 1 : 0)
-                  .fadeIn(begin: 0)
+                  .animate(target: onboardState.stage == 2 ? 1 : 0)
+                  .fade(
+                    begin: 0,
+                    end: 1,
+                    duration: 200.ms,
+                    curve: Curves.easeInOut,
+                  )
               : Container(),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:alarmi/features/onboarding/layers/background_layer.dart';
 import 'package:alarmi/features/onboarding/layers/button_layer.dart';
 import 'package:alarmi/features/onboarding/layers/character_layer.dart';
-import 'package:alarmi/features/onboarding/layers/ui_layer.dart';
+import 'package:alarmi/features/onboarding/layers/message_layer.dart';
+import 'package:alarmi/features/onboarding/layers/naming_layer.dart';
 import 'package:flutter/material.dart';
 
 class OnboardScreen extends StatelessWidget {
@@ -31,7 +32,8 @@ class OnboardScreen extends StatelessWidget {
         children: [
           BackgroundLayer(),
           CharacterLayer(),
-          UiLayer(),
+          MessageLayer(),
+          NamingLayer(),
           ButtonLayer(),
         ],
       ),

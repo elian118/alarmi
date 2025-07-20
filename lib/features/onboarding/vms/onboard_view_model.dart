@@ -19,10 +19,18 @@ class OnboardViewModel extends Notifier<OnboardState> {
     if (value <= 13) {
       state = state.copyWith(
         stage: value,
-        message: messages[value],
+        message:
+            value == 4
+                ? '${state.name}\n${messages[value]}..'
+                : messages[value],
         isNarration: !(value >= 2 && value <= 6) && value < 9,
       );
     }
+  }
+
+  void setName(String value) {
+    state = state.copyWith(name: value);
+    print(state.name);
   }
 
   void setMessage(String value) {
@@ -38,8 +46,6 @@ class OnboardViewModel extends Notifier<OnboardState> {
       selectedPersonality: personalities[value],
       message: personalities[value].message,
     );
-    print(state.selectedPersonality?.label);
-    print(state.message);
   }
 }
 
