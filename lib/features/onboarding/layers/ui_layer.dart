@@ -13,7 +13,7 @@ class UiLayer extends ConsumerWidget {
     final onboardState = ref.watch(onboardViewProvider);
 
     ref.listen<OnboardState>(onboardViewProvider, (previous, next) {
-      if (next.stage == 10 && previous?.stage != 10) {
+      if (next.stage == 9 && previous?.stage != 9) {
         // stage가 10으로 변경될 때만 실행
         callToast(context, '캐릭터 설정 완료');
       }
@@ -26,17 +26,11 @@ class UiLayer extends ConsumerWidget {
         width: getWinWidth(context),
         alignment: Alignment.center,
         child:
-            onboardState.isNarration
-                ? Text(
-                  onboardState.message,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center,
-                )
-                : Container(
+            !onboardState.isNarration ||
+                    (onboardState.isNarration &&
+                        onboardState.stage == 8 &&
+                        onboardState.selectedPersonality != null)
+                ? Container(
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.2),
@@ -51,6 +45,15 @@ class UiLayer extends ConsumerWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
+                )
+                : Text(
+                  onboardState.message,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
       ),
     );

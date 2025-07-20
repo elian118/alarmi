@@ -1,5 +1,6 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/features/onboarding/vms/onboard_view_model.dart';
 import 'package:alarmi/features/onboarding/widgets/color_options.dart';
 import 'package:alarmi/features/onboarding/widgets/color_pallet_options.dart';
 import 'package:alarmi/features/onboarding/widgets/personality_options.dart';
@@ -12,6 +13,8 @@ class NextBtn extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final onboardState = ref.watch(onboardViewProvider);
+
     return Column(
       children: [
         ColorOptions(),
@@ -25,12 +28,31 @@ class NextBtn extends ConsumerWidget {
           padding: EdgeInsets.symmetric(horizontal: 20),
           alignment: Alignment.center,
           child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            onPressed:
+                onboardState.stage == 8 &&
+                        onboardState.selectedPersonality == null
+                    ? null
+                    : () {},
+            style: ButtonStyle(
+              foregroundColor: WidgetStateProperty.resolveWith<Color?>((
+                Set<WidgetState> states,
+              ) {
+                if (states.contains(WidgetState.disabled)) {
+                  return Colors.white.withValues(alpha: 0.5);
+                }
+                return Colors.white;
+              }),
+              backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+                Set<WidgetState> states,
+              ) {
+                if (states.contains(WidgetState.disabled)) {
+                  return Color(0xFF8EB4FF);
+                }
+                return Theme.of(context).primaryColor;
+              }),
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                // WidgetStateProperty.all 사용
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
             child: Container(
