@@ -1,3 +1,8 @@
+import 'dart:math';
+
+import 'package:alarmi/common/consts/raw_data/cat_random_speeches.dart';
+import 'package:alarmi/common/widgets/speech_bubble.dart';
+import 'package:alarmi/features/onboarding/services/character_service.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,6 +18,8 @@ class FirstMainLayer extends StatefulWidget {
 class _FirstMainLayerState extends State<FirstMainLayer>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
+  late String randomMessage = '';
+  late String? personality;
   String catImg = 'home_day_cat_sit_x3_opti';
 
   @override
@@ -27,12 +34,39 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     super.dispose();
   }
 
+  void setRandomSpeech() async {
+    if (!mounted) return;
+
+    setState(() {
+      randomMessage = '';
+    });
+
+    String? personality = await CharacterService.getCharacterPersonality();
+
+    if (personality != null) {
+      RandomSpeech targetRandomSpeech =
+          randomSpeech
+              .where((speech) => personality == speech.personality)
+              .first;
+
+      debugPrint(targetRandomSpeech.personality);
+      int randomIdx = Random().nextInt(targetRandomSpeech.message.length - 1);
+
+      setState(() {
+        randomMessage = targetRandomSpeech.message[randomIdx];
+      });
+    }
+  }
+
   void changeMotion() {
     setState(() {
       catImg = 'home_day_cat_wave_x3_opti';
     });
-    Future.delayed(2.seconds, () {
+    setRandomSpeech();
+
+    Future.delayed(2.1.seconds, () {
       setState(() {
+        randomMessage = '';
         catImg = 'home_day_cat_sit_x3_opti';
       });
     });
@@ -53,6 +87,13 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                     'assets/images/backgrounds/home_day_bg.png',
                     fit: BoxFit.cover,
                   ),
+                ),
+                Positioned(
+                  top: getWinHeight(context) * 0.26,
+                  child:
+                      randomMessage != ''
+                          ? SpeechBubble(message: randomMessage!)
+                          : Container(),
                 ),
                 Lottie.asset('assets/lotties/home_day_bg_cloud_2x.json'),
                 Positioned.fill(
