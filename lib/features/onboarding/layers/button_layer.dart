@@ -33,7 +33,7 @@ class ButtonLayer extends ConsumerWidget {
                     duration: 200.ms,
                     curve: Curves.easeInOut,
                   )
-              : onboardState.stage == 13
+              : onboardState.stage == 12
               ? GoHomeBtn()
               : Container(),
     );

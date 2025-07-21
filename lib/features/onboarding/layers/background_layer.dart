@@ -11,7 +11,7 @@ class BackgroundLayer extends ConsumerWidget {
 
     return Positioned.fill(
       child: Image.asset(
-        'assets/images/backgrounds/${onboardState.stage >= 12 ? 'bg_onboardingfinished' : 'onboard_bg'}.png',
+        'assets/images/backgrounds/${onboardState.stage >= 11 ? 'bg_onboardingfinished' : 'onboard_bg'}.png',
         fit: BoxFit.cover,
       ),
     );

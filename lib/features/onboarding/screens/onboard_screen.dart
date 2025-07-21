@@ -1,6 +1,7 @@
 import 'package:alarmi/features/onboarding/layers/background_layer.dart';
 import 'package:alarmi/features/onboarding/layers/button_layer.dart';
 import 'package:alarmi/features/onboarding/layers/character_layer.dart';
+import 'package:alarmi/features/onboarding/layers/fade_layer.dart';
 import 'package:alarmi/features/onboarding/layers/message_layer.dart';
 import 'package:alarmi/features/onboarding/layers/naming_layer.dart';
 import 'package:alarmi/features/onboarding/models/onboard_state.dart';
@@ -20,8 +21,12 @@ class OnboardScreen extends ConsumerWidget {
     final onboardNotifier = ref.read(onboardViewProvider.notifier);
 
     ref.listen<OnboardState>(onboardViewProvider, (previous, next) {
-      if (next.stage == 12 && previous?.stage != 12) {
-        Future.delayed(3.seconds, () {
+      if (next.stage == 10 && previous?.stage != 10) {
+        Future.delayed(11.seconds, () {
+          onboardNotifier.setStage(next.stage + 1);
+        });
+      } else if (next.stage == 11 && previous?.stage != 11) {
+        Future.delayed(5.seconds, () {
           onboardNotifier.setStage(next.stage + 1);
         });
       }
@@ -51,14 +56,18 @@ class OnboardScreen extends ConsumerWidget {
           },
         ),
       ),
-      body: Stack(
-        children: [
-          BackgroundLayer(),
-          CharacterLayer(),
-          MessageLayer(),
-          NamingLayer(),
-          ButtonLayer(),
-        ],
+      body: GestureDetector(
+        onTap: () => onboardNotifier.next(),
+        child: Stack(
+          children: [
+            BackgroundLayer(),
+            FadeLayer(),
+            CharacterLayer(),
+            MessageLayer(),
+            NamingLayer(),
+            ButtonLayer(),
+          ],
+        ),
       ),
     );
   }
