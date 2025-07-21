@@ -1,9 +1,6 @@
 import 'package:alarmi/common/configs/notification_initialize.dart';
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/alarm/screens/create_alarm_screen.dart';
-import 'package:alarmi/features/auth/repos/authentication_repo.dart';
-import 'package:alarmi/features/auth/screens/login_screen.dart';
-import 'package:alarmi/features/auth/screens/sign_up_screen.dart';
 import 'package:alarmi/features/main/screens/main_screen.dart';
 import 'package:alarmi/features/missions/screens/shaking_clams_screen.dart';
 import 'package:alarmi/features/missions/services/mission_status_service.dart';
@@ -19,14 +16,15 @@ final routerProvider = Provider((ref) {
     // initialLocation: MainScreen.routeURL,
     initialLocation: OnboardScreen.routeURL,
     redirect: (context, state) async {
-      final isLoggedIn = ref.read(authRepo).isLoggedIn;
+      // todo 추후 로그인 절차가 필요해지면 활성화
+      // final isLoggedIn = ref.read(authRepo).isLoggedIn;
 
-      if (!isLoggedIn) {
-        if (state.uri.path != SignUpScreen.routeURL &&
-            state.uri.path != LoginScreen.routeURL) {
-          return LoginScreen.routeURL;
-        }
-      }
+      // if (!isLoggedIn) {
+      //   if (state.uri.path != SignUpScreen.routeURL &&
+      //       state.uri.path != LoginScreen.routeURL) {
+      //     return LoginScreen.routeURL;
+      //   }
+      // }
 
       // 기상 미션 알림이 왔는지 확인
       if (NotificationInitialize.initialAction != null) {
@@ -50,16 +48,6 @@ final routerProvider = Provider((ref) {
       return null; // 그 외 리다이렉트 없음
     },
     routes: [
-      GoRoute(
-        name: SignUpScreen.routeName,
-        path: SignUpScreen.routeURL,
-        builder: (context, state) => const SignUpScreen(),
-      ),
-      GoRoute(
-        name: LoginScreen.routeName,
-        path: LoginScreen.routeURL,
-        builder: (context, state) => const LoginScreen(),
-      ),
       /*GoRoute(
         name: MainNavigationScreen.routeName,
         path: MainNavigationScreen.routeURL,
