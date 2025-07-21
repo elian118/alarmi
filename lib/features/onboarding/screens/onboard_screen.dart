@@ -61,12 +61,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () {
-            // 실제 뒤로가기 대신 onboardNotifier의 setStage 함수 호출
-            onboardNotifier.setStage(
-              ref.read(onboardViewProvider).stage - 1,
-            ); // 현재 스테이지에서 1 감소
-          },
+          onPressed: () => onboardNotifier.prev(),
         ),
       ),
       body: GestureDetector(
