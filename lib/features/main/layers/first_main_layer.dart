@@ -40,7 +40,6 @@ class FirstMainLayer extends StatefulWidget {
 
 class _FirstMainLayerState extends State<FirstMainLayer> {
   late String message = '';
-  // String _currentCatLottiePath = _catSitLottiePath;
   late Uint8List? _currentCatLottieBytes;
   final Random _random = Random();
 
