@@ -2,6 +2,7 @@ import 'package:alarmi/features/onboarding/constants/color_sets.dart';
 import 'package:alarmi/features/onboarding/constants/personalities.dart';
 import 'package:alarmi/features/onboarding/constants/stage_types.dart';
 import 'package:alarmi/features/onboarding/models/onboard_state.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants/messages.dart';
@@ -17,7 +18,8 @@ class OnboardViewModel extends Notifier<OnboardState> {
   }
 
   void setStage(int value) {
-    if (value <= 12) {
+    if (stageTypes.map((stage) => stage.index).contains(value)) {
+      debugPrint(state.stage.toString());
       state = state.copyWith(
         stage: value,
         message:

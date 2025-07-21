@@ -43,14 +43,24 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     final onboardNotifier = ref.read(onboardViewProvider.notifier);
 
     ref.listen<OnboardState>(onboardViewProvider, (previous, next) {
+      // 탭 가능 상태 초기화(허용)
+      if (previous?.stage != next.stage) {
+        setState(() {
+          isTapEnabled = true;
+        });
+      }
+
       if (stageTypes[next.stage].isClickable) {
         // 자동 이동 로직 비활성화(사유: 광클 버그 야기)
         // Future.delayed(3.seconds, () => onboardNotifier.next());
       } else {
+        bool isStage0 = next.stage == 0 && previous?.stage != 0;
         bool isStage10 = next.stage == 10 && previous?.stage != 10;
         bool isStage11 = next.stage == 11 && previous?.stage != 11;
 
-        if (isStage10) {
+        if (isStage0) {
+          ref.read(onboardViewProvider.notifier).initStates(); // 초기화
+        } else if (isStage10) {
           Future.delayed(11.seconds, () => onboardNotifier.next());
         } else if (isStage11) {
           Future.delayed(4.seconds, () => onboardNotifier.next());
@@ -84,7 +94,9 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
-            isTapEnabled = false;
+            setState(() {
+              isTapEnabled = false;
+            });
             onboardNotifier.prev();
           },
         ),
