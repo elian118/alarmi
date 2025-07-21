@@ -242,19 +242,23 @@ class _FirstMainLayerState extends State<FirstMainLayer> {
                           : Container(),
                 ),
                 Positioned.fill(
-                  top: -410,
-                  child: _buildLottieWidget(
-                    lottieBytes: widget.cloudComposition,
-                    controller: widget.bgLottieController,
-                    repeat: true,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    child: _buildLottieWidget(
+                      lottieBytes: widget.cloudComposition,
+                      controller: widget.bgLottieController,
+                      repeat: true,
+                    ),
                   ),
                 ),
                 Positioned.fill(
-                  top: -410,
-                  child: _buildLottieWidget(
-                    lottieBytes: widget.sunlightComposition,
-                    controller: widget.bgLottieController,
-                    repeat: true,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    child: _buildLottieWidget(
+                      lottieBytes: widget.sunlightComposition,
+                      controller: widget.bgLottieController,
+                      repeat: true,
+                    ),
                   ),
                 ),
                 Positioned.fill(
