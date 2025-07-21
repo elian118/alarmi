@@ -10,14 +10,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OnboardScreen extends ConsumerWidget {
+class OnboardScreen extends ConsumerStatefulWidget {
   static const String routeName = 'onboard';
   static const String routeURL = '/onboard';
 
   const OnboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OnboardScreen> createState() => _OnboardScreenState();
+}
+
+class _OnboardScreenState extends ConsumerState<OnboardScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(onboardViewProvider.notifier).initStates();
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final onboardNotifier = ref.read(onboardViewProvider.notifier);
 
     ref.listen<OnboardState>(onboardViewProvider, (previous, next) {

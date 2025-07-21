@@ -6,6 +6,7 @@ import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/common/widgets/cst_divider.dart';
 import 'package:alarmi/features/missions/screens/shaking_clams_screen.dart';
+import 'package:alarmi/features/onboarding/screens/onboard_screen.dart';
 import 'package:alarmi/features/test/widgets/alarms_dialog.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -112,6 +113,13 @@ class AlarmTestScreen extends StatelessWidget {
                 context.push(ShakingClamsScreen.routeURL);
               },
               child: const Text('조개 흔들기로 이동'),
+            ),
+            Gaps.v20,
+            ElevatedButton(
+              onPressed: () {
+                context.push(OnboardScreen.routeURL);
+              },
+              child: const Text('온보딩으로 이동'),
             ),
           ],
         ),
