@@ -36,14 +36,17 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
     final onboardNotifier = ref.read(onboardViewProvider.notifier);
 
     ref.listen<OnboardState>(onboardViewProvider, (previous, next) {
-      if (next.stage == 10 && previous?.stage != 10) {
-        Future.delayed(11.seconds, () {
-          onboardNotifier.next();
-        });
-      } else if (next.stage == 11 && previous?.stage != 11) {
-        Future.delayed(4.seconds, () {
-          onboardNotifier.next();
-        });
+      if (stageTypes[next.stage].isClickable) {
+        Future.delayed(3.seconds, () => onboardNotifier.next());
+      } else {
+        bool isStage10 = next.stage == 10 && previous?.stage != 10;
+        bool isStage11 = next.stage == 11 && previous?.stage != 11;
+
+        if (isStage10) {
+          Future.delayed(11.seconds, () => onboardNotifier.next());
+        } else if (isStage11) {
+          Future.delayed(4.seconds, () => onboardNotifier.next());
+        }
       }
     });
 

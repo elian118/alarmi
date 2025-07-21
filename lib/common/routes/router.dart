@@ -32,7 +32,10 @@ final routerProvider = Provider((ref) {
       if (isThereNamedCharacter) {
         String? name = await CharacterService.getCharacterNamed();
         String? personality = await CharacterService.getCharacterPersonality();
-        debugPrint('character name: $name ($personality)');
+        int? color = await CharacterService.getCharacterColor();
+        debugPrint(
+          'character name: $name ($personality) - ${color?.toRadixString(16)}',
+        );
       } else {
         debugPrint('character name: null');
         return OnboardScreen.routeURL;

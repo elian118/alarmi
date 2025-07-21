@@ -17,8 +17,11 @@ class GoHomeBtn extends ConsumerWidget {
     void goHome() {
       String name = onboardState.name;
       String personality = onboardState.selectedPersonality!.key;
+      int color =
+          onboardState.selectedColor!.color.toARGB32(); // int 형으로 변경해 반환
       CharacterService.setCharacterName(name);
       CharacterService.setCharacterPersonality(personality);
+      CharacterService.setCharacterColor(color);
       context.go(MainScreen.routeURL);
     }
 
