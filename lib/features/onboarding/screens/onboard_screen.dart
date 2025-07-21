@@ -39,7 +39,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
           onboardNotifier.next();
         });
       } else if (next.stage == 11 && previous?.stage != 11) {
-        Future.delayed(5.seconds, () {
+        Future.delayed(4.seconds, () {
           onboardNotifier.next();
         });
       }

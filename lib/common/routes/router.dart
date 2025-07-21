@@ -48,18 +48,6 @@ final routerProvider = Provider((ref) {
       return null; // 그 외 리다이렉트 없음
     },
     routes: [
-      /*GoRoute(
-        name: MainNavigationScreen.routeName,
-        path: MainNavigationScreen.routeURL,
-        pageBuilder: (context, state) {
-          final tab = state.pathParameters['tab']!;
-          return goRouteOpacityPageBuilder(
-            context,
-            state,
-            MainNavigationScreen(tab: tab),
-          );
-        },
-      ),*/
       GoRoute(
         name: MainScreen.routeName,
         path: MainScreen.routeURL,

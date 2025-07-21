@@ -93,6 +93,7 @@ class _AlarmiAppState extends ConsumerState<AlarmiApp> {
                 ),
               ),
             ),
+            debugShowCheckedModeBanner: false,
           );
         }
       },
