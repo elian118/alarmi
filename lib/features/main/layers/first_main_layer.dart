@@ -10,114 +10,73 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lottie/lottie.dart';
 
-const String _catSitLottiePath = 'assets/lotties/home_day_cat_sit_x3_opti.json';
-const String _catWaveLottiePath =
-    'assets/lotties/home_day_cat_wave_x3_opti.json';
-const String _catHiLottiePath = 'assets/lotties/home_day_cat_hi_x3_opti.json';
-const String _cloudLottiePath = 'assets/lotties/home_day_bg_cloud_2x.json';
-const String _sunlightLottiePath =
-    'assets/lotties/home_day_bg_sunlight_2x.json';
-const String _seaLottiePath = 'assets/lotties/home_day_bg_sea_1x_02.json';
-
-const String _backgroundImgPath = 'assets/images/backgrounds/home_day_bg.png';
-
 class FirstMainLayer extends StatefulWidget {
-  const FirstMainLayer({super.key});
+  final Uint8List catSitComposition;
+  final Uint8List catWaveComposition;
+  final Uint8List catHiComposition;
+  final Uint8List cloudComposition;
+  final Uint8List sunlightComposition;
+  final Uint8List seaComposition;
+  final AnimationController catLottieController;
+  final AnimationController bgLottieController;
+  final String backgroundImgPath;
+
+  const FirstMainLayer({
+    super.key,
+    required this.catSitComposition,
+    required this.catWaveComposition,
+    required this.catHiComposition,
+    required this.cloudComposition,
+    required this.sunlightComposition,
+    required this.seaComposition,
+    required this.catLottieController,
+    required this.bgLottieController,
+    required this.backgroundImgPath,
+  });
 
   @override
   State<FirstMainLayer> createState() => _FirstMainLayerState();
 }
 
-class _FirstMainLayerState extends State<FirstMainLayer>
-    with TickerProviderStateMixin {
-  late final AnimationController _catLottieController;
-  late final AnimationController _bgLottieController;
-
+class _FirstMainLayerState extends State<FirstMainLayer> {
   late String message = '';
-  String _currentCatLottiePath = _catSitLottiePath;
-
-  // 캐싱된 Lottie 컴포지션 객체들
-  Uint8List? _catSitComposition;
-  Uint8List? _catWaveComposition;
-  Uint8List? _catHiComposition;
-  Uint8List? _cloudComposition;
-  Uint8List? _sunlightComposition;
-  Uint8List? _seaComposition;
-
-  bool _isBackgroundLoaded = false;
+  // String _currentCatLottiePath = _catSitLottiePath;
+  late Uint8List? _currentCatLottieBytes;
   final Random _random = Random();
-
-  bool _areLottiesLoaded = false;
-  bool _didPreloadAssets = false;
 
   @override
   void initState() {
-    _catLottieController = AnimationController(vsync: this);
-    _bgLottieController = AnimationController(vsync: this);
+    _currentCatLottieBytes = widget.catSitComposition; // 초기 고양이 애니메이션 설정
+    _setInitialCatMotion();
     super.initState();
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_didPreloadAssets) {
-      _preloadAssets();
-      _didPreloadAssets = true;
-    }
-  }
-
-  @override
   void dispose() {
-    _catLottieController.dispose();
-    _bgLottieController.dispose();
     super.dispose();
   }
 
-  Future<Uint8List> _loadLottieBytes(String assetPath) async {
-    final ByteData data = await rootBundle.load(assetPath);
-    return data.buffer.asUint8List();
-  }
+  void _setInitialCatMotion() async {
+    // 초기 로드 후 바로 'Hi' 애니메이션 재생
+    setState(() {
+      _currentCatLottieBytes = widget.catHiComposition;
+    });
+    setRegularSpeech();
 
-  Future<void> _preloadAssets() async {
-    // 1. 배경 이미지 미리 로드
-    final ImageProvider backgroundProvider = AssetImage(_backgroundImgPath);
+    widget.catLottieController
+      ..reset()
+      ..forward();
 
-    if (mounted) {
-      await precacheImage(backgroundProvider, context);
+    Future.delayed(3.1.seconds, () {
+      if (!mounted) return;
       setState(() {
-        _isBackgroundLoaded = true;
+        message = '';
+        _currentCatLottieBytes = widget.catSitComposition;
       });
-    }
-
-    // 로티 이미지 미리 로드
-    final List<Future<Uint8List>> lottieLoadFutures = [
-      _loadLottieBytes(_catSitLottiePath),
-      _loadLottieBytes(_catWaveLottiePath),
-      _loadLottieBytes(_catHiLottiePath),
-      _loadLottieBytes(_cloudLottiePath),
-      _loadLottieBytes(_sunlightLottiePath),
-      _loadLottieBytes(_seaLottiePath),
-    ];
-
-    // 모든 컴포지션이 로드될 때까지 기다림
-    final List<Uint8List> loadedCompositions = await Future.wait(
-      lottieLoadFutures,
-    );
-
-    if (mounted) {
-      setState(() {
-        _catSitComposition = loadedCompositions[0];
-        _catWaveComposition = loadedCompositions[1];
-        _catHiComposition = loadedCompositions[2];
-        _cloudComposition = loadedCompositions[3];
-        _sunlightComposition = loadedCompositions[4];
-        _seaComposition = loadedCompositions[5];
-
-        _currentCatLottiePath = _catSitLottiePath; // 초기 경로 설정
-        _areLottiesLoaded = true;
-      });
-      changeRegularMotion(initialLoad: true);
-    }
+      widget.catLottieController
+        ..reset()
+        ..repeat();
+    });
   }
 
   void setRandomSpeech() async {
@@ -182,20 +141,20 @@ class _FirstMainLayerState extends State<FirstMainLayer>
 
   void changeRegularMotion({bool initialLoad = false}) {
     setState(() {
-      _currentCatLottiePath = _catHiLottiePath;
+      _currentCatLottieBytes = widget.catHiComposition;
     });
     setRegularSpeech();
 
-    _catLottieController
+    widget.catLottieController
       ..reset()
       ..forward();
 
     Future.delayed(3.1.seconds, () {
       setState(() {
         message = '';
-        _currentCatLottiePath = _catSitLottiePath;
+        _currentCatLottieBytes = widget.catSitComposition;
       });
-      _catLottieController
+      widget.catLottieController
         ..reset()
         ..repeat();
     });
@@ -203,20 +162,20 @@ class _FirstMainLayerState extends State<FirstMainLayer>
 
   void changeMotion() {
     setState(() {
-      _currentCatLottiePath = _catWaveLottiePath;
+      _currentCatLottieBytes = widget.catWaveComposition;
     });
     setRandomSpeech();
 
-    _catLottieController
+    widget.catLottieController
       ..reset()
       ..forward();
 
     Future.delayed(2.1.seconds, () {
       setState(() {
         message = '';
-        _currentCatLottiePath = _catSitLottiePath;
+        _currentCatLottieBytes = widget.catSitComposition;
       });
-      _catLottieController
+      widget.catLottieController
         ..reset()
         ..repeat();
     });
@@ -245,9 +204,14 @@ class _FirstMainLayerState extends State<FirstMainLayer>
       onLoaded: (composition) {
         controller.duration = composition.duration;
         if (repeat) {
-          controller.repeat();
+          if (!controller.isAnimating) {
+            // 이미 재생 중이 아니라면 시작
+            controller.repeat();
+          }
         } else {
-          controller.forward();
+          if (!controller.isAnimating) {
+            controller.forward();
+          }
         }
       },
     );
@@ -255,24 +219,8 @@ class _FirstMainLayerState extends State<FirstMainLayer>
 
   @override
   Widget build(BuildContext context) {
-    // 모든 에셋이 로드될 때까지 로딩 스피너 표시
-    if (!_isBackgroundLoaded || !_areLottiesLoaded) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    Uint8List? currentCatLottieBytes;
-    bool currentCatRepeat = true;
-
-    if (_currentCatLottiePath == _catSitLottiePath) {
-      currentCatLottieBytes = _catSitComposition;
-      currentCatRepeat = true;
-    } else if (_currentCatLottiePath == _catWaveLottiePath) {
-      currentCatLottieBytes = _catWaveComposition;
-      currentCatRepeat = false;
-    } else if (_currentCatLottiePath == _catHiLottiePath) {
-      currentCatLottieBytes = _catHiComposition;
-      currentCatRepeat = false;
-    }
+    bool currentCatRepeat =
+        (_currentCatLottieBytes == widget.catSitComposition);
 
     return GestureDetector(
       onTap: changeMotion,
@@ -282,7 +230,10 @@ class _FirstMainLayerState extends State<FirstMainLayer>
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: Image.asset(_backgroundImgPath, fit: BoxFit.cover),
+                  child: Image.asset(
+                    widget.backgroundImgPath,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Positioned(
                   top: getWinHeight(context) * 0.26,
@@ -294,45 +245,38 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                 Positioned.fill(
                   top: -410,
                   child: _buildLottieWidget(
-                    lottieBytes: _cloudComposition,
-                    controller: _bgLottieController, // 배경 애니메이션용 컨트롤러 사용
+                    lottieBytes: widget.cloudComposition,
+                    controller: widget.bgLottieController,
                     repeat: true,
                   ),
                 ),
                 Positioned.fill(
                   top: -410,
                   child: _buildLottieWidget(
-                    lottieBytes: _sunlightComposition,
-                    controller: _bgLottieController, // 배경 애니메이션용 컨트롤러 사용
+                    lottieBytes: widget.sunlightComposition,
+                    controller: widget.bgLottieController,
                     repeat: true,
                   ),
                 ),
                 Positioned.fill(
                   child: _buildLottieWidget(
-                    lottieBytes: _seaComposition,
-                    controller: _bgLottieController, // 배경 애니메이션용 컨트롤러 사용
+                    lottieBytes: widget.seaComposition,
+                    controller: widget.bgLottieController,
                     repeat: true,
                   ),
                 ),
                 Align(
                   alignment: Alignment.center,
                   child: _buildLottieWidget(
-                    lottieBytes: currentCatLottieBytes, // 현재 선택된 고양이 애니메이션
-                    controller: _catLottieController, // 고양이 애니메이션용 컨트롤러 사용
+                    lottieBytes:
+                        _currentCatLottieBytes!, // 이미 null 체크되었으므로 ! 사용
+                    controller: widget.catLottieController,
                     width: getWinWidth(context) * 0.7,
                     height: getWinWidth(context) * 0.7,
-                    repeat: currentCatRepeat, // 고양이 애니메이션은 기본적으로 반복
+                    repeat: currentCatRepeat,
                   ),
                 ),
               ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              height: getWinHeight(context),
-              color: Colors.transparent,
-              child: Container(),
             ),
           ),
         ],
