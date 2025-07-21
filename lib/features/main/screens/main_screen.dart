@@ -65,8 +65,14 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     });
 
     // 로티 컨트롤러 초기화
-    _catLottieController = AnimationController(vsync: this);
-    _bgLottieController = AnimationController(vsync: this);
+    _catLottieController = AnimationController(
+      vsync: this,
+      duration: 3.1.seconds,
+    );
+    _bgLottieController = AnimationController(
+      vsync: this,
+      duration: 2.1.seconds,
+    );
   }
 
   @override
@@ -112,11 +118,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         _cloudComposition = loadedCompositions[3];
         _sunlightComposition = loadedCompositions[4];
         _seaComposition = loadedCompositions[5];
-
-        // _currentCatLottiePath = _catSitLottiePath; // 초기 경로 설정
         _areLottiesLoaded = true;
       });
-      // changeRegularMotion(initialLoad: true);
     }
   }
 

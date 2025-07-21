@@ -202,16 +202,6 @@ class _FirstMainLayerState extends State<FirstMainLayer> {
       animate: animate,
       onLoaded: (composition) {
         controller.duration = composition.duration;
-        if (repeat) {
-          if (!controller.isAnimating) {
-            // 이미 재생 중이 아니라면 시작
-            controller.repeat();
-          }
-        } else {
-          if (!controller.isAnimating) {
-            controller.forward();
-          }
-        }
       },
     );
   }
