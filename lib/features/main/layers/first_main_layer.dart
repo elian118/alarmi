@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:alarmi/common/consts/raw_data/cat_random_speeches.dart';
+import 'package:alarmi/common/consts/raw_data/cat_regular_speeches.dart';
 import 'package:alarmi/common/widgets/speech_bubble.dart';
 import 'package:alarmi/features/onboarding/services/character_service.dart';
 import 'package:alarmi/utils/helper_utils.dart';
@@ -18,13 +19,14 @@ class FirstMainLayer extends StatefulWidget {
 class _FirstMainLayerState extends State<FirstMainLayer>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
-  late String randomMessage = '';
+  late String message = '';
   late String? personality;
   String catImg = 'home_day_cat_sit_x3_opti';
 
   @override
   void initState() {
     _controller = AnimationController(vsync: this);
+    changeRegularMotion();
     super.initState();
   }
 
@@ -38,7 +40,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     if (!mounted) return;
 
     setState(() {
-      randomMessage = '';
+      message = '';
     });
 
     String? personality = await CharacterService.getCharacterPersonality();
@@ -53,9 +55,58 @@ class _FirstMainLayerState extends State<FirstMainLayer>
       int randomIdx = Random().nextInt(targetRandomSpeech.message.length - 1);
 
       setState(() {
-        randomMessage = targetRandomSpeech.message[randomIdx];
+        message = targetRandomSpeech.message[randomIdx];
       });
     }
+  }
+
+  void setRegularSpeech() async {
+    if (!mounted) return;
+
+    setState(() {
+      message = '';
+    });
+
+    String? personality = await CharacterService.getCharacterPersonality();
+
+    if (personality != null) {
+      final now = DateTime.now();
+      final currentHour = now.hour;
+      String situation =
+          currentHour >= 6 && currentHour < 12
+              ? 'good morning'
+              : currentHour >= 12 && currentHour < 20
+              ? 'good afternoon'
+              : 'good evening';
+      RegularSpeech targetRegularSpeech =
+          regularSpeech
+              .where(
+                (speech) =>
+                    personality == speech.personality &&
+                    situation == speech.situation,
+              )
+              .first;
+
+      debugPrint(targetRegularSpeech.personality);
+
+      setState(() {
+        message = targetRegularSpeech.message;
+      });
+    }
+  }
+
+  void changeRegularMotion() {
+    setState(() {
+      catImg = 'home_day_cat_hi_x3_opti';
+    });
+    setRegularSpeech();
+
+    Future.delayed(3.1.seconds, () {
+      setState(() {
+        message = '';
+        catImg = 'home_day_cat_sit_x3_opti';
+      });
+    });
   }
 
   void changeMotion() {
@@ -66,7 +117,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
 
     Future.delayed(2.1.seconds, () {
       setState(() {
-        randomMessage = '';
+        message = '';
         catImg = 'home_day_cat_sit_x3_opti';
       });
     });
@@ -91,8 +142,8 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                 Positioned(
                   top: getWinHeight(context) * 0.26,
                   child:
-                      randomMessage != ''
-                          ? SpeechBubble(message: randomMessage!)
+                      message != ''
+                          ? SpeechBubble(message: message)
                           : Container(),
                 ),
                 Lottie.asset('assets/lotties/home_day_bg_cloud_2x.json'),
