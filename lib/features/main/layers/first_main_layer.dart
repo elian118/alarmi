@@ -6,8 +6,20 @@ import 'package:alarmi/common/widgets/speech_bubble.dart';
 import 'package:alarmi/features/onboarding/services/character_service.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lottie/lottie.dart';
+
+const String _catSitLottiePath = 'assets/lotties/home_day_cat_sit_x3_opti.json';
+const String _catWaveLottiePath =
+    'assets/lotties/home_day_cat_wave_x3_opti.json';
+const String _catHiLottiePath = 'assets/lotties/home_day_cat_hi_x3_opti.json';
+const String _cloudLottiePath = 'assets/lotties/home_day_bg_cloud_2x.json';
+const String _sunlightLottiePath =
+    'assets/lotties/home_day_bg_sunlight_2x.json';
+const String _seaLottiePath = 'assets/lotties/home_day_bg_sea_1x_02.json';
+
+const String _backgroundImgPath = 'assets/images/backgrounds/home_day_bg.png';
 
 class FirstMainLayer extends StatefulWidget {
   const FirstMainLayer({super.key});
@@ -20,20 +32,86 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
   late String message = '';
-  late String? personality;
-  String catImg = 'home_day_cat_sit_x3_opti';
+  String _currentCatLottiePath = _catSitLottiePath;
+
+  // 캐싱된 Lottie 컴포지션 객체들
+  LottieComposition? _catSitComposition;
+  LottieComposition? _catWaveComposition;
+  LottieComposition? _catHiComposition;
+  LottieComposition? _cloudComposition;
+  LottieComposition? _sunlightComposition;
+  LottieComposition? _seaComposition;
+
+  bool _isBackgroundLoaded = false;
+  final Random _random = Random();
+
+  bool _areLottiesLoaded = false;
+  bool _didPreloadAssets = false;
 
   @override
   void initState() {
     _controller = AnimationController(vsync: this);
-    changeRegularMotion();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_didPreloadAssets) {
+      _preloadAssets();
+      _didPreloadAssets = true;
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _preloadAssets() async {
+    // 1. 배경 이미지 미리 로드
+    final ImageProvider backgroundProvider = AssetImage(_backgroundImgPath);
+
+    if (mounted) {
+      await precacheImage(backgroundProvider, context);
+      setState(() {
+        _isBackgroundLoaded = true;
+      });
+    }
+
+    print('_catSitLottiePath: $_catSitLottiePath');
+    // 로티 이미지 미리 로드
+    final List<Future<LottieComposition>> lottieLoadFutures = [
+      LottieComposition.fromByteData(await rootBundle.load(_catSitLottiePath)),
+      LottieComposition.fromByteData(await rootBundle.load(_catWaveLottiePath)),
+      LottieComposition.fromByteData(await rootBundle.load(_catHiLottiePath)),
+      LottieComposition.fromByteData(await rootBundle.load(_cloudLottiePath)),
+      LottieComposition.fromByteData(
+        await rootBundle.load(_sunlightLottiePath),
+      ),
+      LottieComposition.fromByteData(await rootBundle.load(_seaLottiePath)),
+    ];
+
+    // 모든 컴포지션이 로드될 때까지 기다림
+    final List<LottieComposition> loadedCompositions = await Future.wait(
+      lottieLoadFutures,
+    );
+
+    if (mounted) {
+      setState(() {
+        _catSitComposition = loadedCompositions[0];
+        _catWaveComposition = loadedCompositions[1];
+        _catHiComposition = loadedCompositions[2];
+        _cloudComposition = loadedCompositions[3];
+        _sunlightComposition = loadedCompositions[4];
+        _seaComposition = loadedCompositions[5];
+
+        _currentCatLottiePath = _catSitLottiePath; // 초기 경로 설정
+        _areLottiesLoaded = true;
+      });
+      changeRegularMotion(initialLoad: true);
+    }
   }
 
   void setRandomSpeech() async {
@@ -52,7 +130,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
               .first;
 
       debugPrint(targetRandomSpeech.personality);
-      int randomIdx = Random().nextInt(targetRandomSpeech.message.length - 1);
+      int randomIdx = _random.nextInt(targetRandomSpeech.message.length - 1);
 
       setState(() {
         message = targetRandomSpeech.message[randomIdx];
@@ -78,6 +156,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
               : currentHour >= 12 && currentHour < 20
               ? 'good afternoon'
               : 'good evening';
+
       RegularSpeech targetRegularSpeech =
           regularSpeech
               .where(
@@ -95,78 +174,71 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     }
   }
 
-  void changeRegularMotion() {
+  void changeRegularMotion({bool initialLoad = false}) {
     setState(() {
-      catImg = 'home_day_cat_hi_x3_opti';
+      _currentCatLottiePath = _catHiLottiePath;
     });
     setRegularSpeech();
 
     Future.delayed(3.1.seconds, () {
       setState(() {
         message = '';
-        catImg = 'home_day_cat_sit_x3_opti';
+        _currentCatLottiePath = _catSitLottiePath;
       });
     });
   }
 
   void changeMotion() {
     setState(() {
-      catImg = 'home_day_cat_wave_x3_opti';
+      _currentCatLottiePath = _catWaveLottiePath;
     });
     setRandomSpeech();
 
     Future.delayed(2.1.seconds, () {
       setState(() {
         message = '';
-        catImg = 'home_day_cat_sit_x3_opti';
+        _currentCatLottiePath = _catSitLottiePath;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // 모든 에셋이 로드될 때까지 로딩 스피너 표시
+    if (!_isBackgroundLoaded || !_areLottiesLoaded) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return GestureDetector(
       onTap: changeMotion,
       child: Stack(
         children: [
           Positioned.fill(
             child: Stack(
-              // fit: StackFit.expand,
               children: [
                 Positioned.fill(
-                  child: Image.asset(
-                    'assets/images/backgrounds/home_day_bg.png',
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.asset(_backgroundImgPath, fit: BoxFit.cover),
                 ),
                 Positioned(
                   top: getWinHeight(context) * 0.26,
                   child:
-                      message != ''
+                      message.isNotEmpty
                           ? SpeechBubble(message: message)
                           : Container(),
                 ),
-                Lottie.asset('assets/lotties/home_day_bg_cloud_2x.json'),
+                Lottie(composition: _cloudComposition!, repeat: true),
                 Positioned.fill(
-                  child: Lottie.asset(
-                    'assets/lotties/home_day_bg_sunlight_2x.json',
+                  child: Lottie(
+                    composition: _sunlightComposition!,
+                    repeat: true,
                   ),
                 ),
                 Positioned.fill(
-                  child: Lottie.asset(
-                    'assets/lotties/home_day_bg_sea_1x_02.json',
-                  ),
+                  child: Lottie(composition: _seaComposition!, repeat: true),
                 ),
-
                 Container(
                   alignment: Alignment.center,
-                  child: Lottie.asset(
-                    'assets/lotties/$catImg.json',
-                    // 'assets/lotties/home_day_cat_hi_x3_opti.json',
-                    // 'assets/lotties/home_day_cat_wave_x3_opti.json',
-                    width: getWinWidth(context) * 0.7,
-                    height: getWinWidth(context) * 0.7,
-                  ),
+                  child: _getCatLottieWidget(),
                 ),
               ],
             ),
@@ -181,6 +253,25 @@ class _FirstMainLayerState extends State<FirstMainLayer>
           ),
         ],
       ),
+    );
+  }
+
+  Widget _getCatLottieWidget() {
+    LottieComposition? currentComposition;
+    if (_currentCatLottiePath == _catSitLottiePath) {
+      currentComposition = _catSitComposition;
+    } else if (_currentCatLottiePath == _catWaveLottiePath) {
+      currentComposition = _catWaveComposition;
+    } else if (_currentCatLottiePath == _catHiLottiePath) {
+      currentComposition = _catHiComposition;
+    }
+
+    return Lottie(
+      key: ValueKey(_currentCatLottiePath),
+      composition: currentComposition!,
+      width: getWinWidth(context) * 0.7,
+      height: getWinWidth(context) * 0.7,
+      repeat: true,
     );
   }
 }
