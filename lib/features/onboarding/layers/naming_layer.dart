@@ -55,11 +55,17 @@ class _NamingLayerState extends ConsumerState<NamingLayer> {
                 decoration: BoxDecoration(
                   color: Colors.black87.withValues(alpha: 0.5),
                 ),
+              ),
+            ),
+            Positioned(
+              child: Container(
+                alignment: Alignment.center,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Form(
                     key: _formKey,
                     child: CstTextFormField(
+                      initialValue: onboardState.name,
                       hintText: '눌러서 이름 입력하기',
                       validator: _nameValidator,
                       onChanged: (value) {

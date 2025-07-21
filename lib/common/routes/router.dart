@@ -5,6 +5,7 @@ import 'package:alarmi/features/main/screens/main_screen.dart';
 import 'package:alarmi/features/missions/screens/shaking_clams_screen.dart';
 import 'package:alarmi/features/missions/services/mission_status_service.dart';
 import 'package:alarmi/features/onboarding/screens/onboard_screen.dart';
+import 'package:alarmi/features/onboarding/services/character_service.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -13,8 +14,7 @@ import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider((ref) {
   return GoRouter(
-    // initialLocation: MainScreen.routeURL,
-    initialLocation: OnboardScreen.routeURL,
+    initialLocation: MainScreen.routeURL,
     redirect: (context, state) async {
       // todo 추후 로그인 절차가 필요해지면 활성화
       // final isLoggedIn = ref.read(authRepo).isLoggedIn;
@@ -25,6 +25,18 @@ final routerProvider = Provider((ref) {
       //     return LoginScreen.routeURL;
       //   }
       // }
+
+      bool isThereNamedCharacter =
+          await CharacterService.getCharacterNamed() != null;
+      // 고양이 이름이 지어졌는지 확인
+      if (isThereNamedCharacter) {
+        String? name = await CharacterService.getCharacterNamed();
+        String? personality = await CharacterService.getCharacterPersonality();
+        debugPrint('character name: $name ($personality)');
+      } else {
+        debugPrint('character name: null');
+        return OnboardScreen.routeURL;
+      }
 
       // 기상 미션 알림이 왔는지 확인
       if (NotificationInitialize.initialAction != null) {

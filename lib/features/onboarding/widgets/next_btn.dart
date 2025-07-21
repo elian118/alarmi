@@ -29,7 +29,7 @@ class NextBtn extends ConsumerWidget {
               onboardState.stage == 8 &&
                       onboardState.selectedPersonality == null
                   ? null
-                  : () => onboardNotifier.setStage(onboardState.stage + 1),
+                  : () => onboardNotifier.next(),
         ),
       ],
     );

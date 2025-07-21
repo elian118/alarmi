@@ -1,3 +1,4 @@
+import 'package:alarmi/features/onboarding/constants/stage_types.dart';
 import 'package:alarmi/features/onboarding/layers/background_layer.dart';
 import 'package:alarmi/features/onboarding/layers/button_layer.dart';
 import 'package:alarmi/features/onboarding/layers/character_layer.dart';
@@ -31,6 +32,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final onboardState = ref.watch(onboardViewProvider);
     final onboardNotifier = ref.read(onboardViewProvider.notifier);
 
     ref.listen<OnboardState>(onboardViewProvider, (previous, next) {
@@ -65,7 +67,11 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
         ),
       ),
       body: GestureDetector(
-        onTap: () => onboardNotifier.next(),
+        onTap: () {
+          if (stageTypes[onboardState.stage].isClickable) {
+            onboardNotifier.next();
+          }
+        },
         child: Stack(
           children: [
             BackgroundLayer(),

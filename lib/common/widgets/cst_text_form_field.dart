@@ -5,6 +5,7 @@ class CstTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String value)? onChanged;
   final void Function(String?)? onSaved;
+  final String? initialValue;
 
   const CstTextFormField({
     Key? key,
@@ -12,21 +13,23 @@ class CstTextFormField extends StatelessWidget {
     this.validator,
     this.onSaved,
     this.onChanged,
+    this.initialValue,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
-          color: Colors.white.withValues(alpha: 0.5),
+          color: Colors.white.withValues(alpha: 0.4),
           fontSize: 26,
           fontWeight: FontWeight.w400,
         ),
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.2),
+        fillColor: Colors.white.withValues(alpha: 0.3),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
