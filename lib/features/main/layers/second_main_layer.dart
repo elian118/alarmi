@@ -16,7 +16,7 @@ class SecondMainLayer extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF64b4cd), Color(0xFF02365a)],
+                colors: [Color(0xFF2b6fa5), Color(0xFF02365a)],
               ),
             ),
           ),
