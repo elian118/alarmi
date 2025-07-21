@@ -1,5 +1,6 @@
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lottie/lottie.dart';
 
 class FirstMainLayer extends StatefulWidget {
@@ -12,6 +13,7 @@ class FirstMainLayer extends StatefulWidget {
 class _FirstMainLayerState extends State<FirstMainLayer>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
+  String catImg = 'home_day_cat_sit_x3_opti';
 
   @override
   void initState() {
@@ -25,10 +27,21 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     super.dispose();
   }
 
+  void changeMotion() {
+    setState(() {
+      catImg = 'home_day_cat_wave_x3_opti';
+    });
+    Future.delayed(2.seconds, () {
+      setState(() {
+        catImg = 'home_day_cat_sit_x3_opti';
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      ignoring: true,
+    return GestureDetector(
+      onTap: changeMotion,
       child: Stack(
         children: [
           Positioned.fill(
@@ -56,7 +69,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                 Container(
                   alignment: Alignment.center,
                   child: Lottie.asset(
-                    'assets/lotties/home_day_cat_sit_x3_opti.json',
+                    'assets/lotties/$catImg.json',
                     // 'assets/lotties/home_day_cat_hi_x3_opti.json',
                     // 'assets/lotties/home_day_cat_wave_x3_opti.json',
                     width: getWinWidth(context) * 0.7,
