@@ -14,7 +14,7 @@ import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider((ref) {
   return GoRouter(
-    initialLocation: MainScreen.routeURL,
+    initialLocation: '${MainScreen.routeURL}/null',
     redirect: (context, state) async {
       // todo 추후 로그인 절차가 필요해지면 활성화
       // final isLoggedIn = ref.read(authRepo).isLoggedIn;

@@ -131,14 +131,15 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     if (personality != null) {
       final now = DateTime.now();
       final currentHour = now.hour;
+
       String situation =
-          widget.situation != null
+          widget.situation != 'null'
               ? widget.situation!
               : currentHour >= 6 && currentHour < 12
-              ? 'good morning'
+              ? 'good_morning'
               : currentHour >= 12 && currentHour < 20
-              ? 'good afternoon'
-              : 'good evening';
+              ? 'good_afternoon'
+              : 'good_evening';
 
       RegularSpeech targetRegularSpeech =
           regularSpeech
