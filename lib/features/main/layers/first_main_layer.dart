@@ -342,8 +342,10 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                     child: _buildLottieWidget(
                       lottieBytes: widget.catWaveComposition,
                       controller: _catWaveController,
-                      width: getWinWidth(context) * 0.7,
-                      height: getWinWidth(context) * 0.7,
+                      // width: getWinWidth(context) * 0.7,
+                      // height: getWinWidth(context) * 0.7,
+                      width: 311,
+                      height: 284.87,
                       repeat: false, // Wave는 자동 반복 금지
                       visible: _currentCatAnimation == CatAnimationState.wave,
                     ),
@@ -353,8 +355,10 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                     child: _buildLottieWidget(
                       lottieBytes: widget.catHiComposition,
                       controller: _catHiController,
-                      width: getWinWidth(context) * 0.7,
-                      height: getWinWidth(context) * 0.7,
+                      // width: getWinWidth(context) * 0.7,
+                      // height: getWinWidth(context) * 0.7,
+                      width: 311,
+                      height: 284.87,
                       repeat: false, // Hi는 자동 반복 금지
                       visible: _currentCatAnimation == CatAnimationState.hi,
                     ),
