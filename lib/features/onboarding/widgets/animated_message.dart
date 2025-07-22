@@ -32,7 +32,7 @@ class AnimatedMessage extends ConsumerWidget {
               fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,
-            speed: 80.ms,
+            speed: onboardState.message.length > 18 ? 50.ms : 80.ms,
           ),
         ],
       ),
