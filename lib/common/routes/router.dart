@@ -65,10 +65,13 @@ final routerProvider = Provider((ref) {
     routes: [
       GoRoute(
         name: MainScreen.routeName,
-        path: MainScreen.routeURL,
+        path: '${MainScreen.routeURL}/:situation',
         pageBuilder:
-            (context, state) =>
-                goRouteOpacityPageBuilder(context, state, MainScreen()),
+            (context, state) => goRouteOpacityPageBuilder(
+              context,
+              state,
+              MainScreen(situation: state.pathParameters['situation']),
+            ),
       ),
       GoRoute(
         name: OnboardScreen.routeName,

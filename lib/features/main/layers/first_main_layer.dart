@@ -20,6 +20,7 @@ class FirstMainLayer extends StatefulWidget {
   final Uint8List seaComposition;
   final AnimationController bgLottieController;
   final String backgroundImgPath;
+  final String? situation;
 
   const FirstMainLayer({
     super.key,
@@ -31,6 +32,7 @@ class FirstMainLayer extends StatefulWidget {
     required this.seaComposition,
     required this.bgLottieController,
     required this.backgroundImgPath,
+    this.situation,
   });
 
   @override
@@ -130,7 +132,9 @@ class _FirstMainLayerState extends State<FirstMainLayer>
       final now = DateTime.now();
       final currentHour = now.hour;
       String situation =
-          currentHour >= 6 && currentHour < 12
+          widget.situation != null
+              ? widget.situation!
+              : currentHour >= 6 && currentHour < 12
               ? 'good morning'
               : currentHour >= 12 && currentHour < 20
               ? 'good afternoon'

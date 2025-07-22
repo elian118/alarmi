@@ -24,7 +24,9 @@ class MainScreen extends StatefulWidget {
   static const String routeName = 'main';
   static const String routeURL = '/main';
 
-  const MainScreen({super.key});
+  final String? situation;
+
+  const MainScreen({super.key, this.situation});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -156,6 +158,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 seaComposition: _seaComposition!,
                 bgLottieController: _bgLottieController,
                 backgroundImgPath: _backgroundImgPath,
+                situation: widget.situation,
               ),
               SecondMainLayer(),
             ],

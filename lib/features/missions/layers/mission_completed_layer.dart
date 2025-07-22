@@ -49,7 +49,7 @@ class MissionCompletedLayer extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       MissionStatusService.setWakeUpMissionCompleted(true);
-                      context.go(MainScreen.routeURL);
+                      context.go('${MainScreen.routeURL}/mission_completed');
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
