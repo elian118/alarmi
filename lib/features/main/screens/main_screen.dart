@@ -118,6 +118,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         _seaComposition = loadedCompositions[5];
         _areLottiesLoaded = true;
       });
+
+      _bgLottieController.repeat(); // 배경 로티 반복 재생 시작
     }
   }
 
