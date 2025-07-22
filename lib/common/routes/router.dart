@@ -68,13 +68,11 @@ final routerProvider = Provider((ref) {
         path: '${MainScreen.routeURL}/:situation',
         pageBuilder: (context, state) {
           final situation = state.pathParameters['situation'];
-          final isNullSituation = situation == 'null';
 
           return goRouteOpacityPageBuilder(
             context,
             state,
             MainScreen(situationParam: situation),
-            !isNullSituation,
           );
         },
       ),

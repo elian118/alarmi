@@ -48,11 +48,10 @@ void navPush(
 CustomTransitionPage<void> goRouteOpacityPageBuilder(
   BuildContext context,
   GoRouterState state,
-  Widget target, [
-  bool? isReload, // 선택적 인자
-]) {
+  Widget target,
+) {
   return CustomTransitionPage<void>(
-    key: isReload == true ? UniqueKey() : state.pageKey,
+    key: state.pageKey,
     child: target,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(

@@ -51,6 +51,8 @@ class _FirstMainLayerState extends State<FirstMainLayer>
 
   final Random _random = Random();
 
+  bool _isInitialMotionSet = false;
+
   @override
   void initState() {
     _catSitController = AnimationController(vsync: this, duration: 2.1.seconds);
@@ -60,8 +62,28 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     );
     _catHiController = AnimationController(vsync: this, duration: 2.1.seconds);
 
-    _setInitialCatMotion();
+    _setInitialCatMotionOnInitialLoad();
+
+    // 초기에는 sit 애니메이션 시작
+    _catSitController
+      ..reset()
+      ..repeat();
+
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant FirstMainLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // widget.situation 값이 이전과 다를 경우 setRegularSpeech 실행
+    if (widget.situation != oldWidget.situation) {
+      debugPrint(
+        'Situation changed: ${oldWidget.situation} -> ${widget.situation}',
+      );
+      // 새로운 상황 값이 있을 때만 changeRegularMotion 호출
+      changeRegularMotion();
+    }
   }
 
   @override
@@ -72,12 +94,17 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     super.dispose();
   }
 
-  void _setInitialCatMotion() async {
-    // 초기 로드 후 바로 'Hi' 애니메이션 재생
+  void _setInitialCatMotionOnInitialLoad() async {
+    // 이 함수는 FirstMainLayer가 처음 빌드될 때만 호출되도록 합니다.
+    if (_isInitialMotionSet) return;
+
+    _isInitialMotionSet = true; // 플래그 설정
+
     setState(() {
       _currentCatAnimation = CatAnimationState.hi;
     });
-    setRegularSpeech();
+    // 초기 로드 시에도 regular speech 설정
+    await setRegularSpeech(); // 메시지 설정 완료 후 애니메이션 진행
 
     _catHiController
       ..reset()
@@ -86,7 +113,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     Future.delayed(3.1.seconds, () {
       if (!mounted) return;
       setState(() {
-        message = '';
+        message = ''; // 메시지 비움
         _currentCatAnimation = CatAnimationState.sit;
       });
       _catSitController
@@ -119,7 +146,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     }
   }
 
-  void setRegularSpeech() async {
+  Future<void> setRegularSpeech() async {
     if (!mounted) return;
 
     setState(() {
@@ -158,7 +185,8 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     }
   }
 
-  void changeRegularMotion({bool initialLoad = false}) {
+  // situation 변화 시 호출
+  void changeRegularMotion() {
     setState(() {
       _currentCatAnimation = CatAnimationState.hi;
     });
@@ -169,6 +197,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
       ..forward();
 
     Future.delayed(3.1.seconds, () {
+      if (!mounted) return; // dispose 후 setState 호출 방지
       setState(() {
         message = '';
         _currentCatAnimation = CatAnimationState.sit;
