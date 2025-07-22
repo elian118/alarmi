@@ -1,7 +1,10 @@
+import 'package:alarmi/common/widgets/cst_error.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/screens/create_alarm_screen.dart';
 import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/features/main/widgets/alarm.dart';
+import 'package:alarmi/features/main/widgets/cst_loading.dart';
+import 'package:alarmi/features/main/widgets/no_alarms.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,12 +34,7 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
     return alarmAsync.when(
       data: (alarms) {
         if (alarms.isEmpty) {
-          return Center(
-            child: Text(
-              "저장된 알람이 없습니다.",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          );
+          return NoAlarms();
         }
         return SingleChildScrollView(
           child: Column(
@@ -96,15 +94,11 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => CstLoading(),
 
       error:
-          (error, stackTrace) => Center(
-            child: Text(
-              '알람을 불러오는 데 오류가 발생했습니다. $error',
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
+          (error, stackTrace) =>
+              CstError(error: error, errorMessage: '알람을 불러오는 데 오류가 발생했습니다.'),
     );
   }
 }
