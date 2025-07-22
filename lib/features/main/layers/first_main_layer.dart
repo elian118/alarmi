@@ -5,6 +5,7 @@ import 'package:alarmi/common/consts/raw_data/cat_regular_speeches.dart';
 import 'package:alarmi/common/widgets/speech_bubble.dart';
 import 'package:alarmi/features/main/constants/cat_animation_state.dart';
 import 'package:alarmi/features/onboarding/services/character_service.dart';
+import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,7 @@ class FirstMainLayer extends StatefulWidget {
   final Uint8List seaComposition;
   final AnimationController bgLottieController;
   final String backgroundImgPath;
+  final String nightBackgroundImgPath;
   final String? situation;
 
   const FirstMainLayer({
@@ -32,6 +34,7 @@ class FirstMainLayer extends StatefulWidget {
     required this.seaComposition,
     required this.bgLottieController,
     required this.backgroundImgPath,
+    required this.nightBackgroundImgPath,
     this.situation,
   });
 
@@ -52,6 +55,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
   final Random _random = Random();
 
   bool _isInitialMotionSet = false;
+  bool _isEvening = false;
 
   @override
   void initState() {
@@ -60,14 +64,24 @@ class _FirstMainLayerState extends State<FirstMainLayer>
       vsync: this,
       duration: 2.1.seconds,
     );
-    _catHiController = AnimationController(vsync: this, duration: 2.1.seconds);
 
-    _setInitialCatMotionOnInitialLoad();
+    setState(() {
+      _isEvening = 'good_evening' == getHourCategory();
+    });
+    // 저녁이 아닐때만 로띠 적용
+    // todo - 저녁용 로띠 애니메이션 얻으면 조건절 풀 것!
+    if (!_isEvening) {
+      _catHiController = AnimationController(
+        vsync: this,
+        duration: 2.1.seconds,
+      );
+      _setInitialCatMotionOnInitialLoad();
 
-    // 초기에는 sit 애니메이션 시작
-    _catSitController
-      ..reset()
-      ..repeat();
+      // 초기에는 sit 애니메이션 시작
+      _catSitController
+        ..reset()
+        ..repeat();
+    }
 
     super.initState();
   }
@@ -156,18 +170,9 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     String? personality = await CharacterService.getCharacterPersonality();
 
     if (personality != null) {
-      final now = DateTime.now();
-      final currentHour = now.hour;
-
       String situation =
-          widget.situation != null
-              ? widget.situation!
-              : currentHour >= 6 && currentHour < 12
-              ? 'good_morning'
-              : currentHour >= 12 && currentHour < 20
-              ? 'good_afternoon'
-              : 'good_evening';
-      debugPrint('situation: $situation');
+          widget.situation != null ? widget.situation! : getHourCategory();
+
       RegularSpeech targetRegularSpeech =
           regularSpeech
               .where(
@@ -274,78 +279,87 @@ class _FirstMainLayerState extends State<FirstMainLayer>
               children: [
                 Positioned.fill(
                   child: Image.asset(
-                    widget.backgroundImgPath,
+                    // todo 저녁용 로띠가 있으면 아래 조건식 바꾸기
+                    !_isEvening
+                        ? widget.backgroundImgPath
+                        : widget.nightBackgroundImgPath,
                     fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  top: getWinHeight(context) * 0.26,
-                  child:
-                      message.isNotEmpty
-                          ? SpeechBubble(message: message)
-                          : Container(),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    alignment: Alignment.topCenter,
+                // todo 저녁용 로띠가 있으면 아래 조건식 바꾸기
+                // 저녁인 경우 아래 위젯 모두 감추기
+                if (!_isEvening) ...[
+                  Positioned(
+                    top: getWinHeight(context) * 0.26,
+                    child:
+                        message.isNotEmpty
+                            ? SpeechBubble(message: message)
+                            : Container(),
+                  ),
+                  Positioned.fill(
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      child: _buildLottieWidget(
+                        lottieBytes: widget.cloudComposition,
+                        controller: widget.bgLottieController,
+                        repeat: true,
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      child: _buildLottieWidget(
+                        lottieBytes: widget.sunlightComposition,
+                        controller: widget.bgLottieController,
+                        repeat: true,
+                      ),
+                    ),
+                  ),
+                  Positioned.fill(
                     child: _buildLottieWidget(
-                      lottieBytes: widget.cloudComposition,
+                      lottieBytes: widget.seaComposition,
                       controller: widget.bgLottieController,
                       repeat: true,
                     ),
                   ),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    alignment: Alignment.topCenter,
+                  // 가시성 제어가 적용된 고양이 Lottie 위젯들
+                  Align(
+                    alignment: Alignment.center,
                     child: _buildLottieWidget(
-                      lottieBytes: widget.sunlightComposition,
-                      controller: widget.bgLottieController,
+                      lottieBytes: widget.catSitComposition,
+                      controller: _catSitController,
+                      // width: getWinWidth(context) * 0.7,
+                      // height: getWinWidth(context) * 0.7,
+                      width: 311,
+                      height: 284.87,
                       repeat: true,
+                      visible: _currentCatAnimation == CatAnimationState.sit,
                     ),
                   ),
-                ),
-                Positioned.fill(
-                  child: _buildLottieWidget(
-                    lottieBytes: widget.seaComposition,
-                    controller: widget.bgLottieController,
-                    repeat: true,
+                  Align(
+                    alignment: Alignment.center,
+                    child: _buildLottieWidget(
+                      lottieBytes: widget.catWaveComposition,
+                      controller: _catWaveController,
+                      width: getWinWidth(context) * 0.7,
+                      height: getWinWidth(context) * 0.7,
+                      repeat: false, // Wave는 자동 반복 금지
+                      visible: _currentCatAnimation == CatAnimationState.wave,
+                    ),
                   ),
-                ),
-                // 가시성 제어가 적용된 고양이 Lottie 위젯들
-                Align(
-                  alignment: Alignment.center,
-                  child: _buildLottieWidget(
-                    lottieBytes: widget.catSitComposition,
-                    controller: _catSitController,
-                    width: getWinWidth(context) * 0.7,
-                    height: getWinWidth(context) * 0.7,
-                    repeat: true,
-                    visible: _currentCatAnimation == CatAnimationState.sit,
+                  Align(
+                    alignment: Alignment.center,
+                    child: _buildLottieWidget(
+                      lottieBytes: widget.catHiComposition,
+                      controller: _catHiController,
+                      width: getWinWidth(context) * 0.7,
+                      height: getWinWidth(context) * 0.7,
+                      repeat: false, // Hi는 자동 반복 금지
+                      visible: _currentCatAnimation == CatAnimationState.hi,
+                    ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: _buildLottieWidget(
-                    lottieBytes: widget.catWaveComposition,
-                    controller: _catWaveController,
-                    width: getWinWidth(context) * 0.7,
-                    height: getWinWidth(context) * 0.7,
-                    repeat: false, // Wave는 자동 반복 금지
-                    visible: _currentCatAnimation == CatAnimationState.wave,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: _buildLottieWidget(
-                    lottieBytes: widget.catHiComposition,
-                    controller: _catHiController,
-                    width: getWinWidth(context) * 0.7,
-                    height: getWinWidth(context) * 0.7,
-                    repeat: false, // Hi는 자동 반복 금지
-                    visible: _currentCatAnimation == CatAnimationState.hi,
-                  ),
-                ),
+                ],
               ],
             ),
           ),

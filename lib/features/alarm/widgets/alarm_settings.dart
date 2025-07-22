@@ -6,6 +6,7 @@ import 'package:alarmi/common/widgets/cst_image_switch.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
 import 'package:alarmi/features/alarm/widgets/bell_settings_dialog.dart';
 import 'package:alarmi/features/alarm/widgets/vibrate_settings_dialog.dart';
+import 'package:alarmi/utils/date_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -46,10 +47,14 @@ class AlarmSettings extends StatefulWidget {
 class _AlarmSettingsState extends State<AlarmSettings> {
   String? _selectedBellId;
   String? _selectedVibrateId;
+  bool _isEvening = false;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _isEvening = 'good_evening' == getHourCategory();
+    });
     if (widget.bellId != null) _selectedBellId = widget.bellId;
     if (widget.vibrateId != null) _selectedVibrateId = widget.vibrateId;
   }
@@ -105,7 +110,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white.withValues(alpha: 0.1),
+      color: Colors.white.withValues(alpha: !_isEvening ? 0.01 : 0.1),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8),
         child: Column(
@@ -159,9 +164,14 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                         style: TextButton.styleFrom(
                           backgroundColor:
                               day.isSelected
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey.shade700,
-                          foregroundColor: Colors.white, // 텍스트 색상
+                                  ? Colors.white
+                                  : Colors.white.withValues(alpha: 0.1),
+                          foregroundColor:
+                              day.isSelected
+                                  ? Colors.black87
+                                  : Colors.white.withValues(
+                                    alpha: 0.6,
+                                  ), // 텍스트 색상
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),

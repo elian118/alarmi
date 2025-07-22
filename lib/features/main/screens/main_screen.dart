@@ -19,6 +19,7 @@ const String _sunlightLottiePath =
     'assets/lotties/home_day_bg_sunlight_2x.json';
 const String _seaLottiePath = 'assets/lotties/home_day_bg_sea_1x_02.json';
 const String _backgroundImgPath = 'assets/images/backgrounds/home_day_bg.png';
+const String _nightBackgroundImgPath = 'assets/images/backgrounds/bg_night.png';
 
 class MainScreen extends StatefulWidget {
   static const String routeName = 'main';
@@ -160,6 +161,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 seaComposition: _seaComposition!,
                 bgLottieController: _bgLottieController,
                 backgroundImgPath: _backgroundImgPath,
+                nightBackgroundImgPath: _nightBackgroundImgPath,
                 situation: widget.situation,
               ),
               SecondMainLayer(),

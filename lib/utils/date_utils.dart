@@ -24,3 +24,14 @@ DateTime getWakeUpTimeFromAlarm(String alarmTime) {
 
   return DateTime(now.year, now.month, now.day, hour, minute, second);
 }
+
+String getHourCategory() {
+  final now = DateTime.now();
+  final currentHour = now.hour;
+
+  return currentHour >= 6 && currentHour < 12
+      ? 'good_morning'
+      : currentHour >= 12 && currentHour < 20
+      ? 'good_afternoon'
+      : 'good_evening';
+}
