@@ -133,14 +133,14 @@ class _FirstMainLayerState extends State<FirstMainLayer>
       final currentHour = now.hour;
 
       String situation =
-          widget.situation != 'null'
+          widget.situation != null
               ? widget.situation!
               : currentHour >= 6 && currentHour < 12
               ? 'good_morning'
               : currentHour >= 12 && currentHour < 20
               ? 'good_afternoon'
               : 'good_evening';
-
+      debugPrint('situation: $situation');
       RegularSpeech targetRegularSpeech =
           regularSpeech
               .where(

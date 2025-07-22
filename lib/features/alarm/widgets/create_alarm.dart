@@ -201,7 +201,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     if (mounted) {
       if (isSuccess) {
         callSimpleToast('알람이 ${isCreate ? '등록' : '저장'}되었습니다.');
-        context.go(MainScreen.routeURL);
+        context.go('${MainScreen.routeURL}/null');
       } else {
         callSimpleToast('알람 ${isCreate ? '등록' : '저장'}에 실패했습니다.');
       }

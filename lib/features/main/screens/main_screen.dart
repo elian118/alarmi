@@ -26,7 +26,8 @@ class MainScreen extends StatefulWidget {
 
   final String? situation;
 
-  const MainScreen({super.key, this.situation});
+  const MainScreen({super.key, required String? situationParam})
+    : situation = situationParam == 'null' ? null : situationParam;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -123,7 +124,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   void dispose() {
     _pageController.dispose();
-    // _catLottieController.dispose();
     _bgLottieController.dispose();
     super.dispose();
   }

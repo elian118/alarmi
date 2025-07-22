@@ -8,7 +8,7 @@ List<Tab> tabs = [
     key: "main",
     name: "개인 알람",
     iconAsset: "assets/images/icons/bi_person_fill.svg",
-    target: MainScreen(),
+    target: MainScreen(situationParam: null),
   ),
   Tab(
     key: "new",

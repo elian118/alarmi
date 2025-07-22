@@ -31,7 +31,7 @@ class SpeechBubble extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
-                  speed: 0.1.seconds,
+                  speed: 80.ms,
                 ),
               ],
             ),

@@ -70,7 +70,7 @@ final routerProvider = Provider((ref) {
             (context, state) => goRouteOpacityPageBuilder(
               context,
               state,
-              MainScreen(situation: state.pathParameters['situation']),
+              MainScreen(situationParam: state.pathParameters['situation']),
             ),
       ),
       GoRoute(
