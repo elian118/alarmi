@@ -5,7 +5,9 @@ import 'package:alarmi/features/missions/widgets/shaking_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../test/screens/alarm_test_screen.dart';
 import '../layers/mission_failed_layer.dart';
 import '../vms/shaking_clams_view_model.dart';
 
@@ -66,6 +68,20 @@ class ShakingClamsScreen extends ConsumerWidget {
                           : 0,
                 )
                 .fadeOut(begin: 1.0),
+          ),
+          // 테스트 스크린으로 이동하는 버튼 - 임시
+          Positioned(
+            top: 50,
+            right: 20,
+            child: GestureDetector(
+              onTap: () => context.push(AlarmTestScreen.routeURL),
+              child: Image.asset(
+                'assets/images/characters/thumb.png',
+              ).animate().scale(
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              ),
+            ),
           ),
         ],
       ),
