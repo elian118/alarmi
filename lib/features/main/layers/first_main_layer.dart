@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:alarmi/common/consts/raw_data/cat_random_speeches.dart';
 import 'package:alarmi/common/consts/raw_data/cat_regular_speeches.dart';
 import 'package:alarmi/common/widgets/speech_bubble.dart';
+import 'package:alarmi/features/main/constants/cat_animation_state.dart';
 import 'package:alarmi/features/onboarding/services/character_service.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,6 @@ class FirstMainLayer extends StatefulWidget {
   final Uint8List cloudComposition;
   final Uint8List sunlightComposition;
   final Uint8List seaComposition;
-  final AnimationController catLottieController;
   final AnimationController bgLottieController;
   final String backgroundImgPath;
 
@@ -29,7 +29,6 @@ class FirstMainLayer extends StatefulWidget {
     required this.cloudComposition,
     required this.sunlightComposition,
     required this.seaComposition,
-    required this.catLottieController,
     required this.bgLottieController,
     required this.backgroundImgPath,
   });
@@ -38,31 +37,47 @@ class FirstMainLayer extends StatefulWidget {
   State<FirstMainLayer> createState() => _FirstMainLayerState();
 }
 
-class _FirstMainLayerState extends State<FirstMainLayer> {
+class _FirstMainLayerState extends State<FirstMainLayer>
+    with TickerProviderStateMixin {
   late String message = '';
-  late Uint8List? _currentCatLottieBytes;
+
+  late AnimationController _catSitController;
+  late AnimationController _catWaveController;
+  late AnimationController _catHiController;
+
+  CatAnimationState _currentCatAnimation = CatAnimationState.sit;
+
   final Random _random = Random();
 
   @override
   void initState() {
-    _currentCatLottieBytes = widget.catSitComposition; // 초기 고양이 애니메이션 설정
+    _catSitController = AnimationController(vsync: this, duration: 2.1.seconds);
+    _catWaveController = AnimationController(
+      vsync: this,
+      duration: 2.1.seconds,
+    );
+    _catHiController = AnimationController(vsync: this, duration: 2.1.seconds);
+
     _setInitialCatMotion();
     super.initState();
   }
 
   @override
   void dispose() {
+    _catSitController.dispose();
+    _catWaveController.dispose();
+    _catHiController.dispose();
     super.dispose();
   }
 
   void _setInitialCatMotion() async {
     // 초기 로드 후 바로 'Hi' 애니메이션 재생
     setState(() {
-      _currentCatLottieBytes = widget.catHiComposition;
+      _currentCatAnimation = CatAnimationState.hi;
     });
     setRegularSpeech();
 
-    widget.catLottieController
+    _catHiController
       ..reset()
       ..forward();
 
@@ -70,9 +85,9 @@ class _FirstMainLayerState extends State<FirstMainLayer> {
       if (!mounted) return;
       setState(() {
         message = '';
-        _currentCatLottieBytes = widget.catSitComposition;
+        _currentCatAnimation = CatAnimationState.sit;
       });
-      widget.catLottieController
+      _catSitController
         ..reset()
         ..repeat();
     });
@@ -140,20 +155,20 @@ class _FirstMainLayerState extends State<FirstMainLayer> {
 
   void changeRegularMotion({bool initialLoad = false}) {
     setState(() {
-      _currentCatLottieBytes = widget.catHiComposition;
+      _currentCatAnimation = CatAnimationState.hi;
     });
     setRegularSpeech();
 
-    widget.catLottieController
+    _catHiController
       ..reset()
       ..forward();
 
     Future.delayed(3.1.seconds, () {
       setState(() {
         message = '';
-        _currentCatLottieBytes = widget.catSitComposition;
+        _currentCatAnimation = CatAnimationState.sit;
       });
-      widget.catLottieController
+      _catSitController
         ..reset()
         ..repeat();
     });
@@ -161,56 +176,61 @@ class _FirstMainLayerState extends State<FirstMainLayer> {
 
   void changeMotion() {
     setState(() {
-      _currentCatLottieBytes = widget.catWaveComposition;
+      _currentCatAnimation = CatAnimationState.wave;
     });
     setRandomSpeech();
 
-    widget.catLottieController
+    _catWaveController
       ..reset()
       ..forward();
 
     Future.delayed(2.1.seconds, () {
       setState(() {
         message = '';
-        _currentCatLottieBytes = widget.catSitComposition;
+        _currentCatAnimation = CatAnimationState.sit;
       });
-      widget.catLottieController
+      _catSitController
         ..reset()
         ..repeat();
     });
   }
 
   Widget _buildLottieWidget({
-    required Uint8List? lottieBytes, // Lottie Bytes 데이터
-    required AnimationController controller, // 해당 애니메이션 컨트롤러
+    required Uint8List? lottieBytes,
+    required AnimationController controller,
     double? width,
     double? height,
     BoxFit fit = BoxFit.contain,
     bool repeat = true,
     bool animate = true,
+    bool visible = true,
   }) {
     if (lottieBytes == null) {
-      return const CircularProgressIndicator(); // 데이터가 아직 로드되지 않았으면 로딩 표시
+      return const CircularProgressIndicator();
     }
-    return LottieBuilder.memory(
-      lottieBytes,
-      controller: controller,
-      width: width,
-      height: height,
-      fit: fit,
-      repeat: repeat,
-      animate: animate,
-      onLoaded: (composition) {
-        controller.duration = composition.duration;
-      },
+
+    return Visibility(
+      visible: visible,
+      maintainState: true, // 보이지 않아도 위젯 상태 유지
+      maintainAnimation: true, // 보이지 않아도 애니메이션 상태 유지
+      maintainSize: true, // 보이지 않아도 공간 차지하도록 유지
+      child: LottieBuilder.memory(
+        lottieBytes,
+        controller: controller,
+        width: width,
+        height: height,
+        fit: fit,
+        repeat: repeat,
+        animate: animate,
+        onLoaded: (composition) {
+          controller.duration = composition.duration;
+        },
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    bool currentCatRepeat =
-        (_currentCatLottieBytes == widget.catSitComposition);
-
     return GestureDetector(
       onTap: changeMotion,
       child: Stack(
@@ -258,15 +278,38 @@ class _FirstMainLayerState extends State<FirstMainLayer> {
                     repeat: true,
                   ),
                 ),
+                // 가시성 제어가 적용된 고양이 Lottie 위젯들
                 Align(
                   alignment: Alignment.center,
                   child: _buildLottieWidget(
-                    lottieBytes:
-                        _currentCatLottieBytes!, // 이미 null 체크되었으므로 ! 사용
-                    controller: widget.catLottieController,
+                    lottieBytes: widget.catSitComposition,
+                    controller: _catSitController,
                     width: getWinWidth(context) * 0.7,
                     height: getWinWidth(context) * 0.7,
-                    repeat: currentCatRepeat,
+                    repeat: true,
+                    visible: _currentCatAnimation == CatAnimationState.sit,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: _buildLottieWidget(
+                    lottieBytes: widget.catWaveComposition,
+                    controller: _catWaveController,
+                    width: getWinWidth(context) * 0.7,
+                    height: getWinWidth(context) * 0.7,
+                    repeat: false, // Wave는 자동 반복 금지
+                    visible: _currentCatAnimation == CatAnimationState.wave,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: _buildLottieWidget(
+                    lottieBytes: widget.catHiComposition,
+                    controller: _catHiController,
+                    width: getWinWidth(context) * 0.7,
+                    height: getWinWidth(context) * 0.7,
+                    repeat: false, // Hi는 자동 반복 금지
+                    visible: _currentCatAnimation == CatAnimationState.hi,
                   ),
                 ),
               ],

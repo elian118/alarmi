@@ -10,10 +10,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
-const String _catSitLottiePath = 'assets/lotties/home_day_cat_sit_x3_opti.json';
+const String _catSitLottiePath = 'assets/lotties/home_day_cat_sit_x2_opti.json';
 const String _catWaveLottiePath =
-    'assets/lotties/home_day_cat_wave_x3_opti.json';
-const String _catHiLottiePath = 'assets/lotties/home_day_cat_hi_x3_opti.json';
+    'assets/lotties/home_day_cat_wave_x2_opti.json';
+const String _catHiLottiePath = 'assets/lotties/home_day_cat_hi_x2_opti.json';
 const String _cloudLottiePath = 'assets/lotties/home_day_bg_cloud_2x.json';
 const String _sunlightLottiePath =
     'assets/lotties/home_day_bg_sunlight_2x.json';
@@ -47,7 +47,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   bool _areLottiesLoaded = false;
   bool _didPreloadAssets = false;
 
-  late final AnimationController _catLottieController;
   late final AnimationController _bgLottieController;
 
   @override
@@ -65,10 +64,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     });
 
     // 로티 컨트롤러 초기화
-    _catLottieController = AnimationController(
-      vsync: this,
-      duration: 3.1.seconds,
-    );
     _bgLottieController = AnimationController(
       vsync: this,
       duration: 2.1.seconds,
@@ -126,7 +121,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   void dispose() {
     _pageController.dispose();
-    _catLottieController.dispose();
+    // _catLottieController.dispose();
     _bgLottieController.dispose();
     super.dispose();
   }
@@ -159,7 +154,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 cloudComposition: _cloudComposition!,
                 sunlightComposition: _sunlightComposition!,
                 seaComposition: _seaComposition!,
-                catLottieController: _catLottieController,
                 bgLottieController: _bgLottieController,
                 backgroundImgPath: _backgroundImgPath,
               ),
