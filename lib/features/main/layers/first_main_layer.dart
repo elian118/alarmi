@@ -9,17 +9,10 @@ import 'package:alarmi/features/onboarding/services/character_service.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lottie/lottie.dart';
 
 class FirstMainLayer extends StatefulWidget {
-  final Uint8List catSitComposition;
-  final Uint8List catWaveComposition;
-  final Uint8List catHiComposition;
-  final Uint8List cloudComposition;
-  final Uint8List sunlightComposition;
-  final Uint8List seaComposition;
   final AnimationController bgLottieController;
   final String backgroundImgPath;
   final String nightBackgroundImgPath;
@@ -27,12 +20,6 @@ class FirstMainLayer extends StatefulWidget {
 
   const FirstMainLayer({
     super.key,
-    required this.catSitComposition,
-    required this.catWaveComposition,
-    required this.catHiComposition,
-    required this.cloudComposition,
-    required this.sunlightComposition,
-    required this.seaComposition,
     required this.bgLottieController,
     required this.backgroundImgPath,
     required this.nightBackgroundImgPath,
@@ -65,6 +52,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
       vsync: this,
       duration: 2.1.seconds,
     );
+    _catHiController = AnimationController(vsync: this, duration: 2.1.seconds);
 
     setState(() {
       _isEvening = isEvening();
@@ -72,16 +60,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     // 저녁이 아닐때만 로띠 적용
     // todo - 저녁용 로띠 애니메이션 얻으면 조건절 풀 것!
     if (!_isEvening) {
-      _catHiController = AnimationController(
-        vsync: this,
-        duration: 2.1.seconds,
-      );
       _setInitialCatMotionOnInitialLoad();
-
-      // 초기에는 sit 애니메이션 시작
-      _catSitController
-        ..reset()
-        ..repeat();
     }
 
     super.initState();
@@ -110,7 +89,6 @@ class _FirstMainLayerState extends State<FirstMainLayer>
   }
 
   void _setInitialCatMotionOnInitialLoad() async {
-    // 이 함수는 FirstMainLayer가 처음 빌드될 때만 호출되도록 합니다.
     if (_isInitialMotionSet) return;
 
     _isInitialMotionSet = true; // 플래그 설정
@@ -236,7 +214,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
   }
 
   Widget _buildLottieWidget({
-    required Uint8List? lottieBytes,
+    required assetPath,
     required AnimationController controller,
     double? width,
     double? height,
@@ -245,7 +223,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     bool animate = true,
     bool visible = true,
   }) {
-    if (lottieBytes == null) {
+    if (assetPath == null) {
       return CstPartLoading();
     }
 
@@ -254,8 +232,8 @@ class _FirstMainLayerState extends State<FirstMainLayer>
       maintainState: true, // 보이지 않아도 위젯 상태 유지
       maintainAnimation: true, // 보이지 않아도 애니메이션 상태 유지
       maintainSize: true, // 보이지 않아도 공간 차지하도록 유지
-      child: LottieBuilder.memory(
-        lottieBytes,
+      child: LottieBuilder.asset(
+        assetPath,
         controller: controller,
         width: width,
         height: height,
@@ -301,7 +279,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                     child: Container(
                       alignment: Alignment.topCenter,
                       child: _buildLottieWidget(
-                        lottieBytes: widget.cloudComposition,
+                        assetPath: 'assets/lotties/home_day_bg_cloud_2x.json',
                         controller: widget.bgLottieController,
                         repeat: true,
                       ),
@@ -311,7 +289,8 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                     child: Container(
                       alignment: Alignment.topCenter,
                       child: _buildLottieWidget(
-                        lottieBytes: widget.sunlightComposition,
+                        assetPath:
+                            'assets/lotties/home_day_bg_sunlight_2x.json',
                         controller: widget.bgLottieController,
                         repeat: true,
                       ),
@@ -319,7 +298,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                   ),
                   Positioned.fill(
                     child: _buildLottieWidget(
-                      lottieBytes: widget.seaComposition,
+                      assetPath: 'assets/lotties/home_day_bg_sea_1x_02.json',
                       controller: widget.bgLottieController,
                       repeat: true,
                     ),
@@ -328,7 +307,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                   Align(
                     alignment: Alignment.center,
                     child: _buildLottieWidget(
-                      lottieBytes: widget.catSitComposition,
+                      assetPath: 'assets/lotties/home_day_cat_sit_x2_opti.json',
                       controller: _catSitController,
                       // width: getWinWidth(context) * 0.7,
                       // height: getWinWidth(context) * 0.7,
@@ -341,7 +320,8 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                   Align(
                     alignment: Alignment.center,
                     child: _buildLottieWidget(
-                      lottieBytes: widget.catWaveComposition,
+                      assetPath:
+                          'assets/lotties/home_day_cat_wave_x2_opti.json',
                       controller: _catWaveController,
                       // width: getWinWidth(context) * 0.7,
                       // height: getWinWidth(context) * 0.7,
@@ -354,7 +334,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                   Align(
                     alignment: Alignment.center,
                     child: _buildLottieWidget(
-                      lottieBytes: widget.catHiComposition,
+                      assetPath: 'assets/lotties/home_day_cat_hi_x2_opti.json',
                       controller: _catHiController,
                       // width: getWinWidth(context) * 0.7,
                       // height: getWinWidth(context) * 0.7,
