@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:alarmi/common/consts/raw_data/cat_random_speeches.dart';
 import 'package:alarmi/common/consts/raw_data/cat_regular_speeches.dart';
+import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/common/widgets/speech_bubble.dart';
 import 'package:alarmi/features/main/constants/cat_animation_state.dart';
 import 'package:alarmi/features/onboarding/services/character_service.dart';
@@ -66,7 +67,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     );
 
     setState(() {
-      _isEvening = 'good_evening' == getHourCategory();
+      _isEvening = isEvening();
     });
     // 저녁이 아닐때만 로띠 적용
     // todo - 저녁용 로띠 애니메이션 얻으면 조건절 풀 것!
@@ -245,7 +246,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     bool visible = true,
   }) {
     if (lottieBytes == null) {
-      return const CircularProgressIndicator();
+      return CstPartLoading();
     }
 
     return Visibility(

@@ -1,8 +1,8 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/widgets/cst_error.dart';
+import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/features/alarm/widgets/alarm_tab_content.dart';
-import 'package:alarmi/features/main/widgets/cst_loading.dart';
 import 'package:alarmi/features/main/widgets/no_alarms.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
@@ -153,7 +153,7 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
                         error: error,
                         errorMessage: '알람을 불러오는 데 오류가 발생했습니다.',
                       ),
-                  loading: () => CstLoading(),
+                  loading: () => CstPartLoading(),
                 ),
                 Text(
                   '알림',

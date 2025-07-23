@@ -1,9 +1,9 @@
 import 'package:alarmi/common/widgets/cst_error.dart';
+import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/screens/create_alarm_screen.dart';
 import 'package:alarmi/features/alarm/services/alarm_notifier.dart';
 import 'package:alarmi/features/main/widgets/alarm.dart';
-import 'package:alarmi/features/main/widgets/cst_loading.dart';
 import 'package:alarmi/features/main/widgets/no_alarms.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +94,7 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
           ),
         );
       },
-      loading: () => CstLoading(),
+      loading: () => CstPartLoading(),
 
       error:
           (error, stackTrace) =>

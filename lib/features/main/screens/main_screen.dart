@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:alarmi/common/widgets/cst_loading.dart';
 import 'package:alarmi/features/main/layers/first_main_layer.dart';
 import 'package:alarmi/features/main/layers/my_alarms_layer.dart';
 import 'package:alarmi/features/main/layers/second_main_layer.dart';
@@ -139,7 +140,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (!_isBackgroundLoaded || !_areLottiesLoaded) {
-      return const Center(child: CircularProgressIndicator());
+      return Scaffold(body: CstLoading());
     }
 
     final double blurSigma = _currentPageIndex == 0 ? 1.0 : 0.0; // 블러 강도 조절

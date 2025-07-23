@@ -35,3 +35,5 @@ String getHourCategory() {
       ? 'good_afternoon'
       : 'good_evening';
 }
+
+bool isEvening() => 'good_evening' == getHourCategory();

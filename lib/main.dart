@@ -1,3 +1,4 @@
+import 'package:alarmi/common/widgets/cst_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -81,18 +82,7 @@ class _AlarmiAppState extends ConsumerState<AlarmiApp> {
         } else {
           // 초기화가 아직 진행 중일 때는 로딩 스플래시
           return MaterialApp(
-            home: Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(), // 로딩 인디케이터
-                    SizedBox(height: 20),
-                    Text('알람 준비 중...'),
-                  ],
-                ),
-              ),
-            ),
+            home: Scaffold(body: CstLoading()),
             debugShowCheckedModeBanner: false,
           );
         }

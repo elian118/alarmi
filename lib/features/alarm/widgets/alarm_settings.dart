@@ -53,7 +53,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   void initState() {
     super.initState();
     setState(() {
-      _isEvening = 'good_evening' == getHourCategory();
+      _isEvening = isEvening();
     });
     if (widget.bellId != null) _selectedBellId = widget.bellId;
     if (widget.vibrateId != null) _selectedVibrateId = widget.vibrateId;

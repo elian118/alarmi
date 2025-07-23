@@ -1,3 +1,4 @@
+import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,10 @@ class SecondMainLayer extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF2b6fa5), Color(0xFF02365a)],
+                colors: [
+                  Color(isEvening() ? 0xFF101841 : 0xFF2b6fa5),
+                  Color(0xFF02365a),
+                ],
               ),
             ),
           ),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
+import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/features/alarm/widgets/vibrate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -60,7 +61,7 @@ class _VibratesState extends State<Vibrates> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (!_isVibrationChecked) {
-      return Center(child: CircularProgressIndicator());
+      return CstPartLoading();
     }
 
     return SingleChildScrollView(
