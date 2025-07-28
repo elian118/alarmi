@@ -6,6 +6,7 @@ import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/features/alarm/models/bell.dart';
 import 'package:alarmi/features/alarm/models/haptic_pattern.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -13,28 +14,21 @@ import 'package:flutter_animate/flutter_animate.dart';
 class NotificationController {
   // 알람 채널 존재 여부 확인 - 알림을 보내기 직전에 호출
   static Future<void> ensureNotificationChannelExists({
-    required Bell bell,
-    required String soundSource,
+    required String channelKey,
+    required String channelName,
+    Bell? bell,
+    String? soundSource,
     HapticPattern? hapticPattern, // 진동 패턴은 선택 사항
   }) async {
-    String channelKey;
-    String channelName;
-    String channelDescription;
     Int64List? vibrationPattern;
     bool enableVibration;
 
     if (hapticPattern != null) {
       // 진동 패턴이 있는 경우의 채널
-      channelKey = '${bell.id}_${hapticPattern.id}_channel';
-      channelName = '${bell.name}_${hapticPattern.name}';
-      channelDescription = '${bell.name}_${hapticPattern.name}';
       vibrationPattern = hapticPattern.pattern;
       enableVibration = true;
     } else {
       // 진동 패턴이 없는 경우의 채널 (기본 채널)
-      channelKey = '${bell.id}_channel';
-      channelName = bell.name;
-      channelDescription = bell.name;
       vibrationPattern = null; // 진동 패턴 없음
       enableVibration = false;
     }
@@ -48,7 +42,7 @@ class NotificationController {
       NotificationChannel(
         channelKey: channelKey,
         channelName: channelName,
-        channelDescription: channelDescription,
+        channelDescription: channelKey,
         defaultColor: const Color(0xFF9D50DD),
         ledColor: Colors.white,
         playSound: true,
@@ -86,20 +80,30 @@ class NotificationController {
     required bool isWakeUpMission,
   }) async {
     DateTime testDateTime = DateTime.now().add(5.seconds); // 5초 뒤 시간
-    Bell? bell = bells.where((bell) => bell.id == bellId).first;
-    HapticPattern? pattern =
-        hapticPatterns.where((p) => p.id == vibrateId).first;
+    Bell? bell = bells.firstWhereOrNull((bell) => bell.id == bellId);
+    HapticPattern? pattern = hapticPatterns.firstWhereOrNull(
+      (p) => p.id == vibrateId,
+    );
     await NotificationController.stopTestAlarms(); // 중복되는 ID 1~5 테스트 알람만 제거
 
-    final channelKeySuffix = vibrateId != null ? '_$vibrateId' : '';
+    final channelKeySuffix =
+        vibrateId != null
+            ? bellId != null
+                ? '_$vibrateId'
+                : vibrateId
+            : '';
 
     debugPrint('channelKey: $bellId${channelKeySuffix}_channel');
-
-    String soundSource =
-        'resource://raw/${bell.path.split('/').last.split('.').first}';
+    String channelKey = "${bellId ?? ''}${channelKeySuffix}_channel')";
+    String? soundSource =
+        bell != null
+            ? 'resource://raw/${bell?.path.split('/').last.split('.').first}'
+            : null;
 
     // 알림 채널이 존재하는지 확인하고 필요하면 생성
     await ensureNotificationChannelExists(
+      channelKey: channelKey,
+      channelName: channelKey.replaceAll('_channel', ''),
       bell: bell,
       hapticPattern: pattern,
       soundSource: soundSource,
@@ -115,7 +119,7 @@ class NotificationController {
           body: '상쾌한 아침을 시작하세요.',
           payload: {
             'day': i.toString(),
-            'soundAssetPath': bell.path,
+            'soundAssetPath': bell?.path,
             'hapticPattern': vibrateId,
             'isWakeUpMission': isWakeUpMission.toString(),
           },
@@ -160,19 +164,30 @@ class NotificationController {
     required bool isWakeUpMission,
   }) async {
     List<int> alarmKeys = [];
-    Bell? bell = bells.where((bell) => bell.id == bellId).first;
-    HapticPattern? pattern =
-        hapticPatterns.where((p) => p.id == vibrateId).first;
+    Bell? bell = bells.firstWhereOrNull((bell) => bell.id == bellId);
+    HapticPattern? pattern = hapticPatterns.firstWhereOrNull(
+      (p) => p.id == vibrateId,
+    );
 
-    final channelKeySuffix = vibrateId != null ? '_$vibrateId' : '';
+    final channelKeySuffix =
+        vibrateId != null
+            ? bellId != null
+                ? '_$vibrateId'
+                : vibrateId
+            : '';
 
-    debugPrint('channelKey: $bellId${channelKeySuffix}_channel');
+    debugPrint('channelKey: ${bellId ?? ''}${channelKeySuffix}_channel');
+    String channelKey = "${bellId ?? ''}${channelKeySuffix}_channel')";
+    String? soundSource =
+        bell != null
+            ? 'resource://raw/${bell?.path.split('/').last.split('.').first}'
+            : null;
 
-    String soundSource =
-        'resource://raw/${bell.path.split('/').last.split('.').first}';
-
+    debugPrint('soundSource: $soundSource');
     // 알림 채널이 존재하는지 확인하고 필요하면 생성
     await ensureNotificationChannelExists(
+      channelKey: channelKey,
+      channelName: channelKey.replaceAll('_channel', ''),
       bell: bell,
       hapticPattern: pattern,
       soundSource: soundSource,
@@ -189,7 +204,7 @@ class NotificationController {
           body: '상쾌한 아침을 시작하세요.',
           payload: {
             'day': week.toString(),
-            'soundAssetPath': bell.path,
+            'soundAssetPath': bell?.path,
             'hapticPattern': vibrateId,
             'alarmKey': uId.toString(),
             'isWakeUpMission': isWakeUpMission.toString(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 String getCurrentPath(BuildContext context) =>
@@ -59,8 +60,32 @@ CustomTransitionPage<void> goRouteOpacityPageBuilder(
         child: child,
       );
     },
-    transitionDuration: const Duration(milliseconds: 300), // 애니메이션 지속 시간
-    reverseTransitionDuration: const Duration(milliseconds: 300),
+    transitionDuration: 300.ms,
+    reverseTransitionDuration: 300.ms,
+  );
+}
+
+CustomTransitionPage<void> goRouteSlidePageBuilder(
+  BuildContext context,
+  GoRouterState state, {
+  required Widget target,
+  Offset? begin,
+  Offset? end,
+}) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: target,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      begin = begin ?? Offset(0.0, 1.0);
+      end = end ?? Offset.zero;
+      const curve = Curves.easeInOut;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(position: animation.drive(tween), child: child);
+    },
+    transitionDuration: 0.4.seconds,
+    reverseTransitionDuration: 0.4.seconds,
   );
 }
 

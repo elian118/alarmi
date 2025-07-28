@@ -11,7 +11,6 @@ import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/toast_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -243,57 +242,54 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
 
     return Column(
       children: [
-            Gaps.v96,
-            AlarmDatePicker(
-              selectedDateTime: _selectedDateTime,
-              changeDate: changeDate,
+        Gaps.v96,
+        AlarmDatePicker(
+          selectedDateTime: _selectedDateTime,
+          changeDate: changeDate,
+        ),
+        Gaps.v16,
+        AlarmSettings(
+          weekdays: _weekdays,
+          isActivatedVirtualMission: _isActivatedWakeUpMission,
+          toggleWakeUpMission: toggleWakeUpMission,
+          isActivatedVibrate: _isActivatedVibrate,
+          toggleActivatedVibrate: toggleActivatedVibrate,
+          isAllDay: _isAllDay,
+          toggleIsAllDay: toggleIsAllDay,
+          onWeekdaySelected: onWeekdaySelected,
+          onChangeSelectedBellId: onChangeSelectedBellId,
+          onChangeSelectedVibrateId: onChangeSelectedVibrateId,
+          bellId: _bellId,
+          vibrateId: _vibrateId,
+        ),
+        Spacer(),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 4),
+          child: ElevatedButton(
+            onPressed: _save,
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Theme.of(context).primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-            Gaps.v16,
-            AlarmSettings(
-              weekdays: _weekdays,
-              isActivatedVirtualMission: _isActivatedWakeUpMission,
-              toggleWakeUpMission: toggleWakeUpMission,
-              isActivatedVibrate: _isActivatedVibrate,
-              toggleActivatedVibrate: toggleActivatedVibrate,
-              isAllDay: _isAllDay,
-              toggleIsAllDay: toggleIsAllDay,
-              onWeekdaySelected: onWeekdaySelected,
-              onChangeSelectedBellId: onChangeSelectedBellId,
-              onChangeSelectedVibrateId: onChangeSelectedVibrateId,
-              bellId: _bellId,
-              vibrateId: _vibrateId,
-            ),
-            Spacer(),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 4),
-              child: ElevatedButton(
-                onPressed: _save,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: Sizes.size14),
-                  child: Center(
-                    child: Text(
-                      '저장',
-                      style: TextStyle(
-                        fontSize: Sizes.size18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: Sizes.size14),
+              child: Center(
+                child: Text(
+                  '저장',
+                  style: TextStyle(
+                    fontSize: Sizes.size18,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
             ),
-            Gaps.v32,
-          ]
-          .animate(interval: 0.2.seconds, delay: 0.2.seconds)
-          .fadeIn(begin: 0)
-          .scale(duration: 600.ms, curve: Curves.easeInOut),
+          ),
+        ),
+        Gaps.v32,
+      ],
     );
   }
 }

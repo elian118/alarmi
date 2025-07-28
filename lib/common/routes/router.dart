@@ -102,10 +102,11 @@ final routerProvider = Provider((ref) {
           final type = state.pathParameters['type']!;
           final alarmId = state.pathParameters['alarmId'];
 
-          return goRouteOpacityPageBuilder(
+          return goRouteSlidePageBuilder(
             context,
             state,
-            CreateAlarmScreen(type: type, alarmId: alarmId),
+            target: CreateAlarmScreen(type: type, alarmId: alarmId),
+            // end: Offset(0.0, 0.1),
           );
         },
       ),

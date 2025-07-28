@@ -32,12 +32,10 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
 
   // 이하 GestureDetector 콜백 함수들
   void _onVerticalDragStart(DragStartDetails details) {
-    if (_hasNoAlarms) return;
     _dragStartY = details.globalPosition.dy;
   }
 
   void _onVerticalDragUpdate(DragUpdateDetails details) {
-    if (_hasNoAlarms) return;
     setState(() {
       final double screenHeight = getWinHeight(context);
       final double startPosition =

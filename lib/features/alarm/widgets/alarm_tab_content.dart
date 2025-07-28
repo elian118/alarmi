@@ -83,8 +83,8 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                           ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 50,
-                          vertical: 20,
+                          horizontal: 24,
+                          vertical: 18,
                         ),
                         child: Alarm(alarmId: alarm['id'], params: alarmParams),
                       ),
