@@ -112,7 +112,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
     return Card(
       color: Colors.white.withValues(alpha: !_isEvening ? 0.01 : 0.1),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             Row(

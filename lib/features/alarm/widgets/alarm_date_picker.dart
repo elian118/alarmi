@@ -23,15 +23,50 @@ class _AlarmDatePickerState extends State<AlarmDatePicker> {
       height: getWinHeight(context) * 0.3,
       child: CupertinoTheme(
         data: CupertinoThemeData(
-          brightness: Brightness.dark,
           primaryColor: Colors.white,
+          textTheme: CupertinoTextThemeData(
+            pickerTextStyle: TextStyle(
+              color: Colors.white.withValues(alpha: 0.5),
+              fontSize: 24, // 선택되지 않은 항목의 기본 글자 크기
+              fontWeight: FontWeight.w400,
+            ),
+            dateTimePickerTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
         ),
-        child: CupertinoDatePicker(
-          initialDateTime: widget.selectedDateTime,
-          mode: CupertinoDatePickerMode.time,
-          use24hFormat: false,
-          onDateTimeChanged: widget.changeDate,
-          itemExtent: 47,
+        child: Stack(
+          children: [
+            CupertinoDatePicker(
+              initialDateTime: widget.selectedDateTime,
+              mode: CupertinoDatePickerMode.time,
+              use24hFormat: false,
+              onDateTimeChanged: widget.changeDate,
+              itemExtent: 50,
+              backgroundColor: Colors.transparent,
+            ),
+            Positioned(
+              top: (getWinHeight(context) * 0.3 / 2) - (47 / 2) - 1, // 중앙선 위쪽으로
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 0.67,
+                color: Colors.white.withValues(alpha: 0.6),
+              ),
+            ),
+            // 선택 영역의 아래쪽 선
+            Positioned(
+              top: (getWinHeight(context) * 0.3 / 2) + (47 / 2), // 중앙선 아래쪽으로
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 0.67,
+                color: Colors.white.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
         ),
       ),
     );

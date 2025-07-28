@@ -79,14 +79,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
               _alarmKeys = initialParams.alarmKeys;
             } else {
               // 해당 ID의 알람이 없는 경우 기본값으로 초기화
-              _selectedDateTime = DateTime(
-                now.year,
-                now.month,
-                now.day,
-                7,
-                0,
-                0,
-              );
+              _selectedDateTime = now;
               _bellId = null;
               _vibrateId = null;
               _isActivatedWakeUpMission = false;
@@ -101,7 +94,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
         // alarmId가 유효한 숫자가 아닌 경우
         if (mounted) {
           setState(() {
-            _selectedDateTime = DateTime(now.year, now.month, now.day, 7, 0, 0);
+            _selectedDateTime = now;
             _isLoading = false;
           });
           callSimpleToast('유효하지 않은 알람 ID입니다.');
@@ -111,14 +104,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
       // alarmId가 없는 경우 (새 알람 생성)
       if (mounted) {
         setState(() {
-          _selectedDateTime = DateTime(
-            now.year,
-            now.month,
-            now.day,
-            7,
-            0,
-            0, // 기본 시간
-          );
+          _selectedDateTime = now;
           _isLoading = false; // 로딩 종료
         });
       }
