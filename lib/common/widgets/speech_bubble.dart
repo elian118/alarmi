@@ -14,10 +14,10 @@ class SpeechBubble extends StatelessWidget {
       width: getWinWidth(context),
       alignment: Alignment.center,
       child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: AnimatedTextKit(
               key: GlobalKey(),

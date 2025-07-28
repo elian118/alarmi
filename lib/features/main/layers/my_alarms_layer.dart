@@ -139,7 +139,7 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
                     } else {
                       return SvgPicture.asset(
                         'assets/images/icons/double_up_arrow_icon.svg',
-                        height: 30, // 아이콘 크기 적절히 조절
+                        height: 18, // 아이콘 크기 적절히 조절
                       ).animate().fade(
                         begin: widget.currentPageIndex == 0 ? 0.0 : 1.0,
                         end: widget.currentPageIndex == 0 ? 1.0 : 0.0,

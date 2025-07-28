@@ -268,13 +268,6 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                 // todo 저녁용 로띠가 있으면 아래 조건식 바꾸기
                 // 저녁인 경우 아래 위젯 모두 감추기
                 if (!_isEvening) ...[
-                  Positioned(
-                    top: getWinHeight(context) * 0.26,
-                    child:
-                        message.isNotEmpty
-                            ? SpeechBubble(message: message)
-                            : Container(),
-                  ),
                   Positioned.fill(
                     child: Container(
                       alignment: Alignment.topCenter,
@@ -302,6 +295,13 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                       controller: widget.bgLottieController,
                       repeat: true,
                     ),
+                  ),
+                  Positioned(
+                    top: getWinHeight(context) * 0.22,
+                    child:
+                        message.isNotEmpty
+                            ? SpeechBubble(message: message)
+                            : Container(),
                   ),
                   // 가시성 제어가 적용된 고양이 Lottie 위젯들
                   Align(
