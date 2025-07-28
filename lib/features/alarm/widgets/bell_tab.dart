@@ -123,6 +123,7 @@ class _BellTabState extends State<BellTab> with TickerProviderStateMixin {
                             overflow: TextOverflow.ellipsis,
                           ),
                 ),
+                // 재생아이콘 유지? / 제거?
                 Container(
                   width: 26,
                   height: 26,

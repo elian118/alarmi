@@ -69,6 +69,22 @@ class _VibratesState extends State<Vibrates> with TickerProviderStateMixin {
             spacing: 14,
             children: [
               Gaps.v12,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                spacing: 25,
+                children: [
+                  SizedBox(width: 50),
+                  Text(
+                    '없음',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              Gaps.v4,
               ...hapticPatterns.map(
                 (h) => Vibrate(
                   key: UniqueKey(),

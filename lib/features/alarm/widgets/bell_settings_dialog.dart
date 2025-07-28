@@ -1,7 +1,10 @@
+import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/widgets/bell_tabs.dart';
+import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BellSettingsDialog extends StatefulWidget {
   final Function(String? bellId, double volmue) onSaveBellSettings;
@@ -43,27 +46,40 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
     return Container(
       padding: EdgeInsets.all(22),
       height: getWinHeight(context) * 0.87,
+      width: getWinWidth(context),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
         ),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(isEvening() ? 0xFF101841 : 0xFF2b6fa5),
+            Color(0xFF02365a),
+          ],
+        ),
       ),
-      width: getWinWidth(context),
       child: Column(
         spacing: 12,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(
+                onPressed: () => context.pop(),
+                icon: Icon(Icons.chevron_left, size: 24, color: Colors.white),
+              ),
               Text(
                 '알람음',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
+              Gaps.h36,
             ],
           ),
           Row(
@@ -71,20 +87,25 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
               IconButton(
                 onPressed: () => onChangeVolume(_volume == 0 ? 0.8 : 0.0),
                 icon: Icon(
-                  _volume > 0 ? Icons.volume_up : Icons.volume_off,
+                  _volume > 0 ? Icons.volume_down : Icons.volume_mute,
                   color: Colors.white,
+                  size: 24,
                 ),
               ),
-
-              Flexible(
+              Expanded(
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     thumbColor: Colors.white,
-                    trackHeight: 4,
                     thumbShape: RoundSliderThumbShape(enabledThumbRadius: 13.0),
+                    inactiveTrackColor: Colors.grey.shade600,
+                    trackHeight: 4,
                   ),
                   child: Slider(value: _volume, onChanged: onChangeVolume),
                 ),
+              ),
+              IconButton(
+                onPressed: () => onChangeVolume(1),
+                icon: Icon(Icons.volume_up, color: Colors.white, size: 24),
               ),
             ],
           ),

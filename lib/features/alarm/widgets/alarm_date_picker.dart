@@ -27,7 +27,7 @@ class _AlarmDatePickerState extends State<AlarmDatePicker> {
           textTheme: CupertinoTextThemeData(
             pickerTextStyle: TextStyle(
               color: Colors.white.withValues(alpha: 0.5),
-              fontSize: 24, // 선택되지 않은 항목의 기본 글자 크기
+              fontSize: 24,
               fontWeight: FontWeight.w400,
             ),
             dateTimePickerTextStyle: TextStyle(
@@ -48,7 +48,7 @@ class _AlarmDatePickerState extends State<AlarmDatePicker> {
               backgroundColor: Colors.transparent,
             ),
             Positioned(
-              top: (getWinHeight(context) * 0.3 / 2) - (47 / 2) - 1, // 중앙선 위쪽으로
+              top: (getWinHeight(context) * 0.3 / 2) - (45 / 2) - 1, // 중앙선 위쪽으로
               left: 0,
               right: 0,
               child: Container(
@@ -58,7 +58,7 @@ class _AlarmDatePickerState extends State<AlarmDatePicker> {
             ),
             // 선택 영역의 아래쪽 선
             Positioned(
-              top: (getWinHeight(context) * 0.3 / 2) + (47 / 2), // 중앙선 아래쪽으로
+              top: (getWinHeight(context) * 0.3 / 2) + (45 / 2), // 중앙선 아래쪽으로
               left: 0,
               right: 0,
               child: Container(

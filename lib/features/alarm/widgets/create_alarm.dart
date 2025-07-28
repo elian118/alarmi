@@ -1,7 +1,6 @@
 import 'package:alarmi/common/configs/notification_controller.dart';
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/weekdays.dart';
-import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
@@ -20,8 +19,9 @@ import 'alarm_settings.dart';
 class CreateAlarm extends ConsumerStatefulWidget {
   final String type;
   final String? alarmId;
+  final VoidCallback? onSave; // <-- 여기에 콜백 함수 추가
 
-  const CreateAlarm({super.key, required this.type, this.alarmId});
+  const CreateAlarm({super.key, required this.type, this.alarmId, this.onSave});
 
   @override
   ConsumerState<CreateAlarm> createState() => _CreateAlarmState();
@@ -45,6 +45,12 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
   void initState() {
     super.initState();
     _initializeAlarmData();
+    // 부모 위젯의 onSave 콜백에 이 위젯의 _save 함수 할당
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.onSave != null) {
+        widget.onSave!();
+      }
+    });
   }
 
   Future<void> _initializeAlarmData() async {
@@ -194,6 +200,10 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     }
   }
 
+  void saveAlarm() {
+    _save(); // 실제 저장 로직 호출
+  }
+
   Future<AlarmParams> _setParams() async {
     List<int> _alarmKeys = [];
     List<int> _selectedWeekdays =
@@ -229,11 +239,12 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     return Column(
       children: [
         Gaps.v96,
+        Gaps.v32,
         AlarmDatePicker(
           selectedDateTime: _selectedDateTime,
           changeDate: changeDate,
         ),
-        Gaps.v16,
+        Gaps.v32,
         AlarmSettings(
           weekdays: _weekdays,
           isActivatedVirtualMission: _isActivatedWakeUpMission,
@@ -249,32 +260,33 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
           vibrateId: _vibrateId,
         ),
         Spacer(),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 4),
-          child: ElevatedButton(
-            onPressed: _save,
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: Sizes.size14),
-              child: Center(
-                child: Text(
-                  '저장',
-                  style: TextStyle(
-                    fontSize: Sizes.size18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Gaps.v32,
+        // 기획에서 삭제
+        // Container(
+        //   padding: EdgeInsets.symmetric(horizontal: 4),
+        //   child: ElevatedButton(
+        //     onPressed: _save,
+        //     style: ElevatedButton.styleFrom(
+        //       foregroundColor: Colors.white,
+        //       backgroundColor: Theme.of(context).primaryColor,
+        //       shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(10),
+        //       ),
+        //     ),
+        //     child: Container(
+        //       padding: EdgeInsets.symmetric(vertical: Sizes.size14),
+        //       child: Center(
+        //         child: Text(
+        //           '저장',
+        //           style: TextStyle(
+        //             fontSize: Sizes.size18,
+        //             fontWeight: FontWeight.w600,
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // Gaps.v32,
       ],
     );
   }

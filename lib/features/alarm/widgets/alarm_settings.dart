@@ -86,18 +86,24 @@ class _AlarmSettingsState extends State<AlarmSettings> {
       builder:
           (context) =>
               type == 'bell'
-                  ? BellSettingsDialog(
-                    onSaveBellSettings: onSaveBellSettings,
-                    selectedBellId: _selectedBellId,
+                  ? FractionallySizedBox(
+                    heightFactor: 0.93,
+                    child: BellSettingsDialog(
+                      onSaveBellSettings: onSaveBellSettings,
+                      selectedBellId: _selectedBellId,
+                    ),
                   )
-                  : VibrateSettingsDialog(
-                    isActivatedVibrate: widget.isActivatedVibrate,
-                    toggleActivatedVibrate: widget.toggleActivatedVibrate,
-                    selectedVibrateId: _selectedVibrateId,
-                    onSaveVibrateSettings: onSaveVibrateSettings,
+                  : FractionallySizedBox(
+                    heightFactor: 0.93,
+                    child: VibrateSettingsDialog(
+                      isActivatedVibrate: widget.isActivatedVibrate,
+                      toggleActivatedVibrate: widget.toggleActivatedVibrate,
+                      selectedVibrateId: _selectedVibrateId,
+                      onSaveVibrateSettings: onSaveVibrateSettings,
+                    ),
                   ),
       isScrollControlled: true,
-      barrierColor: Colors.transparent,
+      // barrierColor: Colors.transparent,
     );
   }
 

@@ -1,9 +1,10 @@
+import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
-import 'package:alarmi/common/widgets/cst_image_switch.dart';
 import 'package:alarmi/features/alarm/widgets/vibrates.dart';
+import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:vibration/vibration.dart';
+import 'package:go_router/go_router.dart';
 
 class VibrateSettingsDialog extends StatefulWidget {
   final bool isActivatedVibrate;
@@ -25,21 +26,22 @@ class VibrateSettingsDialog extends StatefulWidget {
 
 class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
   late String? _selectedVibrateId = widget.selectedVibrateId;
-  late bool _isDialogActivatedVibrate = _selectedVibrateId != null;
+  // late bool _isDialogActivatedVibrate = _selectedVibrateId != null;
+  late bool _isDialogActivatedVibrate = true;
   String? _toUpdateVibrateId;
 
-  void _onSwitchChanged(bool newValue) {
-    setState(() {
-      _isDialogActivatedVibrate = newValue;
-    });
-    // 부모 위젯 상태 업데이트
-    widget.toggleActivatedVibrate();
-    // 플레이 상태 반영
-    if (newValue == false) {
-      onChangeCurrentPlayingPatternId(null);
-      Vibration.cancel(); // 재생중인 모든 진동 취소
-    }
-  }
+  // void _onSwitchChanged(bool newValue) {
+  //   setState(() {
+  //     _isDialogActivatedVibrate = newValue;
+  //   });
+  //   // 부모 위젯 상태 업데이트
+  //   widget.toggleActivatedVibrate();
+  //   // 플레이 상태 반영
+  //   if (newValue == false) {
+  //     onChangeCurrentPlayingPatternId(null);
+  //     Vibration.cancel(); // 재생중인 모든 진동 취소
+  //   }
+  // }
 
   void setToUpdateVibrateId(String? patternId) {
     setState(() {
@@ -64,25 +66,54 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
       padding: EdgeInsets.all(22),
       height: getWinHeight(context) * 0.87,
       width: getWinWidth(context),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(isEvening() ? 0xFF101841 : 0xFF2b6fa5),
+            Color(0xFF02365a),
+          ],
+        ),
+      ),
       child: Column(
         spacing: 12,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '진동',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () => context.pop(),
+                    icon: Icon(
+                      Icons.chevron_left,
+                      size: 24,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    '진동',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Gaps.h36,
+                ],
               ),
-              CstImageSwitch(
-                value: _isDialogActivatedVibrate,
-                onChanged: _onSwitchChanged,
-                thumbIconPath: 'assets/images/icons/cat_icon.svg',
-              ),
+              // 기획에서 제거됨
+              // CstImageSwitch(
+              //   value: _isDialogActivatedVibrate,
+              //   onChanged: _onSwitchChanged,
+              //   thumbIconPath: 'assets/images/icons/cat_icon.svg',
+              // ),
             ],
           ),
           Expanded(

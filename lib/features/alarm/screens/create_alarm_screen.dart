@@ -2,6 +2,7 @@ import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/widgets/create_alarm.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateAlarmScreen extends StatelessWidget {
   static const String routeName = 'createAlarm';
@@ -9,7 +10,10 @@ class CreateAlarmScreen extends StatelessWidget {
   final String type;
   final String? alarmId;
 
-  const CreateAlarmScreen({super.key, required this.type, this.alarmId});
+  final GlobalKey<State<CreateAlarm>> _createAlarmKey =
+      GlobalKey<State<CreateAlarm>>();
+
+  CreateAlarmScreen({super.key, required this.type, this.alarmId});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +28,17 @@ class CreateAlarmScreen extends StatelessWidget {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           centerTitle: true,
+          leading: TextButton(
+            onPressed: () => context.pop(),
+            child: Text(
+              '취소',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
           title: Text(
             '${type == 'my' ? '내' : '팀'} 알람 ${alarmId == 'null' ? '설정' : '수정'}',
             style: TextStyle(
@@ -32,6 +47,21 @@ class CreateAlarmScreen extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                (_createAlarmKey.currentState as dynamic)?.saveAlarm();
+              },
+              child: Text(
+                '완료',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ],
           foregroundColor: Colors.white,
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -60,6 +90,7 @@ class CreateAlarmScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(Sizes.size18),
                 child: CreateAlarm(
+                  key: _createAlarmKey,
                   type: 'my',
                   alarmId: alarmId == 'null' ? null : alarmId,
                 ),
