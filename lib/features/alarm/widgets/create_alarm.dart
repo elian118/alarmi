@@ -170,6 +170,27 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     });
   }
 
+  bool isValidParams(AlarmParams params) {
+    bool isValid = true;
+    String msg = '';
+
+    if (params.bellId == null && params.vibrateId == null) {
+      msg = '알람음 또는 진동을 설정해주세요.';
+      isValid = false;
+    }
+
+    if (params.weekdays.isEmpty) {
+      msg = '요일을 지정해주세요.';
+      isValid = false;
+    }
+
+    if (!isValid) {
+      callToast(context, msg);
+    }
+
+    return isValid;
+  }
+
   void _save() async {
     bool isCreate = _currentAlarmDbId == null;
     bool isSuccess = false;
@@ -178,6 +199,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     );
 
     AlarmParams params = await _setParams();
+    if (!isValidParams(params)) return;
     debugPrint(params.toString());
 
     if (!isCreate) {

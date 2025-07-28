@@ -11,7 +11,7 @@ void callSimpleToast(String msg) => Fluttertoast.showToast(
   fontSize: 16.0, // 폰트 크기
 );
 
-void callToast(BuildContext context, String msg) =>
+void callToast(BuildContext context, String msg, {Widget? icon}) =>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Colors.transparent,
@@ -28,15 +28,7 @@ void callToast(BuildContext context, String msg) =>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-                SizedBox(width: 10),
+                if (icon != null) ...[icon, SizedBox(width: 10)],
                 Text(
                   msg,
                   style: TextStyle(

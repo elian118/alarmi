@@ -111,6 +111,20 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
             MessageLayer(),
             NamingLayer(),
             ButtonLayer(),
+            // 테스트 스크린으로 이동하는 버튼
+            // Positioned(
+            //   top: 50,
+            //   right: 20,
+            //   child: GestureDetector(
+            //     onTap: () => context.push(AlarmTestScreen.routeURL),
+            //     child: Image.asset(
+            //       'assets/images/characters/thumb.png',
+            //     ).animate().scale(
+            //       duration: Duration(milliseconds: 500),
+            //       curve: Curves.easeInOut,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

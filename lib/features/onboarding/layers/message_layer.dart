@@ -16,7 +16,18 @@ class MessageLayer extends ConsumerWidget {
 
     ref.listen<OnboardState>(onboardViewProvider, (previous, next) {
       if (next.stage == 9 && previous?.stage != 9) {
-        callToast(context, '캐릭터 설정 완료');
+        callToast(
+          context,
+          '캐릭터 설정 완료',
+          icon: Container(
+            padding: EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.check, color: Colors.white, size: 16),
+          ),
+        );
       }
     });
 
