@@ -1,12 +1,13 @@
-import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/widgets/bell_tabs.dart';
 import 'package:alarmi/utils/date_utils.dart';
-import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class BellSettingsDialog extends StatefulWidget {
+  static const String routeName = 'bell_settings_dialog';
+  static const String routeURL = '/bell_settings';
+
   final Function(String? bellId, double volmue) onSaveBellSettings;
   final String? selectedBellId;
 
@@ -43,102 +44,118 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(22),
-      height: getWinHeight(context) * 0.87,
-      width: getWinWidth(context),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(isEvening() ? 0xFF101841 : 0xFF2b6fa5),
-            Color(0xFF02365a),
-          ],
-        ),
-      ),
-      child: Column(
-        spacing: 12,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () => context.pop(),
-                icon: Icon(Icons.chevron_left, size: 24, color: Colors.white),
-              ),
-              Text(
-                '알람음',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Gaps.h48,
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          return;
+        }
+        context.pop();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(isEvening() ? 0xFF101841 : 0xFF2b6fa5),
+              Color(0xFF02365a),
             ],
           ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => onChangeVolume(_volume == 0 ? 0.8 : 0.0),
-                icon: Icon(
-                  _volume > 0 ? Icons.volume_down : Icons.volume_mute,
-                  color: Colors.white,
-                  size: 24,
-                ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () => context.pop(),
+              icon: Icon(Icons.chevron_left, size: 24, color: Colors.white),
+            ),
+            title: Text(
+              '알람음',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
-              Expanded(
-                child: SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    thumbColor: Colors.white,
-                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 13.0),
-                    inactiveTrackColor: Colors.grey.shade600,
-                    trackHeight: 4,
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              spacing: 12,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () => onChangeVolume(_volume == 0 ? 0.8 : 0.0),
+                      icon: Icon(
+                        _volume > 0 ? Icons.volume_down : Icons.volume_mute,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                    Expanded(
+                      child: SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          thumbColor: Colors.white,
+                          thumbShape: RoundSliderThumbShape(
+                            enabledThumbRadius: 13.0,
+                          ),
+                          inactiveTrackColor: Colors.grey.shade600,
+                          trackHeight: 4,
+                        ),
+                        child: Slider(
+                          value: _volume,
+                          onChanged: onChangeVolume,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => onChangeVolume(1),
+                      icon: Icon(
+                        Icons.volume_up,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: BellTabs(
+                    selectedBellId: _selectedBellId,
+                    onChangeCurrentPlyingBellId: onChangeCurrentPlyingBellId,
+                    volume: _volume,
                   ),
-                  child: Slider(value: _volume, onChanged: onChangeVolume),
                 ),
-              ),
-              IconButton(
-                onPressed: () => onChangeVolume(1),
-                icon: Icon(Icons.volume_up, color: Colors.white, size: 24),
-              ),
-            ],
-          ),
-          Expanded(
-            child: BellTabs(
-              selectedBellId: _selectedBellId,
-              onChangeCurrentPlyingBellId: onChangeCurrentPlyingBellId,
-              volume: _volume,
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () => saveAlarm(),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: Sizes.size14),
-              child: Center(
-                child: Text(
-                  '선택하기',
-                  style: TextStyle(
-                    fontSize: Sizes.size18,
-                    fontWeight: FontWeight.w600,
+                ElevatedButton(
+                  onPressed: () => saveAlarm(),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: Sizes.size14),
+                    child: Center(
+                      child: Text(
+                        '선택하기',
+                        style: TextStyle(
+                          fontSize: Sizes.size18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

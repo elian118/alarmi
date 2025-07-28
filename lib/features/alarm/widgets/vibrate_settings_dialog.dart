@@ -1,12 +1,13 @@
-import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/widgets/vibrates.dart';
 import 'package:alarmi/utils/date_utils.dart';
-import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class VibrateSettingsDialog extends StatefulWidget {
+  static const String routeName = 'vibrate_settings_dialog';
+  static const String routeURL = '/vibrate_settings';
+
   final bool isActivatedVibrate;
   final Function() toggleActivatedVibrate;
   final String? selectedVibrateId;
@@ -62,82 +63,84 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(22),
-      height: getWinHeight(context) * 0.87,
-      width: getWinWidth(context),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(isEvening() ? 0xFF101841 : 0xFF2b6fa5),
-            Color(0xFF02365a),
-          ],
-        ),
-      ),
-      child: Column(
-        spacing: 12,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () => context.pop(),
-                icon: Icon(Icons.chevron_left, size: 24, color: Colors.white),
-              ),
-              Text(
-                '진동',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Gaps.h48,
-              // 기획에서 제거됨
-              // CstImageSwitch(
-              //   value: _isDialogActivatedVibrate,
-              //   onChanged: _onSwitchChanged,
-              //   thumbIconPath: 'assets/images/icons/cat_icon.svg',
-              // ),
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          return;
+        }
+        context.pop();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(isEvening() ? 0xFF101841 : 0xFF2b6fa5),
+              Color(0xFF02365a),
             ],
           ),
-          Expanded(
-            child: Vibrates(
-              selectedVibrateId: _selectedVibrateId,
-              onChangeCurrentPlayingPatternId: onChangeCurrentPlayingPatternId,
-              setToUpdateVibrateId: setToUpdateVibrateId,
-              isDialogActivatedVibrate: _isDialogActivatedVibrate,
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () => context.pop(),
+              icon: Icon(Icons.chevron_left, size: 24, color: Colors.white),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () => saveVibrate(),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Theme.of(context).primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+            title: Text(
+              '진동',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: Sizes.size14),
-              child: Center(
-                child: Text(
-                  '선택하기',
-                  style: TextStyle(
-                    fontSize: Sizes.size18,
-                    fontWeight: FontWeight.w600,
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              spacing: 12,
+              children: [
+                Expanded(
+                  child: Vibrates(
+                    selectedVibrateId: _selectedVibrateId,
+                    onChangeCurrentPlayingPatternId:
+                        onChangeCurrentPlayingPatternId,
+                    setToUpdateVibrateId: setToUpdateVibrateId,
+                    isDialogActivatedVibrate: _isDialogActivatedVibrate,
                   ),
                 ),
-              ),
+                ElevatedButton(
+                  onPressed: () => saveVibrate(),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: Sizes.size14),
+                    child: Center(
+                      child: Text(
+                        '선택하기',
+                        style: TextStyle(
+                          fontSize: Sizes.size18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

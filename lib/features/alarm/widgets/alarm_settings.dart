@@ -9,6 +9,7 @@ import 'package:alarmi/features/alarm/widgets/vibrate_settings_dialog.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AlarmSettings extends StatefulWidget {
   final List<Weekday> weekdays;
@@ -60,6 +61,10 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   }
 
   void onSaveBellSettings(String? bellId, double volume) {
+    if (!mounted) {
+      // 위젯이 이미 dispose 되었다면, setState 호출하지 않고 그냥 반환
+      return;
+    }
     setState(() {
       _selectedBellId = bellId;
     });
@@ -80,31 +85,23 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   }
 
   void openSettingsDialog(String type) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Color(0xFF110924),
-      builder:
-          (context) =>
-              type == 'bell'
-                  ? FractionallySizedBox(
-                    heightFactor: 0.93,
-                    child: BellSettingsDialog(
-                      onSaveBellSettings: onSaveBellSettings,
-                      selectedBellId: _selectedBellId,
-                    ),
-                  )
-                  : FractionallySizedBox(
-                    heightFactor: 0.93,
-                    child: VibrateSettingsDialog(
-                      isActivatedVibrate: widget.isActivatedVibrate,
-                      toggleActivatedVibrate: widget.toggleActivatedVibrate,
-                      selectedVibrateId: _selectedVibrateId,
-                      onSaveVibrateSettings: onSaveVibrateSettings,
-                    ),
-                  ),
-      isScrollControlled: true,
-      // barrierColor: Colors.transparent,
-    );
+    type == 'bell'
+        ? context.pushNamed(
+          BellSettingsDialog.routeName,
+          extra: {
+            'onSaveBellSettings': onSaveBellSettings, // 함수 전달
+            'selectedBellId': _selectedBellId, // 데이터 전달 (혹은 queryParams로도 가능)
+          },
+        )
+        : context.pushNamed(
+          VibrateSettingsDialog.routeName,
+          extra: {
+            'isActivatedVibrate': widget.isActivatedVibrate,
+            'toggleActivatedVibrate': widget.toggleActivatedVibrate,
+            'selectedVibrateId': _selectedVibrateId,
+            'onSaveVibrateSettings': onSaveVibrateSettings,
+          },
+        );
   }
 
   String getBellTitleById(String id) =>
@@ -202,7 +199,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '알림음',
+                    '알람음',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
