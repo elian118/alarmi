@@ -82,7 +82,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final double blurSigma = _currentPageIndex == 0 ? 1.0 : 0.0; // 블러 강도 조절
+    final double blurSigma = _currentPageIndex == 0 ? 3.0 : 0.0; // 블러 강도 조절
 
     return Scaffold(
       body: Stack(
