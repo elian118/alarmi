@@ -27,7 +27,7 @@ class MyAlarmsLayer extends ConsumerStatefulWidget {
 class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
   double _dragStartY = 0.0; // 드래그 시작 시 Y 좌표
   double _alarmsTopOffset = 0.0;
-  static const double _initialBottomOffset = 250.0;
+  static const double _initialBottomOffset = 300.0;
   bool _hasNoAlarms = false;
 
   // 이하 GestureDetector 콜백 함수들
@@ -111,7 +111,6 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
       top: _alarmsTopOffset,
       height: getWinHeight(context),
       child: GestureDetector(
-        // ✨ 여기에 GestureDetector 추가
         onVerticalDragStart: _onVerticalDragStart,
         onVerticalDragUpdate: _onVerticalDragUpdate,
         onVerticalDragEnd: _onVerticalDragEnd,

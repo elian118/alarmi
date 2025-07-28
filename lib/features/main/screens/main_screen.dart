@@ -106,7 +106,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             pageController: _pageController,
           ),
           Positioned(
-            bottom: 40,
+            bottom: 50,
             left: 0,
             child: ClipRRect(
               child: BackdropFilter(
