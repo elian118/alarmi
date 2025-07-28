@@ -86,28 +86,19 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () => context.pop(),
-                    icon: Icon(
-                      Icons.chevron_left,
-                      size: 24,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    '진동',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Gaps.h36,
-                ],
+              IconButton(
+                onPressed: () => context.pop(),
+                icon: Icon(Icons.chevron_left, size: 24, color: Colors.white),
               ),
+              Text(
+                '진동',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Gaps.h48,
               // 기획에서 제거됨
               // CstImageSwitch(
               //   value: _isDialogActivatedVibrate,
@@ -137,7 +128,7 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
               padding: EdgeInsets.symmetric(vertical: Sizes.size14),
               child: Center(
                 child: Text(
-                  '완료',
+                  '선택하기',
                   style: TextStyle(
                     fontSize: Sizes.size18,
                     fontWeight: FontWeight.w600,

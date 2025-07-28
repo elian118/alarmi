@@ -119,13 +119,13 @@ class _BellTabsState extends State<BellTabs> with TickerProviderStateMixin {
           child: TabBar(
             controller: _bellTabController,
             labelColor: Colors.white,
-            labelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             unselectedLabelColor: Colors.white.withValues(alpha: 0.5),
             dividerHeight: 0,
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorPadding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
             indicator: BoxDecoration(
-              color: Colors.grey.shade700,
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(10),
             ),
             // indicatorColor: Colors.white,

@@ -79,7 +79,7 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              Gaps.h36,
+              Gaps.h48,
             ],
           ),
           Row(
@@ -129,7 +129,7 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
               padding: EdgeInsets.symmetric(vertical: Sizes.size14),
               child: Center(
                 child: Text(
-                  '완료',
+                  '선택하기',
                   style: TextStyle(
                     fontSize: Sizes.size18,
                     fontWeight: FontWeight.w600,
