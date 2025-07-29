@@ -112,7 +112,7 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
         state.isStart &&
         !state.isCompleted &&
         !state.isFailed) {
-      setOpenCount(state.openCount + 0.02); // 흔들림 감지 시 openCount 증가
+      setOpenCount(state.openCount + 0.056); // 흔들림 감지 시 openCount 증가
       _stopInactivityDecrementTimer(); // // 흔들림이 감지되면 감소 타이머 중지
     }
 
@@ -150,7 +150,7 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
       (timer) {
         if (state.openCount > 0) {
           // openCount가 0보다 클 때만 감소
-          setOpenCount(state.openCount - 0.02);
+          setOpenCount(state.openCount - 0.056);
           debugPrint('불활성 상태! openCount 감소: ${state.openCount}');
         } else {
           // openCount가 0 이하가 되면 감소 타이머 중지 및 미션 실패 처리
