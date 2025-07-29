@@ -19,7 +19,9 @@ class CreateAlarmScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isEvening = 'good_evening' == getHourCategory();
 
-    return ClipRRect(
+    return
+    // 기획 변경 시 적용
+    ClipRRect(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(20),
         topRight: Radius.circular(20),

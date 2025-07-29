@@ -62,6 +62,19 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
               Color(0xFF02365a),
             ],
           ),
+          // 일부 기기는 모서리가 각 져 있어 적용 시 보기 흉할 수 있음
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5), // 그림자 색상 및 투명도
+              spreadRadius: 5, // 그림자가 얼마나 퍼질지 (음수이면 안쪽으로 들어감)
+              blurRadius: 15, // 그림자 블러 강도
+              offset: const Offset(0, 8), // 그림자 위치 (X, Y)
+            ),
+          ],
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
