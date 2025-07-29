@@ -74,7 +74,7 @@ class _AlarmiAppState extends ConsumerState<AlarmiApp> {
               theme: ThemeData(
                 fontFamily: "Pretendard",
                 colorScheme: ColorScheme.fromSwatch().copyWith(
-                  primary: const Color(0xFF558EFF),
+                  primary: const Color(0xFF3E7EFF),
                 ),
               ),
             );

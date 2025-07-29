@@ -33,7 +33,7 @@ class MessageLayer extends ConsumerWidget {
 
     return onboardState.stage != 3
         ? Positioned(
-          top: getWinHeight(context) * 0.2,
+          top: getWinHeight(context) * 0.22,
           left: 0,
           child: Container(
             width: getWinWidth(context),
@@ -59,6 +59,7 @@ class MessageLayer extends ConsumerWidget {
                             color: Colors.white,
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
+                            height: 1.4,
                           ),
                           textAlign: TextAlign.center,
                         )

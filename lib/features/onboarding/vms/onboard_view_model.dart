@@ -20,8 +20,8 @@ class OnboardViewModel extends Notifier<OnboardState> {
   }
 
   void initStates() {
-    _startAutoAdvanceTimerIfNeeded(state);
     state = OnboardState();
+    _startAutoAdvanceTimerIfNeeded(state);
   }
 
   void setStage(int value) {
@@ -74,7 +74,7 @@ class OnboardViewModel extends Notifier<OnboardState> {
     Duration? delayDuration;
 
     if (currentStageType.isClickable) {
-      delayDuration = 3.seconds;
+      delayDuration = 3.4.seconds;
       debugPrint(
         'Set timer for clickable stage: ${currentState.stage} with 3 seconds delay',
       );
@@ -82,7 +82,7 @@ class OnboardViewModel extends Notifier<OnboardState> {
       if (currentState.stage == 10) {
         delayDuration = 6.seconds;
       } else if (currentState.stage == 11) {
-        delayDuration = 3.seconds;
+        delayDuration = 3.4.seconds;
       }
     }
 
