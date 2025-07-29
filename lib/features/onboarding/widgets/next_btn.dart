@@ -21,7 +21,7 @@ class NextBtn extends ConsumerWidget {
         Gaps.v24,
         ColorPalletOptions(),
         PersonalityOptions(),
-        Gaps.v16,
+        Gaps.v10,
         CstRoundedElevatedBtn(
           label: '다음',
           height: 58,
