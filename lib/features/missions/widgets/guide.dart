@@ -24,7 +24,7 @@ class _GuideState extends ConsumerState<Guide>
 
   @override
   void dispose() {
-    lottieController.dispose(); // 🔔 위젯이 dispose될 때 컨트롤러 해제
+    lottieController.dispose();
     super.dispose();
   }
 

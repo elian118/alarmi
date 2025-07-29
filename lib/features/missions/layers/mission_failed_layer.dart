@@ -4,11 +4,31 @@ import 'package:alarmi/utils/helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MissionFailedLayer extends ConsumerWidget {
+class MissionFailedLayer extends ConsumerStatefulWidget {
   const MissionFailedLayer({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MissionFailedLayer> createState() => _MissionFailedLayerState();
+}
+
+class _MissionFailedLayerState extends ConsumerState<MissionFailedLayer>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController lottieController;
+
+  @override
+  void initState() {
+    lottieController = AnimationController(vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    lottieController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final shakingClamsNotifier = ref.read(shakingClamsViewProvider.notifier);
 
     return Stack(
@@ -40,6 +60,14 @@ class MissionFailedLayer extends ConsumerWidget {
                   width: 206,
                   height: 206,
                 ),
+                // buildLottieWidget(
+                //   assetPath:
+                //       'assets/lotties/mission_shaking_seashell_waiting_2x_opti.json',
+                //   controller: lottieController,
+                //   repeat: true,
+                //   width: 206,
+                //   height: 206,
+                // ),
                 Spacer(),
                 ElevatedButton(
                   onPressed: () => shakingClamsNotifier.retryMission(),

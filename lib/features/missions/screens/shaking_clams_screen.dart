@@ -2,6 +2,8 @@ import 'package:alarmi/features/missions/layers/guide_layer.dart';
 import 'package:alarmi/features/missions/layers/mission_completed_layer.dart';
 import 'package:alarmi/features/missions/layers/mission_layer.dart';
 import 'package:alarmi/features/missions/widgets/shaking_shell.dart';
+import 'package:alarmi/utils/helper_utils.dart';
+import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,14 +13,34 @@ import '../../test/screens/alarm_test_screen.dart';
 import '../layers/mission_failed_layer.dart';
 import '../vms/shaking_clams_view_model.dart';
 
-class ShakingClamsScreen extends ConsumerWidget {
+class ShakingClamsScreen extends ConsumerStatefulWidget {
   static const String routeName = 'shaking_clams';
   static const String routeURL = '/shaking_clams';
 
   const ShakingClamsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ShakingClamsScreen> createState() => _ShakingClamsScreenState();
+}
+
+class _ShakingClamsScreenState extends ConsumerState<ShakingClamsScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController bgLottieController;
+
+  @override
+  void initState() {
+    bgLottieController = AnimationController(vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    bgLottieController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final shakingClamsState = ref.watch(shakingClamsViewProvider);
     bool isPlayingMission =
         shakingClamsState.showMission &&
@@ -30,8 +52,34 @@ class ShakingClamsScreen extends ConsumerWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/images/backgrounds/mission_bg.png',
+              'assets/images/backgrounds/mission_shaking_bg.png',
               fit: BoxFit.cover,
+            ),
+          ),
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/backgrounds/mission_shaking_bg_floor.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            child: buildLottieWidget(
+              assetPath: 'assets/lotties/mission_shaking_bg_light.json',
+              controller: bgLottieController,
+              repeat: true,
+              width: getWinWidth(context),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: buildLottieWidget(
+              assetPath: 'assets/lotties/mission_shaking_bg_floor.json',
+              controller: bgLottieController,
+              repeat: true,
+              width: getWinWidth(context),
             ),
           ),
           Positioned.fill(child: ShakingShell()),
