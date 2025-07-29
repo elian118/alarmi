@@ -34,7 +34,7 @@ class FadeLayer extends ConsumerWidget {
                 end: shouldBeVisible ? 1.0 : 0.0,
                 duration: 1000.ms,
                 curve: Curves.easeInQuad,
-                delay: shouldBeVisible ? 8.seconds : 0.seconds,
+                delay: shouldBeVisible ? 5.seconds : 0.seconds,
               ),
         )
         : Container();

@@ -61,9 +61,9 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
         if (isStage0) {
           ref.read(onboardViewProvider.notifier).initStates(); // 초기화
         } else if (isStage10) {
-          Future.delayed(11.seconds, () => onboardNotifier.next());
+          Future.delayed(6.seconds, () => onboardNotifier.next());
         } else if (isStage11) {
-          Future.delayed(4.seconds, () => onboardNotifier.next());
+          Future.delayed(3.seconds, () => onboardNotifier.next());
         }
       }
     });

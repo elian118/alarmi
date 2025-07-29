@@ -1,3 +1,4 @@
+import 'package:alarmi/common/consts/curves/cst_curves.dart';
 import 'package:alarmi/features/onboarding/vms/onboard_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -64,13 +65,13 @@ class CharacterLayer extends ConsumerWidget {
                             .slide(
                               begin: const Offset(0, 0),
                               end: const Offset(0, -1.0),
-                              duration: 10.seconds,
-                              curve: Curves.easeInCubic,
+                              duration: 7.seconds,
+                              curve: CstCurves.shortBackEaseIn,
                             )
                             .fade(
                               begin: 1.0,
                               end: 0.0,
-                              duration: 12.seconds,
+                              duration: 8.seconds,
                               curve: Curves.easeInCubic,
                             );
                       }
