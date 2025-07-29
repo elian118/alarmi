@@ -1,14 +1,35 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/missions/vms/shaking_clams_view_model.dart';
+import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Guide extends ConsumerWidget {
+class Guide extends ConsumerStatefulWidget {
   const Guide({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Guide> createState() => _GuideState();
+}
+
+class _GuideState extends ConsumerState<Guide>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController lottieController;
+
+  @override
+  void initState() {
+    lottieController = AnimationController(vsync: this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    lottieController.dispose(); // 🔔 위젯이 dispose될 때 컨트롤러 해제
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final shakingClamsNotifier = ref.read(shakingClamsViewProvider.notifier);
 
     return Column(
@@ -31,7 +52,12 @@ class Guide extends ConsumerWidget {
           ),
         ),
         Gaps.v8,
-        Image.asset('assets/images/etc/media_area.png', fit: BoxFit.cover),
+        // Image.asset('assets/images/etc/media_area.png', fit: BoxFit.cover),
+        buildLottieWidget(
+          assetPath: 'assets/lotties/mission_shaking_etc_phone_2x.json',
+          controller: lottieController,
+          repeat: true,
+        ),
         Gaps.v8,
         ElevatedButton(
           onPressed: () {

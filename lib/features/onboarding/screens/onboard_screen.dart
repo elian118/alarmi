@@ -74,15 +74,19 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () {
-            setState(() {
-              _isTapEnabled = false;
-            });
-            onboardNotifier.prev();
-          },
-        ),
+        automaticallyImplyLeading: false,
+        leading:
+            onboardState.stage >= 8
+                ? null
+                : IconButton(
+                  icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                  onPressed: () {
+                    setState(() {
+                      _isTapEnabled = false;
+                    });
+                    onboardNotifier.prev();
+                  },
+                ),
       ),
       body: GestureDetector(
         onTap: onTab,

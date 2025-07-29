@@ -32,7 +32,7 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
             !shakingClamsState.isFailed;
 
         if (isPlayingMission && _shakeAnimateController?.isAnimating == false) {
-          _shakeAnimateController?.forward(from: 0.0); // 💡 애니메이션 시작
+          _shakeAnimateController?.forward(from: 0.0);
         }
       },
       shakeThresholdGravity: 1.5, // 필요에 따라 조절 (흔들림 감도)
