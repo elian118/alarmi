@@ -7,9 +7,9 @@ import 'package:alarmi/features/alarm/models/weekday.dart';
 import 'package:alarmi/features/alarm/widgets/bell_settings_dialog.dart';
 import 'package:alarmi/features/alarm/widgets/vibrate_settings_dialog.dart';
 import 'package:alarmi/utils/date_utils.dart';
+import 'package:alarmi/utils/route_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class AlarmSettings extends StatefulWidget {
   final List<Weekday> weekdays;
@@ -61,10 +61,9 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   }
 
   void onSaveBellSettings(String? bellId, double volume) {
-    if (!mounted) {
-      // 위젯이 이미 dispose 되었다면, setState 호출하지 않고 그냥 반환
-      return;
-    }
+    debugPrint(
+      'onSaveBellSettings called. mounted: $mounted, bellId: $bellId, volume: $volume',
+    );
     setState(() {
       _selectedBellId = bellId;
     });
@@ -84,23 +83,25 @@ class _AlarmSettingsState extends State<AlarmSettings> {
     });
   }
 
-  void openSettingsDialog(String type) {
+  void openSettingsDialog(String type) async {
     type == 'bell'
-        ? context.pushNamed(
-          BellSettingsDialog.routeName,
-          extra: {
-            'onSaveBellSettings': onSaveBellSettings, // 함수 전달
-            'selectedBellId': _selectedBellId, // 데이터 전달 (혹은 queryParams로도 가능)
-          },
+        ? await Navigator.of(context).push(
+          slidePageRoute(
+            page: BellSettingsDialog(
+              selectedBellId: _selectedBellId,
+              onSaveBellSettings: onSaveBellSettings,
+            ),
+          ),
         )
-        : context.pushNamed(
-          VibrateSettingsDialog.routeName,
-          extra: {
-            'isActivatedVibrate': widget.isActivatedVibrate,
-            'toggleActivatedVibrate': widget.toggleActivatedVibrate,
-            'selectedVibrateId': _selectedVibrateId,
-            'onSaveVibrateSettings': onSaveVibrateSettings,
-          },
+        : await Navigator.of(context).push(
+          slidePageRoute(
+            page: VibrateSettingsDialog(
+              isActivatedVibrate: widget.isActivatedVibrate,
+              toggleActivatedVibrate: widget.toggleActivatedVibrate,
+              selectedVibrateId: _selectedVibrateId,
+              onSaveVibrateSettings: onSaveVibrateSettings,
+            ),
+          ),
         );
   }
 

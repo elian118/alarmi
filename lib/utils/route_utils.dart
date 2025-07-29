@@ -71,6 +71,8 @@ CustomTransitionPage<void> goRouteSlidePageBuilder(
   required Widget target,
   Offset? begin,
   Offset? end,
+  Duration? duration,
+  bool? barrierDismissible,
 }) {
   return CustomTransitionPage<void>(
     key: state.pageKey,
@@ -84,8 +86,38 @@ CustomTransitionPage<void> goRouteSlidePageBuilder(
 
       return SlideTransition(position: animation.drive(tween), child: child);
     },
-    transitionDuration: 0.4.seconds,
-    reverseTransitionDuration: 0.4.seconds,
+    transitionDuration: duration ?? 0.4.seconds,
+    reverseTransitionDuration: duration ?? 0.4.seconds,
+    // 배경 탭으로 닫히지 않도록 (다이얼로그처럼 사용 시)
+    barrierDismissible: barrierDismissible ?? false,
+  );
+}
+
+// 일반 슬라이드 페이지 라우트
+PageRouteBuilder slidePageRoute({
+  required Widget page,
+  Offset? begin,
+  Offset? end,
+  Curve? curve,
+  Duration? duration,
+  bool? barrierDismissible,
+}) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      // 기본: 오른쪽에서 왼쪽으로 슬라이드
+      var tween = Tween(
+        begin: begin ?? Offset(1.0, 0.0),
+        end: end ?? Offset.zero,
+      ).chain(CurveTween(curve: curve ?? Curves.easeOut));
+
+      return SlideTransition(position: animation.drive(tween), child: child);
+    },
+    transitionDuration: duration ?? 0.4.seconds,
+    reverseTransitionDuration: duration ?? 0.4.seconds,
+    opaque: false,
+    // 배경 탭으로 닫히지 않도록 (다이얼로그처럼 사용 시)
+    barrierDismissible: barrierDismissible ?? false,
   );
 }
 

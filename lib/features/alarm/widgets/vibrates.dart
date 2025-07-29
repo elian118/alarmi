@@ -5,7 +5,6 @@ import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/features/alarm/widgets/vibrate.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:vibration/vibration.dart';
 
 class Vibrates extends StatefulWidget {
@@ -65,43 +64,44 @@ class _VibratesState extends State<Vibrates> with TickerProviderStateMixin {
     }
 
     return SingleChildScrollView(
-          child: Column(
-            spacing: 14,
+      child: Column(
+        spacing: 14,
+        children: [
+          Gaps.v12,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            spacing: 25,
             children: [
-              Gaps.v12,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                spacing: 25,
-                children: [
-                  SizedBox(width: 50),
-                  Text(
-                    '없음',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              Gaps.v4,
-              ...hapticPatterns.map(
-                (h) => Vibrate(
-                  key: UniqueKey(),
-                  title: h.name,
-                  preset: h.preset!,
-                  canVibrate: _canVibrate,
-                  currentlyPlayingPresetId: _currentlyPlayingPresetId,
-                  onVibrationStateChanged: onVibrationStateChanged,
-                  isDialogActivatedVibrate: widget.isDialogActivatedVibrate,
-                  presetId: h.id,
+              SizedBox(width: 50),
+              Text(
+                '없음',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              Gaps.v12,
             ],
           ),
-        )
-        .animate(target: widget.isDialogActivatedVibrate ? 1 : 0)
-        .fade(begin: 0, end: 1, curve: Curves.easeInOut, duration: 0.6.seconds);
+          Gaps.v4,
+          ...hapticPatterns.map(
+            (h) => Vibrate(
+              key: UniqueKey(),
+              title: h.name,
+              preset: h.preset!,
+              canVibrate: _canVibrate,
+              currentlyPlayingPresetId: _currentlyPlayingPresetId,
+              onVibrationStateChanged: onVibrationStateChanged,
+              isDialogActivatedVibrate: widget.isDialogActivatedVibrate,
+              presetId: h.id,
+            ),
+          ),
+          Gaps.v12,
+        ],
+      ),
+    );
+    // 최종 기획에서 삭제
+    // .animate(target: widget.isDialogActivatedVibrate ? 1 : 0)
+    // .fade(begin: 0, end: 1, curve: Curves.easeInOut, duration: 0.6.seconds);
   }
 }

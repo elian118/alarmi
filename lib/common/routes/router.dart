@@ -1,10 +1,6 @@
-import 'dart:ui';
-
 import 'package:alarmi/common/configs/notification_initialize.dart';
 import 'package:alarmi/features/alarm/screens/alarms_screen.dart';
 import 'package:alarmi/features/alarm/screens/create_alarm_screen.dart';
-import 'package:alarmi/features/alarm/widgets/bell_settings_dialog.dart';
-import 'package:alarmi/features/alarm/widgets/vibrate_settings_dialog.dart';
 import 'package:alarmi/features/main/screens/main_screen.dart';
 import 'package:alarmi/features/missions/screens/shaking_clams_screen.dart';
 import 'package:alarmi/features/missions/services/mission_status_service.dart';
@@ -111,56 +107,6 @@ final routerProvider = Provider((ref) {
             state,
             target: CreateAlarmScreen(type: type, alarmId: alarmId),
             // end: Offset(0.0, 0.1),
-          );
-        },
-      ),
-      GoRoute(
-        name: BellSettingsDialog.routeName,
-        path: BellSettingsDialog.routeURL,
-        pageBuilder: (context, state) {
-          final Map<String, dynamic>? extras =
-              state.extra as Map<String, dynamic>?;
-
-          final Function(String?, double) onSaveBellSettings =
-              extras?['onSaveBellSettings'] as Function(String?, double);
-          final String? selectedBellId = extras?['selectedBellId'] as String?;
-
-          return goRouteSlidePageBuilder(
-            context,
-            state,
-            target: BellSettingsDialog(
-              onSaveBellSettings: onSaveBellSettings,
-              selectedBellId: selectedBellId,
-            ),
-            begin: Offset(1.0, 0.0),
-          );
-        },
-      ),
-      GoRoute(
-        name: VibrateSettingsDialog.routeName,
-        path: VibrateSettingsDialog.routeURL,
-        pageBuilder: (context, state) {
-          final Map<String, dynamic>? extras =
-              state.extra as Map<String, dynamic>?;
-
-          final bool isActivatedVibrate = extras?['isActivatedVibrate'] as bool;
-          final Function() toggleActivatedVibrate =
-              extras?['toggleActivatedVibrate'] as Function();
-          final String? selectedVibrateId =
-              extras?['selectedVibrateId'] as String?;
-          final Function(String?) onSaveVibrateSettings =
-              extras?['onSaveVibrateSettings'] as Function(String?);
-
-          return goRouteSlidePageBuilder(
-            context,
-            state,
-            target: VibrateSettingsDialog(
-              isActivatedVibrate: isActivatedVibrate,
-              toggleActivatedVibrate: toggleActivatedVibrate,
-              selectedVibrateId: selectedVibrateId,
-              onSaveVibrateSettings: onSaveVibrateSettings,
-            ),
-            begin: Offset(1.0, 0.0),
           );
         },
       ),

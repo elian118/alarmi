@@ -28,9 +28,10 @@ class VibrateSettingsDialog extends StatefulWidget {
 class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
   late String? _selectedVibrateId = widget.selectedVibrateId;
   // late bool _isDialogActivatedVibrate = _selectedVibrateId != null;
-  late bool _isDialogActivatedVibrate = true;
+  final bool _isDialogActivatedVibrate = true;
   String? _toUpdateVibrateId;
 
+  // 최종 기획에서 삭제됨
   // void _onSwitchChanged(bool newValue) {
   //   setState(() {
   //     _isDialogActivatedVibrate = newValue;
