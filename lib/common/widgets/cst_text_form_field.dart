@@ -6,20 +6,23 @@ class CstTextFormField extends StatelessWidget {
   final void Function(String value)? onChanged;
   final void Function(String?)? onSaved;
   final String? initialValue;
+  final int? maxLength;
 
   const CstTextFormField({
-    Key? key,
+    super.key,
     this.hintText,
     this.validator,
     this.onSaved,
     this.onChanged,
     this.initialValue,
-  }) : super(key: key);
+    this.maxLength,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       initialValue: initialValue,
+      textAlign: TextAlign.center,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
@@ -63,6 +66,7 @@ class CstTextFormField extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       onSaved: onSaved,
+      maxLength: maxLength,
       style: const TextStyle(
         color: Colors.white,
         fontSize: 26,
