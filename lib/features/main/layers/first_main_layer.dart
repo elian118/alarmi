@@ -2,25 +2,28 @@ import 'dart:math';
 
 import 'package:alarmi/common/consts/raw_data/cat_random_speeches.dart';
 import 'package:alarmi/common/consts/raw_data/cat_regular_speeches.dart';
-import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/common/widgets/speech_bubble.dart';
 import 'package:alarmi/features/main/constants/cat_animation_state.dart';
 import 'package:alarmi/features/onboarding/services/character_service.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/helper_utils.dart';
+import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lottie/lottie.dart';
 
 class FirstMainLayer extends StatefulWidget {
-  final AnimationController bgLottieController;
+  final AnimationController bgCloudLottieController;
+  final AnimationController bgSunlightLottieController;
+  final AnimationController bgSeaLottieController;
   final String backgroundImgPath;
   final String nightBackgroundImgPath;
   final String? situation;
 
   const FirstMainLayer({
     super.key,
-    required this.bgLottieController,
+    required this.bgCloudLottieController,
+    required this.bgSunlightLottieController,
+    required this.bgSeaLottieController,
     required this.backgroundImgPath,
     required this.nightBackgroundImgPath,
     this.situation,
@@ -213,40 +216,6 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     });
   }
 
-  Widget _buildLottieWidget({
-    required assetPath,
-    required AnimationController controller,
-    double? width,
-    double? height,
-    BoxFit fit = BoxFit.contain,
-    bool repeat = true,
-    bool animate = true,
-    bool visible = true,
-  }) {
-    if (assetPath == null) {
-      return CstPartLoading();
-    }
-
-    return Visibility(
-      visible: visible,
-      maintainState: true, // 보이지 않아도 위젯 상태 유지
-      maintainAnimation: true, // 보이지 않아도 애니메이션 상태 유지
-      maintainSize: true, // 보이지 않아도 공간 차지하도록 유지
-      child: LottieBuilder.asset(
-        assetPath,
-        controller: controller,
-        width: width,
-        height: height,
-        fit: fit,
-        repeat: repeat,
-        animate: animate,
-        onLoaded: (composition) {
-          controller.duration = composition.duration;
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -271,9 +240,11 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                   Positioned.fill(
                     child: Container(
                       alignment: Alignment.topCenter,
-                      child: _buildLottieWidget(
+                      child: buildLottieWidget(
                         assetPath: 'assets/lotties/home_day_bg_cloud_2x.json',
-                        controller: widget.bgLottieController,
+                        controller: widget.bgCloudLottieController,
+                        fit: BoxFit.cover, // 잘림 무시하고 확대 - 좌우 슬라이드 애니메이션이라 상관 없음
+                        height: getWinHeight(context),
                         repeat: true,
                       ),
                     ),
@@ -281,18 +252,18 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                   Positioned.fill(
                     child: Container(
                       alignment: Alignment.topCenter,
-                      child: _buildLottieWidget(
+                      child: buildLottieWidget(
                         assetPath:
                             'assets/lotties/home_day_bg_sunlight_2x.json',
-                        controller: widget.bgLottieController,
+                        controller: widget.bgSunlightLottieController,
                         repeat: true,
                       ),
                     ),
                   ),
                   Positioned.fill(
-                    child: _buildLottieWidget(
+                    child: buildLottieWidget(
                       assetPath: 'assets/lotties/home_day_bg_sea_1x_02.json',
-                      controller: widget.bgLottieController,
+                      controller: widget.bgSeaLottieController,
                       repeat: true,
                     ),
                   ),
@@ -306,7 +277,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                   // 가시성 제어가 적용된 고양이 Lottie 위젯들
                   Align(
                     alignment: Alignment.center,
-                    child: _buildLottieWidget(
+                    child: buildLottieWidget(
                       assetPath: 'assets/lotties/home_day_cat_sit_x2_opti.json',
                       controller: _catSitController,
                       // width: getWinWidth(context) * 0.7,
@@ -319,7 +290,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                   ),
                   Align(
                     alignment: Alignment.center,
-                    child: _buildLottieWidget(
+                    child: buildLottieWidget(
                       assetPath:
                           'assets/lotties/home_day_cat_wave_x2_opti.json',
                       controller: _catWaveController,
@@ -333,7 +304,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                   ),
                   Align(
                     alignment: Alignment.center,
-                    child: _buildLottieWidget(
+                    child: buildLottieWidget(
                       assetPath: 'assets/lotties/home_day_cat_hi_x2_opti.json',
                       controller: _catHiController,
                       // width: getWinWidth(context) * 0.7,

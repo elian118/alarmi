@@ -31,7 +31,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   int _currentPageIndex = 0; // 현재 페이지 인덱스
   bool _didPreloadAssets = false;
 
-  late final AnimationController _bgLottieController;
+  late final AnimationController _bgCloudLottieController;
+  late final AnimationController _bgSunlightLottieController;
+  late final AnimationController _bgSeaLottieController;
 
   @override
   void initState() {
@@ -47,11 +49,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       }
     });
 
-    // 로티 컨트롤러 초기화
-    _bgLottieController = AnimationController(
-      vsync: this,
-      duration: 2.1.seconds,
-    );
+    // 배경 로티 컨트롤러 초기화
+    _bgCloudLottieController = AnimationController(vsync: this);
+    _bgSunlightLottieController = AnimationController(vsync: this);
+    _bgSeaLottieController = AnimationController(vsync: this);
   }
 
   @override
@@ -69,14 +70,15 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     if (mounted) {
       await precacheImage(backgroundProvider, context);
-      _bgLottieController.repeat(); // 배경 로티 반복 재생 시작
     }
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    _bgLottieController.dispose();
+    _bgCloudLottieController.dispose();
+    _bgSunlightLottieController.dispose();
+    _bgSeaLottieController.dispose();
     super.dispose();
   }
 
@@ -93,7 +95,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             physics: NeverScrollableScrollPhysics(), // PageView 기본 스크롤 비활성화
             children: <Widget>[
               FirstMainLayer(
-                bgLottieController: _bgLottieController,
+                bgCloudLottieController: _bgCloudLottieController,
+                bgSunlightLottieController: _bgSunlightLottieController,
+                bgSeaLottieController: _bgSeaLottieController,
                 backgroundImgPath: _backgroundImgPath,
                 nightBackgroundImgPath: _nightBackgroundImgPath,
                 situation: widget.situation,
