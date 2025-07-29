@@ -46,7 +46,6 @@ class _FirstMainLayerState extends State<FirstMainLayer>
   final Random _random = Random();
 
   bool _isInitialMotionSet = false;
-  bool _isEvening = false;
 
   @override
   void initState() {
@@ -57,14 +56,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
     );
     _catHiController = AnimationController(vsync: this, duration: 2.1.seconds);
 
-    setState(() {
-      _isEvening = isEvening();
-    });
-    // 저녁이 아닐때만 로띠 적용
-    // todo - 저녁용 로띠 애니메이션 얻으면 조건절 풀 것!
-    if (!_isEvening) {
-      _setInitialCatMotionOnInitialLoad();
-    }
+    _setInitialCatMotionOnInitialLoad();
 
     super.initState();
   }
@@ -227,8 +219,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
               children: [
                 Positioned.fill(
                   child: Image.asset(
-                    // todo 저녁용 로띠가 있으면 아래 조건식 바꾸기
-                    !_isEvening
+                    !isEvening()
                         ? widget.backgroundImgPath
                         : widget.nightBackgroundImgPath,
                     fit: BoxFit.cover,
@@ -236,86 +227,88 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                 ),
                 // todo 저녁용 로띠가 있으면 아래 조건식 바꾸기
                 // 저녁인 경우 아래 위젯 모두 감추기
-                if (!_isEvening) ...[
-                  Positioned.fill(
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      child: buildLottieWidget(
-                        assetPath: 'assets/lotties/home_day_bg_cloud_2x.json',
-                        controller: widget.bgCloudLottieController,
-                        fit: BoxFit.cover, // 잘림 무시하고 확대 - 좌우 슬라이드 애니메이션이라 상관 없음
-                        height: getWinHeight(context),
-                        repeat: true,
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      child: buildLottieWidget(
-                        assetPath:
-                            'assets/lotties/home_day_bg_sunlight_2x.json',
-                        controller: widget.bgSunlightLottieController,
-                        repeat: true,
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
+                Positioned.fill(
+                  child: Container(
+                    alignment: Alignment.topCenter,
                     child: buildLottieWidget(
-                      assetPath: 'assets/lotties/home_day_bg_sea_1x_02.json',
-                      controller: widget.bgSeaLottieController,
+                      assetPath: 'assets/lotties/home_day_bg_cloud_2x.json',
+                      controller: widget.bgCloudLottieController,
+                      fit: BoxFit.cover, // 잘림 무시하고 확대 - 좌우 슬라이드 애니메이션이라 상관 없음
+                      height: getWinHeight(context),
                       repeat: true,
+                      visible: !isEvening(),
                     ),
                   ),
-                  Positioned(
-                    top: getWinHeight(context) * 0.22,
-                    child:
-                        message.isNotEmpty
-                            ? SpeechBubble(message: message)
-                            : Container(),
-                  ),
-                  // 가시성 제어가 적용된 고양이 Lottie 위젯들
-                  Align(
-                    alignment: Alignment.center,
-                    child: buildLottieWidget(
-                      assetPath: 'assets/lotties/home_day_cat_sit_x2_opti.json',
-                      controller: _catSitController,
-                      // width: getWinWidth(context) * 0.7,
-                      // height: getWinWidth(context) * 0.7,
-                      width: 311,
-                      height: 284.87,
-                      repeat: true,
-                      visible: _currentCatAnimation == CatAnimationState.sit,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
+                ),
+                Positioned.fill(
+                  child: Container(
+                    alignment: Alignment.topCenter,
                     child: buildLottieWidget(
                       assetPath:
-                          'assets/lotties/home_day_cat_wave_x2_opti.json',
-                      controller: _catWaveController,
-                      // width: getWinWidth(context) * 0.7,
-                      // height: getWinWidth(context) * 0.7,
-                      width: 311,
-                      height: 284.87,
-                      repeat: false, // Wave는 자동 반복 금지
-                      visible: _currentCatAnimation == CatAnimationState.wave,
+                          'assets/lotties/home_${isEvening() ? 'night' : 'day'}_bg_${isEvening() ? 'star' : 'sunlight'}_2x.json',
+                      controller: widget.bgSunlightLottieController,
+                      repeat: true,
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: buildLottieWidget(
-                      assetPath: 'assets/lotties/home_day_cat_hi_x2_opti.json',
-                      controller: _catHiController,
-                      // width: getWinWidth(context) * 0.7,
-                      // height: getWinWidth(context) * 0.7,
-                      width: 311,
-                      height: 284.87,
-                      repeat: false, // Hi는 자동 반복 금지
-                      visible: _currentCatAnimation == CatAnimationState.hi,
-                    ),
+                ),
+                Positioned.fill(
+                  child: buildLottieWidget(
+                    assetPath:
+                        'assets/lotties/home_${isEvening() ? 'night' : 'day'}_bg_sea_1x${isEvening() ? '' : '_02'}.json',
+                    controller: widget.bgSeaLottieController,
+                    repeat: true,
                   ),
-                ],
+                ),
+                Positioned(
+                  top: getWinHeight(context) * 0.22,
+                  child:
+                      message.isNotEmpty
+                          ? SpeechBubble(message: message)
+                          : Container(),
+                ),
+                // 가시성 제어가 적용된 고양이 Lottie 위젯들
+                Align(
+                  alignment: Alignment.center,
+                  child: buildLottieWidget(
+                    assetPath:
+                        "assets/lotties/home_${isEvening() ? 'night' : 'day'}_cat_${isEvening() ? 'sleep_x2_90' : 'sit_x2'}_opti.json",
+                    controller: _catSitController,
+                    // width: getWinWidth(context) * 0.7,
+                    // height: getWinWidth(context) * 0.7,
+                    width: 311,
+                    height: 284.87,
+                    repeat: true,
+                    visible: _currentCatAnimation == CatAnimationState.sit,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: buildLottieWidget(
+                    assetPath:
+                        "assets/lotties/home_${isEvening() ? 'night' : 'day'}_cat_${isEvening() ? 'sleep_x2_90' : 'wave_x2'}_opti.json",
+                    controller: _catWaveController,
+                    // width: getWinWidth(context) * 0.7,
+                    // height: getWinWidth(context) * 0.7,
+                    width: 311,
+                    height: 284.87,
+                    repeat: false, // Wave는 자동 반복 금지
+                    visible: _currentCatAnimation == CatAnimationState.wave,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: buildLottieWidget(
+                    assetPath:
+                        "assets/lotties/home_${isEvening() ? 'night' : 'day'}_cat_${isEvening() ? 'sleep_x2_90' : 'hi_x2'}_opti.json",
+                    controller: _catHiController,
+                    // width: getWinWidth(context) * 0.7,
+                    // height: getWinWidth(context) * 0.7,
+                    width: 311,
+                    height: 284.87,
+                    repeat: false, // Hi는 자동 반복 금지
+                    visible: _currentCatAnimation == CatAnimationState.hi,
+                  ),
+                ),
               ],
             ),
           ),

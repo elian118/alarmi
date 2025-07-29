@@ -5,12 +5,14 @@ import 'package:alarmi/features/main/layers/my_alarms_layer.dart';
 import 'package:alarmi/features/main/layers/second_main_layer.dart';
 import 'package:alarmi/features/main/widgets/create_alarm_button.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
+import 'package:alarmi/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 const String _backgroundImgPath = 'assets/images/backgrounds/home_day_bg.png';
-const String _nightBackgroundImgPath = 'assets/images/backgrounds/bg_night.png';
+const String _nightBackgroundImgPath =
+    'assets/images/backgrounds/home_night_bg.png';
 
 class MainScreen extends StatefulWidget {
   static const String routeName = 'main';
@@ -66,7 +68,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   Future<void> _preloadAssets() async {
     // 1. 배경 이미지 미리 로드
-    final ImageProvider backgroundProvider = AssetImage(_backgroundImgPath);
+    final ImageProvider backgroundProvider = AssetImage(
+      isEvening() ? _nightBackgroundImgPath : _backgroundImgPath,
+    );
 
     if (mounted) {
       await precacheImage(backgroundProvider, context);

@@ -48,14 +48,10 @@ class AlarmSettings extends StatefulWidget {
 class _AlarmSettingsState extends State<AlarmSettings> {
   String? _selectedBellId;
   String? _selectedVibrateId;
-  bool _isEvening = false;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _isEvening = isEvening();
-    });
     if (widget.bellId != null) _selectedBellId = widget.bellId;
     if (widget.vibrateId != null) _selectedVibrateId = widget.vibrateId;
   }
@@ -114,7 +110,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white.withValues(alpha: !_isEvening ? 0.01 : 0.1),
+      color: Colors.white.withValues(alpha: !isEvening() ? 0.01 : 0.1),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

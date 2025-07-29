@@ -1,6 +1,6 @@
+import 'package:alarmi/common/consts/raw_data/bg_gradation_color_set.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/alarm/widgets/vibrates.dart';
-import 'package:alarmi/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -77,10 +77,7 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(isEvening() ? 0xFF101841 : 0xFF2b6fa5),
-              Color(0xFF02365a),
-            ],
+            colors: bgGradationColorSet,
           ),
           // 일부 기기는 모서리가 각 져 있어 적용 시 보기 흉할 수 있음
           borderRadius: const BorderRadius.only(
