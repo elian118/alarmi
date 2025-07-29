@@ -177,15 +177,17 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     if (params.bellId == null && params.vibrateId == null) {
       msg = '알람음 또는 진동을 설정해주세요.';
       isValid = false;
-    }
-
-    if (params.weekdays.isEmpty) {
+    } else if (params.weekdays.isEmpty) {
       msg = '요일을 지정해주세요.';
       isValid = false;
     }
 
     if (!isValid) {
-      callToast(context, msg);
+      callToast(
+        context,
+        msg,
+        icon: Icon(Icons.error, color: Colors.redAccent, size: 24),
+      );
     }
 
     return isValid;
@@ -282,7 +284,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
           vibrateId: _vibrateId,
         ),
         Spacer(),
-        // 기획에서 삭제
+        // 최종 기획에서 삭제
         // Container(
         //   padding: EdgeInsets.symmetric(horizontal: 4),
         //   child: ElevatedButton(

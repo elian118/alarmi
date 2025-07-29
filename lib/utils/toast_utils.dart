@@ -17,7 +17,8 @@ void callToast(BuildContext context, String msg, {Widget? icon}) =>
         backgroundColor: Colors.transparent,
         elevation: 0,
         duration: Duration(seconds: 3), // 3초 동안 표시
-        behavior: SnackBarBehavior.floating, // 바닥에 붙지 않고 플로팅
+        // 최종 기획에서 변경
+        // behavior: SnackBarBehavior.floating, // 바닥에 붙지 않고 플로팅
         content: Center(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
