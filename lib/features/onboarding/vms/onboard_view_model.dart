@@ -1,19 +1,26 @@
+import 'dart:async';
+
 import 'package:alarmi/features/onboarding/constants/color_sets.dart';
 import 'package:alarmi/features/onboarding/constants/personalities.dart';
 import 'package:alarmi/features/onboarding/constants/stage_types.dart';
 import 'package:alarmi/features/onboarding/models/onboard_state.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants/messages.dart';
 
 class OnboardViewModel extends Notifier<OnboardState> {
+  Timer? _currentStageTimer;
+
   @override
   OnboardState build() {
+    _startAutoAdvanceTimerIfNeeded(OnboardState());
     return OnboardState();
   }
 
   void initStates() {
+    _startAutoAdvanceTimerIfNeeded(state);
     state = OnboardState();
   }
 
@@ -28,15 +35,16 @@ class OnboardViewModel extends Notifier<OnboardState> {
                 : messages[value],
         isNarration: stageTypes[value].type == 'narration',
       );
+      _startAutoAdvanceTimerIfNeeded(state);
     }
   }
 
   void prev() {
-    setStage(state.stage - 1);
+    if (state.stage > 0) setStage(state.stage - 1);
   }
 
   void next() {
-    setStage(state.stage + 1);
+    if (state.stage < stageTypes.length - 1) setStage(state.stage + 1);
   }
 
   void setName(String value) {
@@ -56,6 +64,40 @@ class OnboardViewModel extends Notifier<OnboardState> {
       selectedPersonality: personalities[value],
       message: personalities[value].message,
     );
+  }
+
+  // 🔔 타이머 시작 및 관리
+  void _startAutoAdvanceTimerIfNeeded(OnboardState currentState) {
+    _cancelStageTimer(); // 기존 타이머가 있다면 먼저 취소
+
+    final currentStageType = stageTypes[currentState.stage];
+    Duration? delayDuration;
+
+    if (currentStageType.isClickable) {
+      delayDuration = 3.seconds;
+      debugPrint(
+        'Set timer for non clickable stage: ${currentState.stage} with 3 seconds delay',
+      );
+    } else {
+      if (currentState.stage == 10) {
+        delayDuration = 6.seconds;
+      } else if (currentState.stage == 11) {
+        delayDuration = 3.seconds;
+      }
+    }
+
+    // 지연시간 설정 시 타이머 시작
+    if (delayDuration != null) {
+      _currentStageTimer = Timer(delayDuration, () {
+        next();
+        _currentStageTimer = null;
+      });
+    }
+  }
+
+  void _cancelStageTimer() {
+    _currentStageTimer?.cancel();
+    _currentStageTimer = null;
   }
 }
 

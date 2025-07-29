@@ -8,7 +8,6 @@ import 'package:alarmi/features/onboarding/layers/naming_layer.dart';
 import 'package:alarmi/features/onboarding/models/onboard_state.dart';
 import 'package:alarmi/features/onboarding/vms/onboard_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OnboardScreen extends ConsumerStatefulWidget {
@@ -22,10 +21,13 @@ class OnboardScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardScreenState extends ConsumerState<OnboardScreen> {
+  bool _isTapEnabled = true;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(onboardViewProvider.notifier).initStates();
+      _isTapEnabled = true;
     });
     super.initState();
   }
@@ -37,8 +39,6 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isTapEnabled = true;
-
     final onboardState = ref.watch(onboardViewProvider);
     final onboardNotifier = ref.read(onboardViewProvider.notifier);
 
@@ -46,32 +46,32 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
       // 탭 가능 상태 초기화(허용)
       if (previous?.stage != next.stage) {
         setState(() {
-          isTapEnabled = true;
+          _isTapEnabled = true;
         });
       }
 
-      if (stageTypes[next.stage].isClickable) {
-        // 자동 이동 로직 비활성화(사유: 광클 버그 야기)
-        // Future.delayed(3.seconds, () => onboardNotifier.next());
-      } else {
-        bool isStage0 = next.stage == 0 && previous?.stage != 0;
-        bool isStage10 = next.stage == 10 && previous?.stage != 10;
-        bool isStage11 = next.stage == 11 && previous?.stage != 11;
-
-        if (isStage0) {
-          ref.read(onboardViewProvider.notifier).initStates(); // 초기화
-        } else if (isStage10) {
-          Future.delayed(6.seconds, () => onboardNotifier.next());
-        } else if (isStage11) {
-          Future.delayed(3.seconds, () => onboardNotifier.next());
-        }
-      }
+      // if (stageTypes[next.stage].isClickable) {
+      //   // 자동 이동 로직 비활성화(사유: 광클 버그 야기)
+      //   // Future.delayed(3.seconds, () => onboardNotifier.next());
+      // } else {
+      //   bool isStage0 = next.stage == 0 && previous?.stage != 0;
+      //   bool isStage10 = next.stage == 10 && previous?.stage != 10;
+      //   bool isStage11 = next.stage == 11 && previous?.stage != 11;
+      //
+      //   if (isStage0) {
+      //     ref.read(onboardViewProvider.notifier).initStates(); // 초기화
+      //   } else if (isStage10) {
+      //     Future.delayed(6.seconds, () => onboardNotifier.next());
+      //   } else if (isStage11) {
+      //     Future.delayed(3.seconds, () => onboardNotifier.next());
+      //   }
+      // }
     });
 
     void onTab() {
-      if (isTapEnabled && stageTypes[onboardState.stage].isClickable) {
+      if (_isTapEnabled && stageTypes[onboardState.stage].isClickable) {
         setState(() {
-          isTapEnabled = false;
+          _isTapEnabled = false;
         });
         onboardNotifier.next();
       }
@@ -95,7 +95,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             setState(() {
-              isTapEnabled = false;
+              _isTapEnabled = false;
             });
             onboardNotifier.prev();
           },
