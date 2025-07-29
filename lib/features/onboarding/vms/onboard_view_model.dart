@@ -66,7 +66,7 @@ class OnboardViewModel extends Notifier<OnboardState> {
     );
   }
 
-  // 🔔 타이머 시작 및 관리
+  // 타이머 시작 및 관리
   void _startAutoAdvanceTimerIfNeeded(OnboardState currentState) {
     _cancelStageTimer(); // 기존 타이머가 있다면 먼저 취소
 
@@ -76,7 +76,7 @@ class OnboardViewModel extends Notifier<OnboardState> {
     if (currentStageType.isClickable) {
       delayDuration = 3.seconds;
       debugPrint(
-        'Set timer for non clickable stage: ${currentState.stage} with 3 seconds delay',
+        'Set timer for clickable stage: ${currentState.stage} with 3 seconds delay',
       );
     } else {
       if (currentState.stage == 10) {
