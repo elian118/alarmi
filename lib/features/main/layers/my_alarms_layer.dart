@@ -73,15 +73,15 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
                 velocity < -minVelocity
             ? 1
             : 0,
-        duration: 800.ms,
-        curve: Curves.easeInOutCirc,
+        duration: 1000.ms,
+        curve: Curves.decelerate,
       );
     } else {
       // 1 페이지에서 0 페이지로 (아래로 스와이프)
       widget.pageController.animateToPage(
         _alarmsTopOffset >= dragThreshold || velocity > minVelocity ? 0 : 1,
-        duration: 800.ms,
-        curve: Curves.easeInOutCirc,
+        duration: 1000.ms,
+        curve: Curves.decelerate,
       );
     }
   }
