@@ -2,6 +2,7 @@ import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/widgets/cst_checkbox.dart';
 import 'package:alarmi/common/widgets/cst_image_switch.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
 import 'package:alarmi/features/alarm/widgets/bell_settings_dialog.dart';
@@ -110,10 +111,11 @@ class _AlarmSettingsState extends State<AlarmSettings> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white.withValues(alpha: !isEvening() ? 0.01 : 0.1),
+      color: Color(!isEvening() ? 0xFF206391 : 0xFF272C4F),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.only(top: 18, bottom: 6, left: 16, right: 16),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,10 +133,15 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                   onTap: () => widget.toggleIsAllDay(null),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
+                    spacing: 6,
                     children: [
-                      Checkbox(
+                      CstCheckbox(
                         value: widget.isAllDay,
                         onChanged: (value) => widget.toggleIsAllDay(null),
+                        size: 16,
+                        borderRadius: 5,
+                        uncheckedColor:
+                            isEvening() ? Color(0xFF525672) : Color(0xFF4692C4),
                       ),
                       Text(
                         '매일',
@@ -150,6 +157,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                 ),
               ],
             ),
+            Gaps.v18,
             Row(
               spacing: 12,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,12 +173,14 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                           backgroundColor:
                               day.isSelected
                                   ? Colors.white
-                                  : Colors.white.withValues(alpha: 0.1),
+                                  : Color(
+                                    isEvening() ? 0xFF525672 : 0xFF4692C4,
+                                  ),
                           foregroundColor:
                               day.isSelected
                                   ? Colors.black87
-                                  : Colors.white.withValues(
-                                    alpha: 0.6,
+                                  : Color(
+                                    isEvening() ? 0xFFA9ABB9 : 0xFF96D3FC,
                                   ), // 텍스트 색상
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -186,7 +196,11 @@ class _AlarmSettingsState extends State<AlarmSettings> {
               ],
             ),
             Gaps.v10,
-            Divider(height: 10),
+            Divider(
+              height: 10,
+              thickness: 0.67,
+              color: Color(isEvening() ? 0xFF525672 : 0xFF61AADF),
+            ),
             TextButton(
               onPressed: () => openSettingsDialog('bell'),
               style: TextButton.styleFrom(
@@ -211,8 +225,8 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                             ? getBellTitleById(_selectedBellId!)
                             : '없음',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w300,
+                          color: Color(isEvening() ? 0xFFA9ABB9 : 0xFF96D3FC),
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       Icon(Icons.chevron_right, color: Colors.white),
@@ -221,7 +235,11 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                 ],
               ),
             ),
-            Divider(height: 10),
+            Divider(
+              height: 10,
+              thickness: 0.67,
+              color: Color(isEvening() ? 0xFF525672 : 0xFF61AADF),
+            ),
             TextButton(
               onPressed: () => openSettingsDialog('vibrate'),
               style: TextButton.styleFrom(
@@ -249,8 +267,8 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                             ? getVibrateNameById(_selectedVibrateId!)
                             : '없음',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w300,
+                          color: Color(isEvening() ? 0xFFA9ABB9 : 0xFF96D3FC),
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       Icon(Icons.chevron_right, color: Colors.white),
@@ -259,7 +277,11 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                 ],
               ),
             ),
-            Divider(height: 10),
+            Divider(
+              height: 10,
+              thickness: 0.67,
+              color: Color(isEvening() ? 0xFF525672 : 0xFF61AADF),
+            ),
             TextButton(
               onPressed: widget.toggleWakeUpMission,
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
@@ -278,6 +300,8 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                     value: widget.isActivatedVirtualMission,
                     onChanged: (value) => widget.toggleWakeUpMission(),
                     thumbIconPath: 'assets/images/icons/cat_icon.svg',
+                    inactiveColor:
+                        isEvening() ? Color(0xFF525672) : Color(0xFF4692C4),
                   ),
                 ],
               ),

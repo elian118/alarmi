@@ -202,8 +202,8 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
           padding: EdgeInsets.only(top: 40),
           child: GestureDetector(
             onTap: () {
-              // print('onTap');
-              // ref.read(shakingClamsViewProvider.notifier).handleShakeEvent();
+              print('onTap');
+              ref.read(shakingClamsViewProvider.notifier).handleShakeEvent();
             },
             child: SizedBox(
                   width: 330,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CstImageSwitch extends StatefulWidget {
@@ -78,7 +79,7 @@ class _CstImageSwitchState extends State<CstImageSwitch> {
           curve: Curves.easeInOut,
           child: AnimatedAlign(
             key: _animatedAlignKey,
-            duration: Duration(milliseconds: 400),
+            duration: 400.ms,
             curve: Curves.easeInOut,
             alignment:
                 widget.value ? Alignment.centerRight : Alignment.centerLeft,

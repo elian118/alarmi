@@ -1,6 +1,7 @@
 import 'package:alarmi/common/configs/notification_controller.dart';
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/weekdays.dart';
+import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
@@ -19,7 +20,7 @@ import 'alarm_settings.dart';
 class CreateAlarm extends ConsumerStatefulWidget {
   final String type;
   final String? alarmId;
-  final VoidCallback? onSave; // <-- 여기에 콜백 함수 추가
+  final VoidCallback? onSave;
 
   const CreateAlarm({super.key, required this.type, this.alarmId, this.onSave});
 
@@ -263,12 +264,12 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
     return Column(
       children: [
         Gaps.v96,
-        Gaps.v32,
+        widget.alarmId != null ? Gaps.v24 : Gaps.v32,
         AlarmDatePicker(
           selectedDateTime: _selectedDateTime,
           changeDate: changeDate,
         ),
-        Gaps.v32,
+        widget.alarmId != null ? Gaps.v24 : Gaps.v32,
         AlarmSettings(
           weekdays: _weekdays,
           isActivatedVirtualMission: _isActivatedWakeUpMission,
@@ -285,32 +286,47 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
         ),
         Spacer(),
         // 최종 기획에서 삭제
-        // Container(
-        //   padding: EdgeInsets.symmetric(horizontal: 4),
-        //   child: ElevatedButton(
-        //     onPressed: _save,
-        //     style: ElevatedButton.styleFrom(
-        //       foregroundColor: Colors.white,
-        //       backgroundColor: Theme.of(context).primaryColor,
-        //       shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(10),
-        //       ),
-        //     ),
-        //     child: Container(
-        //       padding: EdgeInsets.symmetric(vertical: Sizes.size14),
-        //       child: Center(
-        //         child: Text(
-        //           '저장',
-        //           style: TextStyle(
-        //             fontSize: Sizes.size18,
-        //             fontWeight: FontWeight.w600,
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // Gaps.v32,
+        if (widget.alarmId != null)
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 4),
+            child: ElevatedButton(
+              onPressed: () async {
+                try {
+                  final alarmNotifier = ref.read(
+                    alarmListProvider(widget.type).notifier,
+                  );
+
+                  await alarmNotifier.deleteAlarm(
+                    int.parse(widget.alarmId!),
+                    widget.type,
+                  );
+                } catch (e) {
+                  callSimpleToast('알람 삭제가 실패했습니다.');
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Color(0xFFFF5F5F),
+                backgroundColor:
+                    isEvening() ? Color(0xFF272C4F) : Color(0xFF206391),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: Sizes.size14),
+                child: Center(
+                  child: Text(
+                    '알람 삭제',
+                    style: TextStyle(
+                      fontSize: Sizes.size16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        Gaps.v32,
       ],
     );
   }
