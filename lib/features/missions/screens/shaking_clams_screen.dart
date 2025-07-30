@@ -2,7 +2,6 @@ import 'package:alarmi/features/missions/layers/guide_layer.dart';
 import 'package:alarmi/features/missions/layers/mission_completed_layer.dart';
 import 'package:alarmi/features/missions/layers/mission_layer.dart';
 import 'package:alarmi/features/missions/widgets/shaking_shell.dart';
-import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -62,24 +61,20 @@ class _ShakingClamsScreenState extends ConsumerState<ShakingClamsScreen>
               fit: BoxFit.cover,
             ),
           ),
-          Positioned(
-            top: 0,
-            left: 0,
+          Positioned.fill(
             child: buildLottieWidget(
               assetPath: 'assets/lotties/mission_shaking_bg_light.json',
               controller: bgLottieController,
               repeat: true,
-              width: getWinWidth(context),
+              fit: BoxFit.fill,
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
+          Positioned.fill(
             child: buildLottieWidget(
               assetPath: 'assets/lotties/mission_shaking_bg_floor.json',
               controller: bgLottieController,
               repeat: true,
-              width: getWinWidth(context),
+              fit: BoxFit.fill,
             ),
           ),
           Positioned.fill(child: ShakingShell()),
