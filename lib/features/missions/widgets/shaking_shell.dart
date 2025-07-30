@@ -9,6 +9,7 @@ import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ShakingShell extends ConsumerStatefulWidget {
   const ShakingShell({super.key});
@@ -277,13 +278,18 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                                   child: Text(
                                     _currentPopValue > 0
                                         ? getNumberFormat(
-                                          (_currentPopValue * 10000),
+                                          (_currentPopValue * 100000),
                                           decimalDigits: 0,
                                         )
-                                        : '-${getNumberFormat((_currentPopValue * 10000), decimalDigits: 0)}',
-                                    style: TextStyle(
+                                        : '-${getNumberFormat((_currentPopValue * 100000), decimalDigits: 0)}',
+                                    style: GoogleFonts.passionOne(
                                       color: _popColor,
-                                      fontSize: 28,
+                                      fontSize:
+                                          currentClamAnimationFromVM ==
+                                                  ClamAnimationState
+                                                      .stronglyShaking
+                                              ? 48
+                                              : 28,
                                       fontWeight: FontWeight.bold,
                                       shadows: const [
                                         Shadow(
