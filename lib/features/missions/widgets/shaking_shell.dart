@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/features/missions/constants/enums/clam_animation_state.dart';
 import 'package:alarmi/features/missions/vms/shaking_clams_view_model.dart';
+import 'package:alarmi/utils/format_utils.dart';
+import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -19,6 +23,14 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
   late AnimationController _weaklyShakingLottieController;
   late AnimationController _stronglyShakingLottieController;
   late AnimationController _shakingCompletedLottieController;
+  late AnimationController _popAnimationController;
+  late Animation _popOffsetAnimation;
+
+  // 팝업 숫자 애니메이션을 위한 상태 변수
+  double _currentPopValue = 0.0;
+  bool _showPopNumber = false;
+  Color _popColor = Colors.white;
+  final Random _random = Random();
 
   @override
   void initState() {
@@ -38,7 +50,19 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
       vsync: this,
       duration: 2.seconds,
     );
-
+    _popAnimationController = AnimationController(
+      vsync: this,
+      duration: 0.4.seconds,
+    );
+    _popOffsetAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _popAnimationController,
+        curve: Curves.easeOutExpo,
+      ),
+    );
     super.initState();
   }
 
@@ -85,12 +109,53 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
     }
   }
 
+  void _triggerPopNumber(double changeValue) {
+    _popAnimationController.stop();
+    _popAnimationController.reset();
+
+    setState(() {
+      _currentPopValue = changeValue;
+      _popColor = changeValue > 0 ? Colors.white : Colors.redAccent;
+      _showPopNumber = true;
+
+      final double verticalOffset = changeValue > 0 ? -80.0 : 180.0;
+      final double horizontalOffset =
+          changeValue > 0
+              ? _random.nextBool()
+                  ? -100.0
+                  : 100.0
+              : 80;
+
+      final startOffset = changeValue > 0 ? Offset.zero : Offset(80, 120);
+      final endOffset = Offset(horizontalOffset, verticalOffset);
+
+      _popOffsetAnimation = Tween<Offset>(
+        begin: startOffset,
+        end: endOffset,
+      ).animate(
+        CurvedAnimation(
+          parent: _popAnimationController,
+          curve: Curves.easeOutExpo,
+        ),
+      );
+
+      _popAnimationController.forward(from: 0.0).then((_) {
+        if (mounted) {
+          setState(() {
+            _showPopNumber = false;
+          });
+        }
+      });
+    });
+  }
+
   @override
   void dispose() {
     _waitingLottieController.dispose();
     _weaklyShakingLottieController.dispose();
     _stronglyShakingLottieController.dispose();
     _shakingCompletedLottieController.dispose();
+    _popAnimationController.dispose();
     super.dispose();
   }
 
@@ -104,6 +169,19 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
 
     final ClamAnimationState currentClamAnimationFromVM =
         shakingClamsState.currentClamAnimation;
+
+    ref.listen<double>(
+      shakingClamsViewProvider.select((state) => state.openCount),
+      (previousOpenCount, newOpenCount) {
+        if (previousOpenCount != null && mounted) {
+          final double change = newOpenCount - previousOpenCount;
+          if (change != 0) {
+            // 실제 변화가 있을 때만 트리거
+            _triggerPopNumber(change);
+          }
+        }
+      },
+    );
 
     return Consumer(
       builder: (context, ref, child) {
@@ -180,6 +258,49 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                               ClamAnimationState.opened,
                         ),
                       ),
+                      // 증감치 팝업
+                      Positioned(
+                        top: 80,
+                        left: getWinWidth(context) * 0.33,
+                        child: Center(
+                          child: AnimatedOpacity(
+                            opacity: _showPopNumber ? 1.0 : 0.0,
+                            duration: 0.4.seconds,
+                            curve: Curves.easeOutExpo,
+                            child: AnimatedBuilder(
+                              // ✅ AnimatedBuilder 사용
+                              animation: _popOffsetAnimation,
+                              builder: (context, child) {
+                                return Transform.translate(
+                                  offset:
+                                      _popOffsetAnimation.value, // 애니메이션 값 적용
+                                  child: Text(
+                                    _currentPopValue > 0
+                                        ? getNumberFormat(
+                                          (_currentPopValue * 10000),
+                                          decimalDigits: 0,
+                                        )
+                                        : '-${getNumberFormat((_currentPopValue * 10000), decimalDigits: 0)}',
+                                    style: TextStyle(
+                                      color: _popColor,
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      shadows: const [
+                                        Shadow(
+                                          blurRadius: 5.0,
+                                          color: Colors.black,
+                                          offset: Offset(2.0, 2.0),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+
                       isPlayingMission ? Container() : Gaps.v24,
                     ],
                   ),
