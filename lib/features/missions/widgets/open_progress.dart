@@ -2,7 +2,6 @@ import 'package:alarmi/common/widgets/cst_rounded_slider.dart';
 import 'package:alarmi/features/missions/vms/shaking_clams_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shake/shake.dart';
 
 class OpenProgress extends ConsumerStatefulWidget {
   const OpenProgress({super.key});
@@ -12,30 +11,20 @@ class OpenProgress extends ConsumerStatefulWidget {
 }
 
 class _OpenProgressState extends ConsumerState<OpenProgress> {
-  late final shakingClamsNotifier;
-  late ShakeDetector shake;
   late final ValueNotifier<double> _sliderProgressNotifier;
 
   @override
   void initState() {
-    shakingClamsNotifier = ref.read(shakingClamsViewProvider.notifier);
-
     _sliderProgressNotifier = ValueNotifier(
       ref.read(shakingClamsViewProvider).openCount,
     );
 
-    shake = ShakeDetector.waitForStart(
-      onPhoneShake: (event) => shakingClamsNotifier.onPhoneShakeDetected(),
-    );
-    shake.startListening();
     super.initState();
   }
 
   @override
   void dispose() {
-    shake.stopListening();
     _sliderProgressNotifier.dispose();
-    shakingClamsNotifier.disposeViewModel();
     super.dispose();
   }
 

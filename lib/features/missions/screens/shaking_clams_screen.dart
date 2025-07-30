@@ -1,7 +1,6 @@
 import 'package:alarmi/features/missions/layers/guide_layer.dart';
 import 'package:alarmi/features/missions/layers/mission_completed_layer.dart';
 import 'package:alarmi/features/missions/layers/mission_layer.dart';
-import 'package:alarmi/features/missions/widgets/shaking_shell.dart';
 import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -43,7 +42,7 @@ class _ShakingClamsScreenState extends ConsumerState<ShakingClamsScreen>
     final shakingClamsState = ref.watch(shakingClamsViewProvider);
     bool isPlayingMission =
         shakingClamsState.showMission &&
-        !shakingClamsState.isCompleted &&
+        !(shakingClamsState.isCompleted) &&
         !shakingClamsState.isFailed;
 
     return Scaffold(
@@ -77,11 +76,11 @@ class _ShakingClamsScreenState extends ConsumerState<ShakingClamsScreen>
               fit: BoxFit.fill,
             ),
           ),
-          Positioned.fill(child: ShakingShell()),
           Positioned.fill(
             child: Container(color: Colors.black.withValues(alpha: 0.6)),
           ).animate(target: isPlayingMission ? 1 : 0).fadeOut(begin: 1.0),
           IgnorePointer(
+            ignoring: !isPlayingMission,
             child: MissionLayer()
                 .animate(target: isPlayingMission ? 1 : 0)
                 .fadeIn(begin: 0.0),
@@ -106,6 +105,7 @@ class _ShakingClamsScreenState extends ConsumerState<ShakingClamsScreen>
                       shakingClamsState.showMission ||
                               (!shakingClamsState.showMission &&
                                   (shakingClamsState.isCompleted ||
+                                      shakingClamsState.isCompleting ||
                                       shakingClamsState.isFailed))
                           ? 1
                           : 0,

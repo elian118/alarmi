@@ -1,15 +1,24 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:alarmi/features/missions/constants/enums/clam_animation_state.dart';
 import 'package:alarmi/features/missions/models/ShakingClamsState.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shake/shake.dart';
+import 'package:vibration/vibration.dart';
+import 'package:vibration/vibration_presets.dart';
 
 class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
   Timer? _countdownTimer;
   Timer? _inactivityCheckTimer;
   Timer? _inactivityDecrementTimer;
+  Timer? _completionTimer;
 
-  static const int _inactivityDuration = 10; // 불활성 상태 전환 대기시간 10초
+  ShakeDetector? _shakeDetector;
+  final Random _random = Random();
+
+  static const int _inactivityDuration = 1; // 불활성 상태 전환 대기시간 1초
   static const int _decrementInterval = 1; // 감소주기 1초
   double _lastShakeTime = 0.0; // 최근 흔들림이 감지된 시간
 
@@ -23,13 +32,47 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
 
   @override
   ShakingClamsState build() {
-    return ShakingClamsState();
+    _initializeShakeDetector();
+    return ShakingClamsState(currentClamAnimation: ClamAnimationState.waiting);
+  }
+
+  // ShakeDetector 초기화
+  void _initializeShakeDetector() {
+    _shakeDetector = ShakeDetector.autoStart(
+      onPhoneShake: (event) => handleShakeEvent(), // 흔들림 감지 시 내부 메서드 호출
+      shakeThresholdGravity: 1.5, // 필요에 따라 조절 (흔들림 감도)
+      shakeSlopTimeMS: 200, // 흔들림 간격
+    );
+  }
+
+  // 흔들림 감지 이벤트 처리
+  void handleShakeEvent() {
+    // 미션 중일 때만 흔들림 로직 실행 (ViewModel에서 `isStart`는 카운트다운 시작 여부로만 사용)
+    if (state.showMission && !state.isCompleting && !state.isFailed) {
+      // 15% 확률로 강하게 흔들었다고 판정
+      bool isCritical = _random.nextDouble() < 0.15;
+      setClamAnimationState(
+        isCritical
+            ? ClamAnimationState.stronglyShaking
+            : ClamAnimationState.weaklyShaking,
+      );
+      if (isCritical) {
+        Vibration.vibrate(preset: VibrationPreset.doubleBuzz);
+      }
+      onPhoneShakeDetected();
+    }
   }
 
   void initStates() {
     state = ShakingClamsState();
     _lastShakeTime = 0.0; // 상태 초기화 시 마지막 흔들림 시간도 초기화
     _stopAllTimers();
+  }
+
+  void disposeViewModel() {
+    _shakeDetector?.stopListening();
+    _stopAllTimers();
+    debugPrint('ShakingClamsViewModel disposed, ShakeDetector stopped.');
   }
 
   void _stopAllTimers() {
@@ -41,8 +84,8 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     _inactivityDecrementTimer = null;
   }
 
-  void disposeViewModel() {
-    _stopAllTimers();
+  void setClamAnimationState(ClamAnimationState newState) {
+    state = state.copyWith(currentClamAnimation: newState);
   }
 
   void setIsStart(bool value) {
@@ -71,10 +114,26 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     state = state.copyWith(
       openCount: value,
       message: shellMessages[progressStage],
-      showMission: value >= 0 && value < 1,
+      showMission: value >= 0,
       isFailed: value < 0,
-      isCompleted: value >= 1,
+      isCompleting: value >= 1,
+      currentClamAnimation:
+          value >= 1 ? ClamAnimationState.opened : state.currentClamAnimation,
     );
+
+    if (state.isCompleting && !state.isCompleted) {
+      debugPrint('조개가 완전히 열리는 중... 2초 후 미션 완료 처리.');
+      _completionTimer?.cancel();
+      _completionTimer = Timer(const Duration(seconds: 2), () {
+        // 타이머 완료 시점에 여전히 isCompleting 상태인지 확인
+        if (state.isCompleting) {
+          setIsCompleted(true);
+          setShowMission(false);
+          debugPrint('미션 완료!');
+        }
+        _completionTimer = null;
+      });
+    }
   }
 
   void retryMission() {
@@ -83,8 +142,10 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
       message: shellMessages[0],
       showMission: true,
       isFailed: false,
+      isCompleting: false,
       isCompleted: false,
       isStart: true,
+      currentClamAnimation: ClamAnimationState.waiting,
     );
     _lastShakeTime = DateTime.now().millisecondsSinceEpoch / 1000.0;
     _stopInactivityDecrementTimer();
@@ -99,6 +160,10 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     state = state.copyWith(message: value);
   }
 
+  void setIsCompleting(bool value) {
+    state = state.copyWith(isCompleting: value);
+  }
+
   void setIsCompleted(bool value) {
     state = state.copyWith(isCompleted: value);
   }
@@ -108,12 +173,33 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
   }
 
   void onPhoneShakeDetected() {
+    double baseCountUnit = 0.045;
+    double randomOffset =
+        (_random.nextDouble() * 0.01) - 0.005; // -0.005 ~ +0.005
+    double fluctuatingCountUnit = baseCountUnit + randomOffset;
+    double increaseOpenCount = 0;
+
+    // 현재 애니메이션 상태 (ViewModel의 상태)에 따라 증감치 계산
+    if (state.currentClamAnimation == ClamAnimationState.stronglyShaking) {
+      increaseOpenCount = fluctuatingCountUnit * 3; // 강하게 흔들면 3배 증가
+      debugPrint(
+        'Critical Shake! increase: ${increaseOpenCount.toStringAsFixed(3)}',
+      );
+    } else if (state.currentClamAnimation == ClamAnimationState.weaklyShaking) {
+      increaseOpenCount = fluctuatingCountUnit; // 약하게 흔들면 1배 증가
+      debugPrint(
+        'Weak Shake! increase: ${increaseOpenCount.toStringAsFixed(3)}',
+      );
+    }
+
     if (state.showMission &&
         state.isStart &&
-        !state.isCompleted &&
+        !state.isCompleting &&
         !state.isFailed) {
-      setOpenCount(state.openCount + 0.056); // 흔들림 감지 시 openCount 증가
-      _stopInactivityDecrementTimer(); // // 흔들림이 감지되면 감소 타이머 중지
+      setOpenCount(
+        state.openCount + increaseOpenCount,
+      ); // 흔들림 감지 시 openCount 증가
+      _stopInactivityDecrementTimer(); // 흔들림이 감지되면 감소 타이머 중지
     }
 
     // 마지막 흔들림 시간 업데이트
@@ -126,7 +212,7 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     _inactivityCheckTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (state.showMission &&
           state.isStart &&
-          !state.isCompleted &&
+          !state.isCompleting &&
           !state.isFailed) {
         final currentTime = DateTime.now().millisecondsSinceEpoch / 1000.0;
         // _lastShakeTime이 0.0이면 (미션 시작 후 첫 체크) 또는 불활성 기간 초과 여부 확인.
@@ -148,8 +234,8 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     _inactivityDecrementTimer = Timer.periodic(
       Duration(seconds: _decrementInterval),
       (timer) {
-        if (state.openCount > 0) {
-          // openCount가 0보다 클 때만 감소
+        if (state.openCount > 0 && state.openCount < 1) {
+          // openCount가 0~1 때만 감소
           setOpenCount(state.openCount - 0.056);
           debugPrint('불활성 상태! openCount 감소: ${state.openCount}');
         } else {

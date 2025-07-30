@@ -1,1 +1,1 @@
-enum ClamAnimationState { waiting, weaklyShaking, stronglyShaking }
+enum ClamAnimationState { waiting, weaklyShaking, stronglyShaking, opened }
