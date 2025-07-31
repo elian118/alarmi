@@ -33,7 +33,11 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
   @override
   ShakingClamsState build() {
     _initializeShakeDetector();
-    return ShakingClamsState(currentClamAnimation: ClamAnimationState.waiting);
+    return ShakingClamsState(
+      currentClamAnimation: ClamAnimationState.waiting,
+      shakeTriggerCount: 0,
+      // shakeAnimationTarget: 0.0,
+    );
   }
 
   // ShakeDetector 초기화
@@ -51,11 +55,21 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     if (state.showMission && !state.isCompleting && !state.isFailed) {
       // 15% 확률로 강하게 흔들었다고 판정
       bool isCritical = _random.nextDouble() < 0.15;
-      setClamAnimationState(
-        isCritical
-            ? ClamAnimationState.stronglyShaking
-            : ClamAnimationState.weaklyShaking,
+      ClamAnimationState nextAnimationState =
+          isCritical
+              ? ClamAnimationState.stronglyShaking
+              : ClamAnimationState.weaklyShaking;
+
+      state = state.copyWith(
+        currentClamAnimation: nextAnimationState,
+        shakeTriggerCount: state.shakeTriggerCount + 1, // 카운터 증가
+        // shakeAnimationTarget: 1.0 - state.shakeAnimationTarget, // 타겟 토글
       );
+
+      debugPrint(
+        'ViewModel: Shake event. State: ${state.currentClamAnimation}, Count: ${state.shakeTriggerCount}',
+      );
+
       if (isCritical) {
         Vibration.vibrate(preset: VibrationPreset.doubleBuzz);
       }
@@ -64,7 +78,11 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
   }
 
   void initStates() {
-    state = ShakingClamsState();
+    state = ShakingClamsState(
+      currentClamAnimation: ClamAnimationState.waiting,
+      shakeTriggerCount: 0,
+      // shakeAnimationTarget: 0.0,
+    );
     _lastShakeTime = 0.0; // 상태 초기화 시 마지막 흔들림 시간도 초기화
     _stopAllTimers();
   }
@@ -79,9 +97,11 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     _countdownTimer?.cancel();
     _inactivityCheckTimer?.cancel();
     _inactivityDecrementTimer?.cancel();
+    _completionTimer?.cancel();
     _countdownTimer = null;
     _inactivityCheckTimer = null;
     _inactivityDecrementTimer = null;
+    _completionTimer = null;
   }
 
   void setClamAnimationState(ClamAnimationState newState) {
@@ -119,6 +139,9 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
       isCompleting: value >= 1,
       currentClamAnimation:
           value >= 1 ? ClamAnimationState.opened : state.currentClamAnimation,
+      // 조개 열리면 리셋
+      shakeTriggerCount: value >= 1 ? 0 : state.shakeTriggerCount,
+      // shakeAnimationTarget: value >= 1 ? 0.0 : state.shakeAnimationTarget,
     );
 
     if (state.isCompleting && !state.isCompleted) {
@@ -146,6 +169,9 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
       isCompleted: false,
       isStart: true,
       currentClamAnimation: ClamAnimationState.waiting,
+      // 재시도 시 애니메이션 타겟 리셋
+      shakeTriggerCount: 0,
+      // shakeAnimationTarget: 0.0,
     );
     _lastShakeTime = DateTime.now().millisecondsSinceEpoch / 1000.0;
     _stopInactivityDecrementTimer();

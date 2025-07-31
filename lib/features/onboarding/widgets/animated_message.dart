@@ -94,7 +94,7 @@ class _AnimatedMessage extends ConsumerState<AnimatedMessage> {
               padding: const EdgeInsets.only(top: 13.0, bottom: 3.0),
               child: Image.asset(
                 'assets/images/etc/open.png',
-              ).animate().scale(duration: 0.4.seconds),
+              ).animate().scale(duration: 0.2.seconds),
             ),
         ],
       ),

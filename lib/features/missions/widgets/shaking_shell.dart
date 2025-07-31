@@ -21,8 +21,6 @@ class ShakingShell extends ConsumerStatefulWidget {
 class _ShakingShellState extends ConsumerState<ShakingShell>
     with TickerProviderStateMixin {
   late AnimationController _waitingLottieController;
-  late AnimationController _weaklyShakingLottieController;
-  late AnimationController _stronglyShakingLottieController;
   late AnimationController _shakingCompletedLottieController;
   late AnimationController _popAnimationController;
   late Animation _popOffsetAnimation;
@@ -39,17 +37,9 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
       vsync: this,
       duration: 1.seconds,
     );
-    _weaklyShakingLottieController = AnimationController(
-      vsync: this,
-      duration: 1.seconds,
-    );
-    _stronglyShakingLottieController = AnimationController(
-      vsync: this,
-      duration: 1.seconds,
-    );
     _shakingCompletedLottieController = AnimationController(
       vsync: this,
-      duration: 2.seconds,
+      duration: 1.seconds,
     );
     _popAnimationController = AnimationController(
       vsync: this,
@@ -67,64 +57,21 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
     super.initState();
   }
 
-  void _updateLottieAnimation(
-    ClamAnimationState? oldState,
-    ClamAnimationState newState,
-  ) {
-    _waitingLottieController.stop();
-    _weaklyShakingLottieController.stop();
-    _stronglyShakingLottieController.stop();
-    _shakingCompletedLottieController.stop();
-
-    switch (newState) {
-      case ClamAnimationState.waiting:
-        _waitingLottieController.repeat();
-        break;
-      case ClamAnimationState.weaklyShaking:
-        _weaklyShakingLottieController.forward(from: 0.0).then((_) {
-          if (mounted) {
-            ref
-                .read(shakingClamsViewProvider.notifier)
-                .setClamAnimationState(ClamAnimationState.waiting);
-          }
-        });
-        break;
-      case ClamAnimationState.stronglyShaking:
-        _stronglyShakingLottieController.forward(from: 0.0).then((_) {
-          if (mounted) {
-            ref
-                .read(shakingClamsViewProvider.notifier)
-                .setClamAnimationState(ClamAnimationState.waiting);
-          }
-        });
-        break;
-      case ClamAnimationState.opened:
-        _shakingCompletedLottieController.forward(from: 0.0).then((_) {
-          if (mounted) {
-            ref
-                .read(shakingClamsViewProvider.notifier)
-                .setClamAnimationState(ClamAnimationState.opened);
-          }
-        });
-        break;
-    }
-  }
-
   void _triggerPopNumber(double changeValue) {
     _popAnimationController.stop();
     _popAnimationController.reset();
 
     setState(() {
       _currentPopValue = changeValue;
-      _popColor = changeValue > 0 ? Colors.white : Colors.redAccent;
+      _popColor = changeValue > 0 ? Colors.greenAccent : Colors.redAccent;
       _showPopNumber = true;
 
       final double verticalOffset = changeValue > 0 ? -80.0 : 180.0;
       final double horizontalOffset =
           changeValue > 0
               ? _random.nextBool()
-                  ? -100.0
-                  : 100.0
+                  ? -80.0
+                  : 80.0
               : 80;
 
       final startOffset = changeValue > 0 ? Offset.zero : Offset(80, 120);
@@ -153,8 +100,6 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
   @override
   void dispose() {
     _waitingLottieController.dispose();
-    _weaklyShakingLottieController.dispose();
-    _stronglyShakingLottieController.dispose();
     _shakingCompletedLottieController.dispose();
     _popAnimationController.dispose();
     super.dispose();
@@ -170,6 +115,9 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
 
     final ClamAnimationState currentClamAnimationFromVM =
         shakingClamsState.currentClamAnimation;
+    final int shakeTriggerCountFromVM = shakingClamsState.shakeTriggerCount;
+    // final double shakeAnimationTargetFromVM =
+    //     shakingClamsState.shakeAnimationTarget;
 
     ref.listen<double>(
       shakingClamsViewProvider.select((state) => state.openCount),
@@ -177,7 +125,6 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
         if (previousOpenCount != null && mounted) {
           final double change = newOpenCount - previousOpenCount;
           if (change != 0) {
-            // 실제 변화가 있을 때만 트리거
             _triggerPopNumber(change);
           }
         }
@@ -187,22 +134,22 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
     return Consumer(
       builder: (context, ref, child) {
         // ref.listen is safely placed inside the Consumer's builder
-        ref.listen<ClamAnimationState>(
-          shakingClamsViewProvider.select(
-            (state) => state.currentClamAnimation,
-          ),
-          (prev, next) {
-            if (mounted) {
-              _updateLottieAnimation(prev, next);
-            }
-          },
-        );
+        // ref.listen<ClamAnimationState>(
+        //   shakingClamsViewProvider.select(
+        //     (state) => state.currentClamAnimation,
+        //   ),
+        //   (prev, next) {
+        //     if (mounted) {
+        //       _updateLottieAnimation(prev, next);
+        //     }
+        //   },
+        // );
         return Container(
           alignment: Alignment.center,
           padding: EdgeInsets.only(top: 40),
           child: GestureDetector(
             onTap: () {
-              print('onTap');
+              // todo 에뮬레이터 테스트 편의 기능 - 배포 시 비활성 처리
               ref.read(shakingClamsViewProvider.notifier).handleShakeEvent();
             },
             child: SizedBox(
@@ -212,41 +159,47 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                     children: [
                       !isPlayingMission ? Container() : Gaps.v48,
                       Align(
-                        alignment: Alignment.center,
-                        child: buildLottieWidget(
-                          assetPath:
-                              "assets/lotties/mission_shaking_seashell_waiting_2x_opti.json",
-                          controller: _waitingLottieController,
-                          repeat: true,
-                          visible:
+                            alignment: Alignment.center,
+                            child: buildLottieWidget(
+                              assetPath:
+                                  "assets/lotties/mission_shaking_seashell_waiting_2x_opti.json",
+                              controller: _waitingLottieController,
+                              repeat: true,
+                              visible:
+                                  currentClamAnimationFromVM ==
+                                      ClamAnimationState.waiting ||
+                                  currentClamAnimationFromVM ==
+                                      ClamAnimationState.weaklyShaking ||
+                                  currentClamAnimationFromVM ==
+                                      ClamAnimationState.stronglyShaking,
+                            ),
+                          )
+                          .animate(
+                            key: ValueKey('shake-${shakeTriggerCountFromVM}'),
+                            // target: shakeAnimationTargetFromVM,
+                            target: 1.0,
+                          )
+                          .shake(
+                            hz:
+                                currentClamAnimationFromVM ==
+                                        ClamAnimationState.weaklyShaking
+                                    ? 4 // 초당 4회 흔들림
+                                    : currentClamAnimationFromVM ==
+                                        ClamAnimationState.stronglyShaking
+                                    ? 12 // 초당 8회 흔들림
+                                    : 0,
+                            duration: 1.seconds, // 1초 동안 흔들림
+                            offset: Offset(
                               currentClamAnimationFromVM ==
-                              ClamAnimationState.waiting,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: buildLottieWidget(
-                          assetPath:
-                              "assets/lotties/mission_shaking_seashell_weakly_2x_opti.json",
-                          controller: _weaklyShakingLottieController,
-                          repeat: false,
-                          visible:
-                              currentClamAnimationFromVM ==
-                              ClamAnimationState.weaklyShaking,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: buildLottieWidget(
-                          assetPath:
-                              "assets/lotties/mission_shaking_seashell_strongly_2x_opti.json",
-                          controller: _stronglyShakingLottieController,
-                          repeat: false,
-                          visible:
-                              currentClamAnimationFromVM ==
-                              ClamAnimationState.stronglyShaking,
-                        ),
-                      ),
+                                      ClamAnimationState.weaklyShaking
+                                  ? 5 // 좌우 5픽셀 흔들림
+                                  : currentClamAnimationFromVM ==
+                                      ClamAnimationState.stronglyShaking
+                                  ? 15 // 좌우 10픽셀 흔들림
+                                  : 0,
+                              0,
+                            ),
+                          ),
                       Align(
                         alignment: Alignment.center,
                         child: buildLottieWidget(

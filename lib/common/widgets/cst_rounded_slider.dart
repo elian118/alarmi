@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class CstRoundedSlider extends StatelessWidget {
   final ValueNotifier<double> progress;
@@ -12,12 +13,18 @@ class CstRoundedSlider extends StatelessWidget {
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-      child: ValueListenableBuilder(
+      child: ValueListenableBuilder<double>(
         valueListenable: progress,
         builder:
-            (context, value, child) => CustomPaint(
-              size: Size(size.width, 6),
-              painter: ProgressPainter(progress: progress.value),
+            (context, currentValue, child) => TweenAnimationBuilder(
+              tween: Tween<double>(begin: currentValue, end: currentValue),
+              duration: 600.ms,
+              curve: Curves.easeInOut,
+              builder:
+                  (context, animatedValue, child) => CustomPaint(
+                    size: Size(size.width, 6),
+                    painter: ProgressPainter(progress: animatedValue),
+                  ),
             ),
       ),
     );
@@ -41,10 +48,12 @@ class ProgressPainter extends CustomPainter {
           ..color = Colors.white
           ..style = PaintingStyle.fill;
 
+    final clampedProgress = progress.clamp(0.0, 1.0); // progress 값 범위 제한
+
     final progressRect = Rect.fromLTWH(
       0,
       0,
-      size.width * progress,
+      size.width * clampedProgress,
       size.height,
     );
     final Radius radius = Radius.circular(size.height / 2);

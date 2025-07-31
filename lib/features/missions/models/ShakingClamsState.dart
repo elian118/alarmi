@@ -10,6 +10,8 @@ class ShakingClamsState {
   final bool isCompleted;
   final bool isFailed;
   final ClamAnimationState currentClamAnimation;
+  final int shakeTriggerCount;
+  // final double shakeAnimationTarget;
 
   ShakingClamsState({
     this.isStart = false,
@@ -21,6 +23,8 @@ class ShakingClamsState {
     this.isCompleted = false,
     this.isFailed = false,
     this.currentClamAnimation = ClamAnimationState.waiting,
+    this.shakeTriggerCount = 0,
+    // this.shakeAnimationTarget = 0.0,
   });
 
   ShakingClamsState copyWith({
@@ -33,6 +37,8 @@ class ShakingClamsState {
     bool? isCompleted,
     bool? isFailed,
     ClamAnimationState? currentClamAnimation,
+    int? shakeTriggerCount,
+    // double? shakeAnimationTarget,
   }) {
     return ShakingClamsState(
       isStart: isStart ?? this.isStart,
@@ -44,6 +50,8 @@ class ShakingClamsState {
       isCompleted: isCompleted ?? this.isCompleted,
       isFailed: isFailed ?? this.isFailed,
       currentClamAnimation: currentClamAnimation ?? this.currentClamAnimation,
+      shakeTriggerCount: shakeTriggerCount ?? this.shakeTriggerCount,
+      // shakeAnimationTarget: shakeAnimationTarget ?? this.shakeAnimationTarget,
     );
   }
 }
