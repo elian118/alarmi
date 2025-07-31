@@ -149,7 +149,7 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                             alignment: Alignment.center,
                             child: buildLottieWidget(
                               assetPath:
-                                  "assets/lotties/mission_shaking_seashell_waiting_2x_opti.json",
+                                  "assets/lotties/mission_shaking_seashell_waiting_2x_02.json",
                               controller: _waitingLottieController,
                               repeat: true,
                               visible:
