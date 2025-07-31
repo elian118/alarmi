@@ -116,8 +116,6 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
     final ClamAnimationState currentClamAnimationFromVM =
         shakingClamsState.currentClamAnimation;
     final int shakeTriggerCountFromVM = shakingClamsState.shakeTriggerCount;
-    // final double shakeAnimationTargetFromVM =
-    //     shakingClamsState.shakeAnimationTarget;
 
     ref.listen<double>(
       shakingClamsViewProvider.select((state) => state.openCount),
@@ -133,17 +131,6 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
 
     return Consumer(
       builder: (context, ref, child) {
-        // ref.listen is safely placed inside the Consumer's builder
-        // ref.listen<ClamAnimationState>(
-        //   shakingClamsViewProvider.select(
-        //     (state) => state.currentClamAnimation,
-        //   ),
-        //   (prev, next) {
-        //     if (mounted) {
-        //       _updateLottieAnimation(prev, next);
-        //     }
-        //   },
-        // );
         return Container(
           alignment: Alignment.center,
           padding: EdgeInsets.only(top: 40),
@@ -201,17 +188,52 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                             ),
                           ),
                       Align(
-                        alignment: Alignment.center,
-                        child: buildLottieWidget(
-                          assetPath:
-                              "assets/lotties/mission_shaking_seashell_complete_2x_opti.json",
-                          controller: _shakingCompletedLottieController,
-                          repeat: false,
-                          visible:
+                            alignment: Alignment.center,
+                            child: buildLottieWidget(
+                              assetPath:
+                                  "assets/lotties/mission_shaking_seashell_complete_2x_opti.json",
+                              controller: _shakingCompletedLottieController,
+                              repeat: false,
+                              visible:
+                                  currentClamAnimationFromVM ==
+                                  ClamAnimationState.opened,
+                            ),
+                          )
+                          .animate(
+                            key: ValueKey(
                               currentClamAnimationFromVM ==
-                              ClamAnimationState.opened,
-                        ),
-                      ),
+                                  ClamAnimationState.opened,
+                            ),
+                            target:
+                                currentClamAnimationFromVM ==
+                                        ClamAnimationState.opened
+                                    ? 1.0
+                                    : 0.0,
+                          )
+                          .fadeIn(
+                            begin: 0.0,
+                            duration: 500.ms,
+                            curve: Curves.easeOut,
+                          )
+                          .swap(
+                            // 애니메이션이 완료될 때 Lottie 재생 트리거
+                            builder: (context, child) {
+                              if (currentClamAnimationFromVM ==
+                                  ClamAnimationState.opened) {
+                                if (_shakingCompletedLottieController
+                                        .isAnimating ==
+                                    false) {
+                                  _shakingCompletedLottieController.forward(
+                                    from: 0.0,
+                                  );
+                                }
+                              } else {
+                                _shakingCompletedLottieController.stop();
+                                _shakingCompletedLottieController.value = 0.0;
+                              }
+                              return child!;
+                            },
+                          ),
                       // 증감치 팝업
                       Positioned(
                         top: 80,
