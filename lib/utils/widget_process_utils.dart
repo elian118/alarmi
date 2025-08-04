@@ -8,8 +8,8 @@ List<Widget> buildProgressiveBlurLayers({
   double initialSigma = 0.0,
   double sigmaIncrement = 0.05,
   double heightReductionFactor = 0.7, // 높이 감소 비율 (0.0: 변화 없음, 1.0: 급격 감소)
-  double topCompressionFactor =
-      0.5, // 하단으로 갈수록 top 간격 압축 비율 (0.0: 균등, 1.0: 급격 압축)
+  // 하단으로 갈수록 top 간격 압축 비율 (0.0: 균등, 1.0: 급격 압축)
+  double topCompressionFactor = 1.0,
 }) {
   final List<Widget> blurLayers = [];
   double currentTop = 0.0;
