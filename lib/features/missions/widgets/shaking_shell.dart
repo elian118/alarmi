@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rive/rive.dart';
 
 class ShakingShell extends ConsumerStatefulWidget {
   const ShakingShell({super.key});
@@ -164,6 +163,7 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                           )
                           .animate(
                             key: ValueKey('shake-${shakeTriggerCountFromVM}'),
+                            // target: shakeAnimationTargetFromVM,
                             target: 1.0,
                           )
                           .shake(
@@ -189,9 +189,21 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                           ),
                       Align(
                             alignment: Alignment.center,
-                            child: RiveAnimation.asset(
-                              'assets/rives/mission_shaking_seashell_complete_2x.riv',
-                              fit: BoxFit.cover,
+                            child:
+                            // riv 이미지 사용
+                            // RiveAnimation.asset(
+                            //   'assets/rives/mission_shaking_etc_phone_2x.riv',
+                            //   fit: BoxFit.cover,
+                            // ),
+                            // 로티 이미지 사용
+                            buildLottieWidget(
+                              assetPath:
+                                  "assets/lotties/mission_shaking_seashell_complete_2x_opti.json",
+                              controller: _shakingCompletedLottieController,
+                              repeat: false,
+                              visible:
+                                  currentClamAnimationFromVM ==
+                                  ClamAnimationState.opened,
                             ),
                           )
                           .animate(
@@ -209,6 +221,26 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                             begin: 0.0,
                             duration: 500.ms,
                             curve: Curves.easeOut,
+                          )
+                          // 로티 이미지 사용 시 활성화(riv 사용 시 두번 연속 재생의 원인이 되므로 그땐 비활성화)
+                          .swap(
+                            // 애니메이션이 완료될 때 Lottie 재생 트리거
+                            builder: (context, child) {
+                              if (currentClamAnimationFromVM ==
+                                  ClamAnimationState.opened) {
+                                if (_shakingCompletedLottieController
+                                        .isAnimating ==
+                                    false) {
+                                  _shakingCompletedLottieController.forward(
+                                    from: 0.0,
+                                  );
+                                }
+                              } else {
+                                _shakingCompletedLottieController.stop();
+                                _shakingCompletedLottieController.value = 0.0;
+                              }
+                              return child!;
+                            },
                           ),
                       // 증감치 팝업
                       Positioned(
