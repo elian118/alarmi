@@ -1,20 +1,20 @@
-import 'dart:ui';
-
 import 'package:alarmi/features/main/layers/first_main_layer.dart';
 import 'package:alarmi/features/main/layers/my_alarms_layer.dart';
 import 'package:alarmi/features/main/layers/second_main_layer.dart';
+import 'package:alarmi/features/main/vms/main_view_model.dart';
 import 'package:alarmi/features/main/widgets/create_alarm_button.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 const String _backgroundImgPath = 'assets/images/backgrounds/home_day_bg.png';
 const String _nightBackgroundImgPath =
     'assets/images/backgrounds/home_night_bg.png';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   static const String routeName = 'main';
   static const String routeURL = '/main';
 
@@ -24,13 +24,14 @@ class MainScreen extends StatefulWidget {
     : situation = situationParam == 'null' ? null : situationParam;
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+class _MainScreenState extends ConsumerState<MainScreen>
+    with TickerProviderStateMixin {
   final PageController _pageController = PageController(initialPage: 0);
 
-  int _currentPageIndex = 0; // 현재 페이지 인덱스
+  // int _currentPageIndex = 0; // 현재 페이지 인덱스
   bool _didPreloadAssets = false;
 
   late final AnimationController _bgCloudLottieController;
@@ -42,12 +43,12 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.initState();
     _pageController.addListener(() {
       if (_pageController.hasClients) {
-        int newPageIndex = _pageController.page?.round() ?? 0;
-        if (_currentPageIndex != newPageIndex) {
-          setState(() {
-            _currentPageIndex = newPageIndex;
-          });
-        }
+        // int newPageIndex = _pageController.page?.round() ?? 0;
+        // if (_currentPageIndex != newPageIndex) {
+        //   setState(() {
+        //     _currentPageIndex = newPageIndex;
+        //   });
+        // }
       }
     });
 
@@ -88,7 +89,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final double blurSigma = _currentPageIndex == 0 ? 3.0 : 0.0; // 블러 강도 조절
+    final currentPageIndex = ref.watch(mainViewProvider).currentPageIndex;
+    final double blurSigma = currentPageIndex == 0 ? 3.0 : 0.0;
 
     return Scaffold(
       body: Stack(
@@ -109,20 +111,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               SecondMainLayer(),
             ],
           ),
-          MyAlarmsLayer(
-            currentPageIndex: _currentPageIndex,
-            pageController: _pageController,
-          ),
-          Positioned(
-            bottom: 50,
-            left: 0,
-            child: ClipRRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
-                child: CreateAlarmButton(),
-              ),
-            ),
-          ),
+          MyAlarmsLayer(pageController: _pageController),
+          Positioned(bottom: 50, left: 0, child: CreateAlarmButton()),
           // 테스트 스크린으로 이동하는 버튼
           Positioned(
             top: 50,

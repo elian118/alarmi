@@ -96,9 +96,9 @@ class Alarm extends ConsumerWidget {
                       (context, value, child) => Text(
                         formattedTime.split(' ')[0],
                         style: TextStyle(
-                          fontSize: Sizes.size16,
+                          fontSize: Sizes.size24,
                           color: value,
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                 ),
@@ -111,9 +111,9 @@ class Alarm extends ConsumerWidget {
                       (context, value, child) => Text(
                         formattedTime.split(' ')[1],
                         style: TextStyle(
-                          fontSize: Sizes.size24,
+                          fontSize: Sizes.size40,
                           color: value,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w300,
                         ),
                       ),
                 ),
@@ -130,9 +130,9 @@ class Alarm extends ConsumerWidget {
                         (context, value, child) => Text(
                           '$r${idx == params.weekdays.length - 1 ? '' : ', '}',
                           style: TextStyle(
-                            fontSize: Sizes.size12,
+                            fontSize: Sizes.size16,
                             color: value,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                   ),

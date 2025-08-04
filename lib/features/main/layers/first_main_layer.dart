@@ -8,6 +8,7 @@ import 'package:alarmi/features/onboarding/services/character_service.dart';
 import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/lottie_utils.dart';
+import 'package:alarmi/utils/relative_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -247,6 +248,8 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                       assetPath:
                           'assets/lotties/home_${isEvening() ? 'night' : 'day'}_bg_${isEvening() ? 'star' : 'sunlight'}_2x.json',
                       controller: widget.bgSunlightLottieController,
+                      fit: BoxFit.cover, // 잘림 무시하고 확대 - 좌우 슬라이드 애니메이션이라 상관 없음
+                      height: getRelativeHeight(context),
                       repeat: true,
                     ),
                   ),

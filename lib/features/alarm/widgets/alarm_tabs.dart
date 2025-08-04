@@ -48,15 +48,15 @@ class _AlarmTabsState extends State<AlarmTabs> with TickerProviderStateMixin {
           labelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
           tabs: <Widget>[Tab(text: '개인 알람'), Tab(text: '팀 알람')],
         ),
-        Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            children: <Widget>[
-              AlarmTabContent(key: _myAlarmTabKey, type: 'my'),
-              AlarmTabContent(key: _teamAlarmTabKey, type: 'team'),
-            ],
-          ),
-        ),
+        // Expanded(
+        //   child: TabBarView(
+        //     controller: _tabController,
+        //     children: <Widget>[
+        //       AlarmTabContent(key: _myAlarmTabKey, type: 'my'),
+        //       AlarmTabContent(key: _teamAlarmTabKey, type: 'team'),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
