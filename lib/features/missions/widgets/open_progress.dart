@@ -54,7 +54,13 @@ class _OpenProgressState extends ConsumerState<OpenProgress> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: CstRoundedSlider(progress: _sliderProgressNotifier),
+            child: CstRoundedSlider(
+              progress: _sliderProgressNotifier,
+              gradientColors: [
+                const Color(0xFFFF6E9F),
+                const Color(0xFFFF0056),
+              ],
+            ),
           ),
         ),
         Image.asset(
