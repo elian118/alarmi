@@ -91,6 +91,7 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                         child: GestureDetector(
                           onTap: () {
                             if (currentPageIndex == 1) {
+                              debugPrint('currentPageIndex: $currentPageIndex');
                               context.pushNamed(
                                 CreateAlarmScreen.routeName,
                                 pathParameters: {
@@ -116,26 +117,29 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
               ),
             ),
             Positioned(
-              // 블러를 적용할 영역의 상단에 배치
+              // 블러를 적용할 영역 상단에 배치
               top: 0,
               left: 0,
               right: 0,
               height: getWinHeight(context) * 0.25,
-              child: ClipRect(
-                child: AnimatedOpacity(
-                  opacity: currentPageIndex == 0 ? 1.0 : 0.0,
-                  duration: 500.ms,
-                  child: Stack(
-                    children: [
-                      ...buildProgressiveBlurLayers(
-                        blurAreaHeight: blurAreaHeight,
-                        stepCount: 50,
-                        // initialSigma: 0.0,
-                        sigmaIncrement: 0.06,
-                        heightReductionFactor: 0.8,
-                        topCompressionFactor: 1.0,
-                      ),
-                    ],
+              child: IgnorePointer(
+                ignoring: currentPageIndex == 1,
+                child: ClipRect(
+                  child: AnimatedOpacity(
+                    opacity: currentPageIndex == 0 ? 1.0 : 0.0,
+                    duration: 500.ms,
+                    child: Stack(
+                      children: [
+                        ...buildProgressiveBlurLayers(
+                          blurAreaHeight: blurAreaHeight,
+                          stepCount: 50,
+                          // initialSigma: 0.0,
+                          sigmaIncrement: 0.06,
+                          heightReductionFactor: 0.8,
+                          topCompressionFactor: 1.0,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
