@@ -46,13 +46,13 @@ class _VibrateState extends State<Vibrate> with TickerProviderStateMixin {
   Future<void> _playHapticPattern() async {
     // 진동 활성화 여부 확인
     if (!widget.isDialogActivatedVibrate) {
-      callSimpleToast('진동 설정이 비활성화되어 있습니다.');
+      callToast(context, '진동 설정이 비활성화되어 있습니다.');
       _stopVibration();
       return;
     }
 
     if (!widget.canVibrate) {
-      callSimpleToast("이 기기는 진동 기능을 지원하지 않습니다.");
+      callToast(context, "이 기기는 진동 기능을 지원하지 않습니다.");
       return;
     }
 

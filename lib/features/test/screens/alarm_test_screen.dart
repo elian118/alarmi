@@ -74,7 +74,7 @@ class AlarmTestScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   await NotificationController.stopTestAlarms();
-                  callSimpleToast('모든 테스트 알람이 취소되었습니다.');
+                  callToast(context, '모든 테스트 알람이 취소되었습니다.');
                 },
                 child: const Text('재생 중지'),
               ),
@@ -120,7 +120,7 @@ class AlarmTestScreen extends StatelessWidget {
                 onPressed: () async {
                   await NotificationController.stopTestAlarms();
                   await AwesomeNotifications().cancelAll();
-                  callSimpleToast('캐싱된 알람이 모두 삭제되었습니다.');
+                  callToast(context, '캐싱된 알람이 모두 삭제되었습니다.');
                 },
                 child: const Text('캐싱 알람 모두 삭제'),
               ),

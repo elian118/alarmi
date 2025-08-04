@@ -104,7 +104,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
             _selectedDateTime = now;
             _isLoading = false;
           });
-          callSimpleToast('유효하지 않은 알람 ID입니다.');
+          callToast(context, '유효하지 않은 알람 ID입니다.');
         }
       }
     } else {
@@ -217,10 +217,10 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
 
     if (mounted) {
       if (isSuccess) {
-        callSimpleToast('알람이 ${isCreate ? '등록' : '저장'}되었습니다.');
+        callToast(context, '알람이 ${isCreate ? '등록' : '저장'}되었습니다.');
         context.go('${MainScreen.routeURL}/null');
       } else {
-        callSimpleToast('알람 ${isCreate ? '등록' : '저장'}에 실패했습니다.');
+        callToast(context, '알람 ${isCreate ? '등록' : '저장'}에 실패했습니다.');
       }
     }
   }
@@ -301,7 +301,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
                     widget.type,
                   );
                 } catch (e) {
-                  callSimpleToast('알람 삭제가 실패했습니다.');
+                  callToast(context, '알람 삭제가 실패했습니다.');
                 }
               },
               style: ElevatedButton.styleFrom(

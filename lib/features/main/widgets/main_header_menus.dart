@@ -76,7 +76,7 @@ class MainHeaderMenus extends ConsumerWidget {
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
                           ),
-                          onPressed: () => callSimpleToast("보관함 클릭"),
+                          onPressed: () => callToast(context, "보관함 클릭"),
                         ),
                         CstTextBtn(
                           icon: 'assets/images/icons/shopping_icon.png',
@@ -87,7 +87,7 @@ class MainHeaderMenus extends ConsumerWidget {
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
                           ),
-                          onPressed: () => callSimpleToast("상점 클릭"),
+                          onPressed: () => callToast(context, "상점 클릭"),
                         ),
                         CstTextBtn(
                           icon: 'assets/images/icons/bell_icon.png',

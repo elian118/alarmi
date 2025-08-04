@@ -69,7 +69,7 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                           widget.type,
                         );
                       } catch (e) {
-                        callSimpleToast('알람 삭제가 실패했습니다.');
+                        callToast(context, '알람 삭제가 실패했습니다.');
                       }
                     },
                     child: GestureDetector(

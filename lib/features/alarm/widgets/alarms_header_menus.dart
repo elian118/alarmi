@@ -25,7 +25,7 @@ class AlarmsHeaderMenus extends StatelessWidget {
             spacing: 8,
             label: '보관함',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-            onPressed: () => callSimpleToast("잠수함 클릭"),
+            onPressed: () => callToast(context, "잠수함 클릭"),
           ),
           CstTextBtn(
             icon: Icon(Icons.favorite, color: Colors.red),
@@ -33,7 +33,7 @@ class AlarmsHeaderMenus extends StatelessWidget {
             spacing: 8,
             label: '응원',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-            onPressed: () => callSimpleToast("응원 클릭"),
+            onPressed: () => callToast(context, "응원 클릭"),
           ),
         ],
       ),

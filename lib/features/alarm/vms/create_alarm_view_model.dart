@@ -101,14 +101,14 @@ class CreateAlarmViewModel extends Notifier<CreateAlarmState> {
       int? id = await alarmNotifier.insertAlarm(params: params);
 
       if (id != null) {
-        callSimpleToast('알람이 등록되었습니다.');
-        context.go(AlarmsScreen.routeURL);
+        callToast(context, '알람이 등록되었습니다.');
+        () => context.go(AlarmsScreen.routeURL);
       } else {
-        callSimpleToast('알람 등록에 실패했습니다.');
+        callToast(context, '알람 등록에 실패했습니다.');
       }
     } catch (e) {
       debugPrint('알람 저장 중 오류 발생: $e');
-      callSimpleToast('알람 저장 중 오류가 발생했습니다.');
+      callToast(context, '알람 저장 중 오류가 발생했습니다.');
     }
   }
 }
