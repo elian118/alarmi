@@ -300,6 +300,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
                     int.parse(widget.alarmId!),
                     widget.type,
                   );
+                  context.pop(); // 뒤로 가기
                 } catch (e) {
                   callToast(context, '알람 삭제가 실패했습니다.');
                 }
