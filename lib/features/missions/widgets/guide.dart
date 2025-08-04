@@ -1,9 +1,9 @@
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/sizes.dart';
 import 'package:alarmi/features/missions/vms/shaking_clams_view_model.dart';
-import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rive/rive.dart';
 
 class Guide extends ConsumerStatefulWidget {
   const Guide({super.key});
@@ -52,11 +52,11 @@ class _GuideState extends ConsumerState<Guide>
           ),
         ),
         Gaps.v8,
-        // Image.asset('assets/images/etc/media_area.png', fit: BoxFit.cover),
-        buildLottieWidget(
-          assetPath: 'assets/lotties/mission_shaking_etc_phone_2x.json',
-          controller: lottieController,
-          repeat: true,
+        Expanded(
+          child: RiveAnimation.asset(
+            'assets/rives/mission_shaking_etc_phone_2x.riv',
+            fit: BoxFit.cover,
+          ),
         ),
         Gaps.v8,
         ElevatedButton(

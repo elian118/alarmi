@@ -37,6 +37,7 @@ class _AlarmiAppState extends ConsumerState<AlarmiApp> {
   }
 
   Future<void> _initializeDependencies() async {
+    // 개인설정 - 필요시 활성화
     // final personalSettings = await SharedPreferences.getInstance();
     // final setRepository = ConfigRepository(personalSettings);
 
