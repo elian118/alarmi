@@ -1,18 +1,67 @@
 import 'package:alarmi/common/consts/curves/cst_curves.dart';
 import 'package:alarmi/features/onboarding/vms/onboard_view_model.dart';
+import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CharacterLayer extends ConsumerWidget {
+class CharacterLayer extends ConsumerStatefulWidget {
   const CharacterLayer({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CharacterLayer> createState() => _CharacterLayerState();
+}
+
+class _CharacterLayerState extends ConsumerState<CharacterLayer>
+    with TickerProviderStateMixin {
+  late AnimationController characterController;
+
+  @override
+  void initState() {
+    characterController = AnimationController(vsync: this, duration: 3.seconds);
+    _updateLottieAnimation();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(CharacterLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateLottieAnimation();
+  }
+
+  void _updateLottieAnimation() {
+    final onboardState = ref.read(onboardViewProvider);
+
+    if (onboardState.stage == 1) {
+      characterController.forward(from: 0);
+    } else if (onboardState.stage >= 2 && onboardState.stage < 10) {
+      if (!characterController.isAnimating) {
+        characterController.repeat();
+      }
+    } else {
+      characterController.stop();
+    }
+  }
+
+  @override
+  void dispose() {
+    characterController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final onboardState = ref.watch(onboardViewProvider);
 
     String imageAsset =
         'assets/images/characters/${onboardState.stage >= 2 && onboardState.stage < 12 ? 'wakeup_cat' : 'sleepy_cat'}.png';
+
+    String lottieAsset =
+        'assets/lotties/onboarding_cat_${onboardState.stage >= 2 && onboardState.stage < 12
+            ? 'wakeup'
+            : onboardState.stage == 1
+            ? 'wakeup_ing'
+            : 'sleep'}_2x_opti.json';
 
     Widget character =
         onboardState.stage == 7
@@ -21,9 +70,23 @@ class CharacterLayer extends ConsumerWidget {
                 onboardState.selectedColor.color, // 변경하고 싶은 색상
                 BlendMode.srcIn, // 투명하지 않은 픽셀에만 색상 적용
               ),
-              child: Image.asset(imageAsset),
+              child: buildLottieWidget(
+                assetPath: lottieAsset,
+                controller: characterController,
+                repeat: onboardState.stage != 1,
+                width: 300,
+                height: 300,
+              ),
+              // Image.asset(imageAsset),
             )
-            : Image.asset(imageAsset);
+            // : Image.asset(imageAsset);
+            : buildLottieWidget(
+              assetPath: lottieAsset,
+              controller: characterController,
+              repeat: onboardState.stage != 1,
+              width: 300,
+              height: 300,
+            );
 
     return Positioned.fill(
       child:
