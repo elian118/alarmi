@@ -29,6 +29,7 @@ class _CharacterLayerState extends ConsumerState<CharacterLayer>
     _updateLottieAnimation();
   }
 
+  // 애니메이션 업데이트 - 로티 애니메이션별 제어권 분리 목적
   void _updateLottieAnimation() {
     final onboardState = ref.read(onboardViewProvider);
 
@@ -53,15 +54,20 @@ class _CharacterLayerState extends ConsumerState<CharacterLayer>
   Widget build(BuildContext context) {
     final onboardState = ref.watch(onboardViewProvider);
 
-    String imageAsset =
-        'assets/images/characters/${onboardState.stage >= 2 && onboardState.stage < 12 ? 'wakeup_cat' : 'sleepy_cat'}.png';
-
     String lottieAsset =
         'assets/lotties/onboarding_cat_${onboardState.stage >= 2 && onboardState.stage < 12
             ? 'wakeup'
             : onboardState.stage == 1
             ? 'wakeup_ing'
             : 'sleep'}_2x_opti.json';
+
+    Widget lottieWidget = buildLottieWidget(
+      assetPath: lottieAsset,
+      controller: characterController,
+      repeat: onboardState.stage != 1,
+      width: 300,
+      height: 300,
+    );
 
     Widget character =
         onboardState.stage == 7
@@ -70,23 +76,9 @@ class _CharacterLayerState extends ConsumerState<CharacterLayer>
                 onboardState.selectedColor.color, // 변경하고 싶은 색상
                 BlendMode.srcIn, // 투명하지 않은 픽셀에만 색상 적용
               ),
-              child: buildLottieWidget(
-                assetPath: lottieAsset,
-                controller: characterController,
-                repeat: onboardState.stage != 1,
-                width: 300,
-                height: 300,
-              ),
-              // Image.asset(imageAsset),
+              child: lottieWidget,
             )
-            // : Image.asset(imageAsset);
-            : buildLottieWidget(
-              assetPath: lottieAsset,
-              controller: characterController,
-              repeat: onboardState.stage != 1,
-              width: 300,
-              height: 300,
-            );
+            : lottieWidget;
 
     return Positioned.fill(
       child:
