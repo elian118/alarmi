@@ -38,8 +38,8 @@ class MissionCompletedLayer extends StatelessWidget {
                   ),
                   Image.asset(
                     'assets/images/characters/mission_completed.png',
-                    width: 260,
-                    height: 260,
+                    // width: 260,
+                    // height: 260,
                     fit: BoxFit.cover,
                   ),
                   Text(
