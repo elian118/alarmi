@@ -226,8 +226,6 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                     fit: BoxFit.cover,
                   ),
                 ),
-                // todo 저녁용 로띠가 있으면 아래 조건식 바꾸기
-                // 저녁인 경우 아래 위젯 모두 감추기
                 Positioned.fill(
                   child: Container(
                     alignment: Alignment.topCenter,

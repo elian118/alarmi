@@ -1,7 +1,6 @@
 import 'package:alarmi/features/main/layers/first_main_layer.dart';
 import 'package:alarmi/features/main/layers/my_alarms_layer.dart';
 import 'package:alarmi/features/main/layers/second_main_layer.dart';
-import 'package:alarmi/features/main/vms/main_view_model.dart';
 import 'package:alarmi/features/main/widgets/create_alarm_button.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
 import 'package:alarmi/utils/date_utils.dart';
@@ -31,7 +30,6 @@ class _MainScreenState extends ConsumerState<MainScreen>
     with TickerProviderStateMixin {
   final PageController _pageController = PageController(initialPage: 0);
 
-  // int _currentPageIndex = 0; // 현재 페이지 인덱스
   bool _didPreloadAssets = false;
 
   late final AnimationController _bgCloudLottieController;
@@ -41,17 +39,6 @@ class _MainScreenState extends ConsumerState<MainScreen>
   @override
   void initState() {
     super.initState();
-    _pageController.addListener(() {
-      if (_pageController.hasClients) {
-        // int newPageIndex = _pageController.page?.round() ?? 0;
-        // if (_currentPageIndex != newPageIndex) {
-        //   setState(() {
-        //     _currentPageIndex = newPageIndex;
-        //   });
-        // }
-      }
-    });
-
     // 배경 로티 컨트롤러 초기화
     _bgCloudLottieController = AnimationController(vsync: this);
     _bgSunlightLottieController = AnimationController(vsync: this);
@@ -89,8 +76,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
   @override
   Widget build(BuildContext context) {
-    final currentPageIndex = ref.watch(mainViewProvider).currentPageIndex;
-    final double blurSigma = currentPageIndex == 0 ? 3.0 : 0.0;
+    const double initialBottomOffset = 300.0;
 
     return Scaffold(
       body: Stack(
@@ -111,7 +97,10 @@ class _MainScreenState extends ConsumerState<MainScreen>
               SecondMainLayer(),
             ],
           ),
-          MyAlarmsLayer(pageController: _pageController),
+          MyAlarmsLayer(
+            pageController: _pageController,
+            initialBottomOffset: initialBottomOffset,
+          ),
           Positioned(bottom: 50, left: 0, child: CreateAlarmButton()),
           // 테스트 스크린으로 이동하는 버튼
           Positioned(

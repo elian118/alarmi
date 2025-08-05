@@ -12,22 +12,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
 class MyAlarmsLayer extends ConsumerStatefulWidget {
+  final double initialBottomOffset;
   final PageController pageController;
 
-  const MyAlarmsLayer({super.key, required this.pageController});
+  const MyAlarmsLayer({
+    super.key,
+    required this.pageController,
+    required this.initialBottomOffset,
+  });
 
   @override
   ConsumerState<MyAlarmsLayer> createState() => _MyAlarmsLayerState();
 }
 
 class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
-  static const double _initialBottomOffset = 300.0;
-
   @override
   void initState() {
     super.initState();
-    // PageController의 페이지 변경을 감지하는 리스너 추가
     widget.pageController.addListener(_handlePageChange);
+
+    // MyAlarmsLayer가 처음 생성될 때, 뷰 모델 상태를 초기화합니다.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(mainViewProvider).alarmsTopOffset == 0.0) {
+        final screenHeight = getWinHeight(context);
+        final initialAlarmsTopOffset =
+            screenHeight - widget.initialBottomOffset;
+        ref
+            .read(mainViewProvider.notifier)
+            .setAlarmsTopOffset(initialAlarmsTopOffset);
+      }
+    });
   }
 
   @override
@@ -47,7 +61,7 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
       // currentPage가 0이면 초기 위치, 1이면 상단
       final screenHeight = getWinHeight(context);
       final newOffset =
-          currentPage == 0 ? screenHeight - _initialBottomOffset : 0.0;
+          currentPage == 0 ? screenHeight - widget.initialBottomOffset : 0.0;
       ref.read(mainViewProvider.notifier).setAlarmsTopOffset(newOffset);
     }
   }
@@ -64,7 +78,7 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
     final currentMainState = ref.read(mainViewProvider); // 현재 상태 스냅샷
 
     final double screenHeight = getWinHeight(context);
-    final double startPosition = screenHeight - _initialBottomOffset;
+    final double startPosition = screenHeight - widget.initialBottomOffset;
     final double dragDelta =
         details.globalPosition.dy - currentMainState.dragStartY;
 
@@ -90,10 +104,10 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
     if (mainState.hasNoAlarms) return;
 
     final double screenHeight = getWinHeight(context);
-    final double startPosition = screenHeight - _initialBottomOffset;
+    final double startPosition = screenHeight - widget.initialBottomOffset;
     final double dragThreshold = screenHeight * 0.15;
     final double velocity = details.primaryVelocity ?? 0.0;
-    final double minVelocity = 600.0;
+    const double minVelocity = 600.0;
 
     if (mainState.currentPageIndex == 0) {
       widget.pageController.animateToPage(
@@ -122,6 +136,12 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
     final alarmsTopOffset = mainState.alarmsTopOffset;
     final hasNoAlarms = mainState.hasNoAlarms;
 
+    // 초기화에 따른 값 설정과 애니메이션이 완전히 동기화되지 않은 시점일 경우 표시 안 함
+    // 예: 0 페이지인데, alarmsTopOffset이 여전히 0.0인 상황
+    if (alarmsTopOffset == 0.0 && currentPageIndex == 0) {
+      return SizedBox.shrink();
+    }
+
     final AsyncValue<List<Map<String, dynamic>>> alarmAsync = ref.watch(
       alarmListProvider('my'),
     );
@@ -142,7 +162,6 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
         onVerticalDragUpdate: _onVerticalDragUpdate,
         onVerticalDragEnd: _onVerticalDragEnd,
         child: Container(
-          // padding: const EdgeInsets.symmetric(horizontal: 20),
           width: getWinWidth(context),
           color: Colors.transparent,
           child: SafeArea(
