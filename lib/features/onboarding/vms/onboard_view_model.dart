@@ -15,17 +15,20 @@ class OnboardViewModel extends Notifier<OnboardState> {
 
   @override
   OnboardState build() {
-    _startAutoAdvanceTimerIfNeeded(OnboardState());
+    startAutoAdvanceTimerIfNeeded(OnboardState());
     return OnboardState();
   }
 
-  void initStates() {
-    state = OnboardState();
-    _startAutoAdvanceTimerIfNeeded(state);
+  void initStates({bool? hasConfirmed = false}) {
+    state = OnboardState(hasConfirmed: hasConfirmed ?? false);
+    if (hasConfirmed == true) {
+      startAutoAdvanceTimerIfNeeded(state);
+    }
   }
 
   void setStage(int value) {
-    if (stageTypes.map((stage) => stage.index).contains(value)) {
+    if (stageTypes.map((stage) => stage.index).contains(value) &&
+        state.hasConfirmed) {
       debugPrint(state.stage.toString());
       state = state.copyWith(
         stage: value,
@@ -35,7 +38,7 @@ class OnboardViewModel extends Notifier<OnboardState> {
                 : messages[value],
         isNarration: stageTypes[value].type == 'narration',
       );
-      _startAutoAdvanceTimerIfNeeded(state);
+      startAutoAdvanceTimerIfNeeded(state);
     }
   }
 
@@ -55,6 +58,10 @@ class OnboardViewModel extends Notifier<OnboardState> {
     state = state.copyWith(message: value);
   }
 
+  void setHasConfirmed(bool value) {
+    state = state.copyWith(hasConfirmed: value);
+  }
+
   void setColor(int value) {
     state = state.copyWith(selectedColor: colorSets[value]);
   }
@@ -67,7 +74,7 @@ class OnboardViewModel extends Notifier<OnboardState> {
   }
 
   // 타이머 시작 및 관리
-  void _startAutoAdvanceTimerIfNeeded(OnboardState currentState) {
+  void startAutoAdvanceTimerIfNeeded(OnboardState currentState) {
     _cancelStageTimer(); // 기존 타이머가 있다면 먼저 취소
 
     final currentStageType = stageTypes[currentState.stage];

@@ -8,6 +8,7 @@ class OnboardState {
   final String message;
   final String name;
   final bool isNarration;
+  final bool hasConfirmed;
   final ColorSet selectedColor;
   final Personality? selectedPersonality;
 
@@ -16,6 +17,7 @@ class OnboardState {
     this.message = '바다 깊은 곳에서\n고양이가 깨어나고 있어요.',
     this.name = '',
     this.isNarration = true,
+    this.hasConfirmed = false,
     this.selectedColor = const ColorSet(
       color: Color(0xffF9B9FF),
       colorName: '핑크색',
@@ -29,6 +31,7 @@ class OnboardState {
     String? message,
     String? name,
     bool? isNarration,
+    bool? hasConfirmed,
     ColorSet? selectedColor,
     Personality? selectedPersonality,
   }) {
@@ -37,6 +40,7 @@ class OnboardState {
       message: message ?? this.message,
       name: name ?? this.name,
       isNarration: isNarration ?? this.isNarration,
+      hasConfirmed: hasConfirmed ?? this.hasConfirmed,
       selectedColor: selectedColor ?? this.selectedColor,
       selectedPersonality: selectedPersonality ?? this.selectedPersonality,
     );

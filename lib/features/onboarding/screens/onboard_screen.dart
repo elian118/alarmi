@@ -2,6 +2,7 @@ import 'package:alarmi/features/onboarding/constants/stage_types.dart';
 import 'package:alarmi/features/onboarding/layers/background_layer.dart';
 import 'package:alarmi/features/onboarding/layers/button_layer.dart';
 import 'package:alarmi/features/onboarding/layers/character_layer.dart';
+import 'package:alarmi/features/onboarding/layers/confirm_layer.dart';
 import 'package:alarmi/features/onboarding/layers/fade_layer.dart';
 import 'package:alarmi/features/onboarding/layers/message_layer.dart';
 import 'package:alarmi/features/onboarding/layers/naming_layer.dart';
@@ -98,6 +99,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
             MessageLayer(),
             NamingLayer(),
             ButtonLayer(),
+            ConfirmLayer(),
             // 테스트 스크린으로 이동하는 버튼
             // Positioned(
             //   top: 50,
