@@ -33,7 +33,7 @@ class _CharacterLayerState extends ConsumerState<CharacterLayer>
   void _updateLottieAnimation() {
     final onboardState = ref.read(onboardViewProvider);
 
-    if (onboardState.stage == 1) {
+    if (onboardState.stage == 1 || onboardState.stage == 10) {
       characterController.forward(from: 0);
     } else if (onboardState.stage >= 2 && onboardState.stage < 10) {
       if (!characterController.isAnimating) {
@@ -55,16 +55,18 @@ class _CharacterLayerState extends ConsumerState<CharacterLayer>
     final onboardState = ref.watch(onboardViewProvider);
 
     String lottieAsset =
-        'assets/lotties/onboarding_cat_${onboardState.stage >= 2 && onboardState.stage < 12
+        'assets/lotties/onboarding_cat_${onboardState.stage >= 2 && onboardState.stage < 12 && onboardState.stage != 10
             ? 'wakeup'
             : onboardState.stage == 1
             ? 'wakeup_ing'
+            : onboardState.stage == 10
+            ? 'up'
             : 'sleep'}_2x_opti.json';
 
     Widget lottieWidget = buildLottieWidget(
       assetPath: lottieAsset,
       controller: characterController,
-      repeat: onboardState.stage != 1,
+      repeat: onboardState.stage != 1 && onboardState.stage != 10,
       width: 300,
       height: 300,
     );
