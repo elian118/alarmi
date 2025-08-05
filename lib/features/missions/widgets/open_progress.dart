@@ -48,8 +48,8 @@ class _OpenProgressState extends ConsumerState<OpenProgress> {
       children: [
         Image.asset(
           'assets/images/etc/close_seashell.png',
-          width: 46,
-          height: 46,
+          width: 64,
+          height: 64,
         ),
         Expanded(
           child: Padding(
@@ -65,8 +65,8 @@ class _OpenProgressState extends ConsumerState<OpenProgress> {
         ),
         Image.asset(
           'assets/images/etc/open_seashell.png',
-          width: 58,
-          height: 58,
+          width: 64,
+          height: 64,
         ),
       ],
     );

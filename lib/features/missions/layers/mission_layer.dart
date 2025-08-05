@@ -69,8 +69,16 @@ class _MissionLayerState extends ConsumerState<MissionLayer>
                   padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.3),
+                    color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(14)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black87.withValues(alpha: 0.25),
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
                   ),
                   child: OpenProgress(),
                 ),

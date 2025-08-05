@@ -77,25 +77,27 @@ class _ShakingClamsScreenState extends ConsumerState<ShakingClamsScreen>
             ),
           ),
           Positioned.fill(
-            child: Container(color: Colors.black.withValues(alpha: 0.6)),
-          ).animate(target: isPlayingMission ? 1 : 0).fadeOut(begin: 1.0),
+                child: Container(color: Colors.black.withValues(alpha: 0.6)),
+              )
+              .animate(target: isPlayingMission ? 1 : 0)
+              .fadeOut(begin: 1.0, duration: 0.4.seconds),
           IgnorePointer(
             ignoring: !isPlayingMission,
             child: MissionLayer()
                 .animate(target: isPlayingMission ? 1 : 0)
-                .fadeIn(begin: 0.0),
+                .fadeIn(begin: 0.0, duration: 0.4.seconds),
           ),
           IgnorePointer(
             ignoring: isPlayingMission,
             child: MissionCompletedLayer()
                 .animate(target: shakingClamsState.isCompleted ? 1 : 0)
-                .fadeIn(begin: 0.0),
+                .fadeIn(begin: 0.0, duration: 0.4.seconds),
           ),
           IgnorePointer(
             ignoring: isPlayingMission,
             child: MissionFailedLayer()
                 .animate(target: shakingClamsState.isFailed ? 1 : 0)
-                .fadeIn(begin: 0.0),
+                .fadeIn(begin: 0.0, duration: 0.4.seconds),
           ),
           IgnorePointer(
             ignoring: shakingClamsState.showMission,
@@ -110,7 +112,7 @@ class _ShakingClamsScreenState extends ConsumerState<ShakingClamsScreen>
                           ? 1
                           : 0,
                 )
-                .fadeOut(begin: 1.0),
+                .fadeOut(begin: 1.0, duration: 0.4.seconds),
           ),
           // 테스트 스크린으로 이동하는 버튼 - 임시
           Positioned(
@@ -120,10 +122,7 @@ class _ShakingClamsScreenState extends ConsumerState<ShakingClamsScreen>
               onTap: () => context.push(AlarmTestScreen.routeURL),
               child: Image.asset(
                 'assets/images/characters/thumb.png',
-              ).animate().scale(
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              ),
+              ).animate().scale(duration: 0.5.seconds, curve: Curves.easeInOut),
             ),
           ),
         ],

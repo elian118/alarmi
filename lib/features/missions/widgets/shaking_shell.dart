@@ -140,8 +140,8 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
               ref.read(shakingClamsViewProvider.notifier).handleShakeEvent();
             },
             child: SizedBox(
-                  width: 330,
-                  height: 360,
+                  width: 300,
+                  height: 300,
                   child: Stack(
                     children: [
                       !isPlayingMission ? Container() : Gaps.v48,
@@ -162,8 +162,7 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                             ),
                           )
                           .animate(
-                            key: ValueKey('shake-${shakeTriggerCountFromVM}'),
-                            // target: shakeAnimationTargetFromVM,
+                            key: ValueKey('shake-$shakeTriggerCountFromVM'),
                             target: 1.0,
                           )
                           .shake(
@@ -252,7 +251,6 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                             duration: 0.4.seconds,
                             curve: Curves.easeOutExpo,
                             child: AnimatedBuilder(
-                              // ✅ AnimatedBuilder 사용
                               animation: _popOffsetAnimation,
                               builder: (context, child) {
                                 return Transform.translate(

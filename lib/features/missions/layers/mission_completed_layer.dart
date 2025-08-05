@@ -36,7 +36,12 @@ class MissionCompletedLayer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Image.asset('assets/images/characters/mission_completed.png'),
+                  Image.asset(
+                    'assets/images/characters/mission_completed.png',
+                    width: 260,
+                    height: 260,
+                    fit: BoxFit.cover,
+                  ),
                   Text(
                     '좋은 아침이에요!\n오늘도 힘차게 시작해요.',
                     textAlign: TextAlign.center,
