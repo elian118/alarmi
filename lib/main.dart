@@ -72,6 +72,7 @@ class _AlarmiAppState extends ConsumerState<AlarmiApp> {
               debugShowCheckedModeBanner: false,
               title: 'Alarmi',
               themeMode: ThemeMode.system,
+              // todo: 언제 한 번 날 잡아서 커스덤 테마 적용하기
               theme: ThemeData(
                 fontFamily: "Pretendard",
                 colorScheme: ColorScheme.fromSwatch().copyWith(
