@@ -4,12 +4,14 @@ import 'dart:math';
 import 'package:alarmi/features/missions/constants/enums/clam_animation_state.dart';
 import 'package:alarmi/features/missions/models/ShakingClamsState.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shake/shake.dart';
 import 'package:vibration/vibration.dart';
 import 'package:vibration/vibration_presets.dart';
 
 class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
+  Timer? _popCountdownTimer; // 팝업 내 3초 타이머
   Timer? _countdownTimer;
   Timer? _inactivityCheckTimer;
   Timer? _inactivityDecrementTimer;
@@ -81,10 +83,10 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     state = ShakingClamsState(
       currentClamAnimation: ClamAnimationState.waiting,
       shakeTriggerCount: 0,
-      // shakeAnimationTarget: 0.0,
     );
     _lastShakeTime = 0.0; // 상태 초기화 시 마지막 흔들림 시간도 초기화
     _stopAllTimers();
+    startPopCountdown();
   }
 
   void disposeViewModel() {
@@ -94,6 +96,7 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
   }
 
   void _stopAllTimers() {
+    _popCountdownTimer?.cancel();
     _countdownTimer?.cancel();
     _inactivityCheckTimer?.cancel();
     _inactivityDecrementTimer?.cancel();
@@ -110,6 +113,10 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
 
   void setIsStart(bool value) {
     state = state.copyWith(isStart: value);
+  }
+
+  void setPopCountdown(int value) {
+    state = state.copyWith(popCountdown: value);
   }
 
   void setCountdown(int value) {
@@ -141,7 +148,6 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
           value >= 1 ? ClamAnimationState.opened : state.currentClamAnimation,
       // 조개 열리면 리셋
       shakeTriggerCount: value >= 1 ? 0 : state.shakeTriggerCount,
-      // shakeAnimationTarget: value >= 1 ? 0.0 : state.shakeAnimationTarget,
     );
 
     if (state.isCompleting && !state.isCompleted) {
@@ -171,7 +177,6 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
       currentClamAnimation: ClamAnimationState.waiting,
       // 재시도 시 애니메이션 타겟 리셋
       shakeTriggerCount: 0,
-      // shakeAnimationTarget: 0.0,
     );
     _lastShakeTime = DateTime.now().millisecondsSinceEpoch / 1000.0;
     _stopInactivityDecrementTimer();
@@ -283,6 +288,22 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
   void _stopInactivityCheckTimer() {
     _inactivityCheckTimer?.cancel();
     _inactivityCheckTimer = null;
+  }
+
+  // 팝업 카운트다운 시작 - 종료 시 자동 카운트다운 시작
+  void startPopCountdown() {
+    _stopAllTimers();
+
+    _popCountdownTimer = Timer.periodic(1.seconds, (timer) {
+      if (state.popCountdown > 0) {
+        setPopCountdown(state.popCountdown - 1);
+      } else {
+        timer.cancel();
+        debugPrint('popCountdown finished! startCountdown started.');
+        setIsStart(true);
+        startCountdown();
+      }
+    });
   }
 
   // 카운트다운 시작

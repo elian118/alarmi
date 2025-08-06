@@ -2,6 +2,7 @@ import 'package:alarmi/features/missions/constants/enums/clam_animation_state.da
 
 class ShakingClamsState {
   final bool isStart;
+  final int popCountdown;
   final int countdown;
   final bool showMission;
   final double openCount;
@@ -14,6 +15,7 @@ class ShakingClamsState {
 
   ShakingClamsState({
     this.isStart = false,
+    this.popCountdown = 3,
     this.countdown = 3,
     this.showMission = false,
     this.openCount = 0.0,
@@ -27,6 +29,7 @@ class ShakingClamsState {
 
   ShakingClamsState copyWith({
     bool? isStart,
+    int? popCountdown,
     int? countdown,
     bool? showMission,
     double? openCount,
@@ -39,6 +42,7 @@ class ShakingClamsState {
   }) {
     return ShakingClamsState(
       isStart: isStart ?? this.isStart,
+      popCountdown: popCountdown ?? this.popCountdown,
       countdown: countdown ?? this.countdown,
       showMission: showMission ?? this.showMission,
       openCount: openCount ?? this.openCount,

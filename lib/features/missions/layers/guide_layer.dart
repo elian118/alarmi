@@ -30,9 +30,6 @@ class _GuideLayerState extends ConsumerState<GuideLayer>
 
   @override
   void initState() {
-    Future.microtask(() {
-      ref.read(shakingClamsViewProvider.notifier).initStates();
-    });
     super.initState();
   }
 

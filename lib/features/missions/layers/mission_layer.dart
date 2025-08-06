@@ -3,39 +3,15 @@ import 'package:alarmi/features/missions/vms/shaking_clams_view_model.dart';
 import 'package:alarmi/features/missions/widgets/open_progress.dart';
 import 'package:alarmi/features/missions/widgets/shaking_shell.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MissionLayer extends ConsumerStatefulWidget {
+class MissionLayer extends ConsumerWidget {
   const MissionLayer({super.key});
 
   @override
-  ConsumerState<MissionLayer> createState() => _MissionLayerState();
-}
-
-class _MissionLayerState extends ConsumerState<MissionLayer>
-    with SingleTickerProviderStateMixin {
-  late final shakingClamsNotifier;
-
-  @override
-  void initState() {
-    shakingClamsNotifier = ref.read(shakingClamsViewProvider.notifier);
-
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      shakingClamsNotifier.initStates();
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    shakingClamsNotifier.disposeViewModel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final shakingClamsState = ref.watch(shakingClamsViewProvider);
+
     return Stack(
       children: [
         Positioned.fill(

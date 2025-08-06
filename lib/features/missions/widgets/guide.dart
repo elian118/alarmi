@@ -30,6 +30,7 @@ class _GuideState extends ConsumerState<Guide>
 
   @override
   Widget build(BuildContext context) {
+    final shakingClamsState = ref.watch(shakingClamsViewProvider);
     final shakingClamsNotifier = ref.read(shakingClamsViewProvider.notifier);
 
     return Column(
@@ -82,7 +83,7 @@ class _GuideState extends ConsumerState<Guide>
             padding: EdgeInsets.symmetric(vertical: Sizes.size14),
             child: Center(
               child: Text(
-                '바로 시작 (3s)',
+                '바로 시작 (${shakingClamsState.popCountdown}s)',
                 style: TextStyle(
                   fontSize: Sizes.size18,
                   fontWeight: FontWeight.w600,

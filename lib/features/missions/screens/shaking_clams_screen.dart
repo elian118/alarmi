@@ -3,6 +3,7 @@ import 'package:alarmi/features/missions/layers/mission_completed_layer.dart';
 import 'package:alarmi/features/missions/layers/mission_layer.dart';
 import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -23,17 +24,24 @@ class ShakingClamsScreen extends ConsumerStatefulWidget {
 
 class _ShakingClamsScreenState extends ConsumerState<ShakingClamsScreen>
     with SingleTickerProviderStateMixin {
+  late final shakingClamsNotifier;
   late final AnimationController bgLottieController;
 
   @override
   void initState() {
+    shakingClamsNotifier = ref.read(shakingClamsViewProvider.notifier);
     bgLottieController = AnimationController(vsync: this);
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      shakingClamsNotifier.initStates();
+    });
     super.initState();
   }
 
   @override
   void dispose() {
     bgLottieController.dispose();
+    shakingClamsNotifier.disposeViewModel();
     super.dispose();
   }
 
