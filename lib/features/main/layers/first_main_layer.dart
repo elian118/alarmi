@@ -9,6 +9,7 @@ import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:alarmi/utils/relative_utils.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -41,6 +42,11 @@ class _FirstMainLayerState extends State<FirstMainLayer>
   late AnimationController _catSitController;
   late AnimationController _catWaveController;
   late AnimationController _catHiController;
+  late final Map<CatAnimationState, AnimationController> _catControllers = {
+    CatAnimationState.sit: _catSitController,
+    CatAnimationState.wave: _catWaveController,
+    CatAnimationState.hi: _catHiController,
+  };
 
   CatAnimationState _currentCatAnimation = CatAnimationState.sit;
 
@@ -78,9 +84,9 @@ class _FirstMainLayerState extends State<FirstMainLayer>
 
   @override
   void dispose() {
-    _catSitController.dispose();
-    _catWaveController.dispose();
-    _catHiController.dispose();
+    for (final controller in _catControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -268,48 +274,29 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                           : Container(),
                 ),
                 // 가시성 제어가 적용된 고양이 Lottie 위젯들
-                Align(
-                  alignment: Alignment.center,
-                  child: buildLottieWidget(
-                    assetPath:
-                        "assets/lotties/home_${isEvening() ? 'night' : 'day'}_cat_${isEvening() ? 'sleep_x2_90' : 'sit_x2'}_opti.json",
-                    controller: _catSitController,
-                    // width: getWinWidth(context) * 0.7,
-                    // height: getWinWidth(context) * 0.7,
-                    width: 311,
-                    height: 284.87,
-                    repeat: true,
-                    visible: _currentCatAnimation == CatAnimationState.sit,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: buildLottieWidget(
-                    assetPath:
-                        "assets/lotties/home_${isEvening() ? 'night' : 'day'}_cat_${isEvening() ? 'sleep_x2_90' : 'wave_x2'}_opti.json",
-                    controller: _catWaveController,
-                    // width: getWinWidth(context) * 0.7,
-                    // height: getWinWidth(context) * 0.7,
-                    width: 311,
-                    height: 284.87,
-                    repeat: false, // Wave는 자동 반복 금지
-                    visible: _currentCatAnimation == CatAnimationState.wave,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: buildLottieWidget(
-                    assetPath:
-                        "assets/lotties/home_${isEvening() ? 'night' : 'day'}_cat_${isEvening() ? 'sleep_x2_90' : 'hi_x2'}_opti.json",
-                    controller: _catHiController,
-                    // width: getWinWidth(context) * 0.7,
-                    // height: getWinWidth(context) * 0.7,
-                    width: 311,
-                    height: 284.87,
-                    repeat: false, // Hi는 자동 반복 금지
-                    visible: _currentCatAnimation == CatAnimationState.hi,
-                  ),
-                ),
+                ...CatAnimationState.values.mapIndexed((idx, state) {
+                  return Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        buildLottieWidget(
+                          assetPath:
+                              "assets/lotties/home_${isEvening() ? 'night' : 'day'}_cat_${isEvening() ? 'sleep_x2_90' : '${state.name}_x2'}_opti.json",
+                          controller: _catControllers[state]!,
+                          // width: getWinWidth(context) * 0.7,
+                          // height: getWinWidth(context) * 0.7,
+                          width: 311,
+                          height: 284.87,
+                          repeat: idx == 0,
+                          visible: _currentCatAnimation == state,
+                        ),
+                        // 배경 그림자 위치와 맞추기 위한 마진
+                        SizedBox(height: getWinHeight(context) * 0.06),
+                      ],
+                    ),
+                  );
+                }),
               ],
             ),
           ),

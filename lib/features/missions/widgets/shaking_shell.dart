@@ -172,7 +172,7 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                                     ? 4 // 초당 4회 흔들림
                                     : currentClamAnimationFromVM ==
                                         ClamAnimationState.stronglyShaking
-                                    ? 12 // 초당 8회 흔들림
+                                    ? 12 // 초당 12회 흔들림
                                     : 0,
                             duration: 1.seconds, // 1초 동안 흔들림
                             offset: Offset(
@@ -181,7 +181,7 @@ class _ShakingShellState extends ConsumerState<ShakingShell>
                                   ? 5 // 좌우 5픽셀 흔들림
                                   : currentClamAnimationFromVM ==
                                       ClamAnimationState.stronglyShaking
-                                  ? 15 // 좌우 10픽셀 흔들림
+                                  ? 15 // 좌우 15픽셀 흔들림
                                   : 0,
                               0,
                             ),
