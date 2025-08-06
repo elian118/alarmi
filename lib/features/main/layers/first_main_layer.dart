@@ -9,7 +9,6 @@ import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/helper_utils.dart';
 import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:alarmi/utils/relative_utils.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -274,7 +273,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                           : Container(),
                 ),
                 // 가시성 제어가 적용된 고양이 Lottie 위젯들
-                ...CatAnimationState.values.mapIndexed((idx, state) {
+                ...CatAnimationState.values.map((state) {
                   return Align(
                     alignment: Alignment.center,
                     child: Column(
@@ -288,7 +287,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                           // height: getWinWidth(context) * 0.7,
                           width: 311,
                           height: 284.87,
-                          repeat: idx == 0,
+                          repeat: state == CatAnimationState.sit,
                           visible: _currentCatAnimation == state,
                         ),
                         // 배경 그림자 위치와 맞추기 위한 마진
