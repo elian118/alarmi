@@ -44,6 +44,7 @@ class _GuideLayerState extends ConsumerState<GuideLayer>
     final shakingClamsState = ref.watch(shakingClamsViewProvider);
 
     if (shakingClamsState.isStart &&
+        shakingClamsState.countdownProgress == 1 &&
         !_progressAnimationController.isAnimating) {
       _progressAnimationController.forward(from: 0.0);
     } else if (!shakingClamsState.isStart &&

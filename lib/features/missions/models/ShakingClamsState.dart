@@ -4,6 +4,7 @@ class ShakingClamsState {
   final bool isStart;
   final int popCountdown;
   final int countdown;
+  final double countdownProgress;
   final bool showMission;
   final double openCount;
   final String message;
@@ -17,6 +18,7 @@ class ShakingClamsState {
     this.isStart = false,
     this.popCountdown = 3,
     this.countdown = 3,
+    this.countdownProgress = 1,
     this.showMission = false,
     this.openCount = 0.0,
     this.message = '흔들어 주세요',
@@ -31,6 +33,7 @@ class ShakingClamsState {
     bool? isStart,
     int? popCountdown,
     int? countdown,
+    double? countdownProgress,
     bool? showMission,
     double? openCount,
     String? message,
@@ -44,6 +47,7 @@ class ShakingClamsState {
       isStart: isStart ?? this.isStart,
       popCountdown: popCountdown ?? this.popCountdown,
       countdown: countdown ?? this.countdown,
+      countdownProgress: countdownProgress ?? this.countdownProgress,
       showMission: showMission ?? this.showMission,
       openCount: openCount ?? this.openCount,
       message: message ?? this.message,

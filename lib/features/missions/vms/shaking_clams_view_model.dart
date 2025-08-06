@@ -38,7 +38,6 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
     return ShakingClamsState(
       currentClamAnimation: ClamAnimationState.waiting,
       shakeTriggerCount: 0,
-      // shakeAnimationTarget: 0.0,
     );
   }
 
@@ -121,6 +120,10 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
 
   void setCountdown(int value) {
     state = state.copyWith(countdown: value);
+  }
+
+  void setCountdownProgress(double value) {
+    state = state.copyWith(countdownProgress: value);
   }
 
   void setOpenCount(double value) {
@@ -314,7 +317,10 @@ class ShakingClamsViewModel extends Notifier<ShakingClamsState> {
 
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (state.countdown > 1) {
+        // 카운트다운 업데이트
         setCountdown(state.countdown - 1);
+        // 진행도(애니메이션) 업데이트
+        setCountdownProgress(state.countdownProgress - (1 / _initialCountdown));
       } else {
         timer.cancel();
         // 카운트다운 종료 시점도 마지막 흔들림 시간으로 간주
