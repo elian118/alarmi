@@ -309,6 +309,20 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
                     int.parse(widget.alarmId!),
                     widget.type,
                   );
+
+                  callToast(
+                    context,
+                    '알람이 삭제되었습니다.',
+                    icon: Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.check, color: Colors.white, size: 16),
+                    ),
+                  );
+
                   context.pop(); // 뒤로 가기
                 } catch (e) {
                   callToast(context, '알람 삭제가 실패했습니다.');

@@ -72,7 +72,18 @@ class Alarm extends ConsumerWidget {
               renewDateTime: renewDateTime,
               updatedAlarmMap: updatedAlarmMap,
             );
-        callToast(context, newValue ? '알람이 비활성화되었습니다.' : '알람이 활성화되었습니다.');
+        callToast(
+          context,
+          newValue ? '알람이 비활성화되었습니다.' : '알람이 활성화되었습니다.',
+          icon: Container(
+            padding: EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.check, color: Colors.white, size: 16),
+          ),
+        );
       } catch (e) {
         debugPrint('알람 상태 업데이트 실패: $e');
         callToast(context, '알람 상태 변경에 실패했습니다.');
