@@ -70,6 +70,7 @@ class _AlarmiAppState extends ConsumerState<AlarmiApp> {
               supportedLocales: const [Locale('en', 'US'), Locale('ko', 'KR')],
               routerConfig: ref.watch(routerProvider),
               debugShowCheckedModeBanner: false,
+              showPerformanceOverlay: true, // 랜더링 테스트 시 활성화
               title: 'Alarmi',
               themeMode: ThemeMode.system,
               // todo: 언제 한 번 날 잡아서 커스덤 테마 적용하기

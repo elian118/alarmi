@@ -115,10 +115,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
               onTap: () => context.push(AlarmTestScreen.routeURL),
               child: Image.asset(
                 'assets/images/characters/thumb.png',
-              ).animate().scale(
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              ),
+              ).animate().scale(duration: 500.ms, curve: Curves.easeInOut),
             ),
           ),
         ],

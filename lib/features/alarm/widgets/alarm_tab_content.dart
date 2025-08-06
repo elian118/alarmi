@@ -123,17 +123,9 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                   child: AnimatedOpacity(
                     opacity: currentPageIndex == 0 ? 1.0 : 0.0,
                     duration: 500.ms,
-                    child: Stack(
-                      children: [
-                        ...buildProgressiveBlurLayers(
-                          blurAreaHeight: blurAreaHeight,
-                          stepCount: 50,
-                          // initialSigma: 0.0,
-                          sigmaIncrement: 0.06,
-                          heightReductionFactor: 0.8,
-                          topCompressionFactor: 1.0,
-                        ),
-                      ],
+                    child: buildSingleGradientBlurLayer(
+                      blurAreaHeight: getWinHeight(context) * 0.25,
+                      blurSigma: 2.0,
                     ),
                   ),
                 ),
