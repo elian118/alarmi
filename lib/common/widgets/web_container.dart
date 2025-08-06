@@ -13,7 +13,7 @@ class WebContainer extends StatelessWidget {
   final AlignmentGeometry? alignment;
 
   const WebContainer({
-    Key? key,
+    super.key,
     this.child,
     this.padding,
     this.minWidth = 0,
@@ -23,7 +23,7 @@ class WebContainer extends StatelessWidget {
     this.alignment = Alignment.topCenter,
     // this.heightFactor = 1,
     // this.widthFactor = 3,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

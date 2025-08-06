@@ -117,7 +117,7 @@ class _FeedDialogState extends State<FeedDialog> {
           Gaps.v8,
 
           Gaps.v16,
-          Container(
+          SizedBox(
             height: size.height * 0.57,
             child: SingleChildScrollView(
               child: Wrap(

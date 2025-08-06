@@ -34,7 +34,7 @@ class _CstImageSwitchState extends State<CstImageSwitch> {
   Widget build(BuildContext context) {
     bool isSvg(String path) => path.toLowerCase().endsWith('.svg');
 
-    Widget _buildThumbIcon() {
+    Widget buildThumbIcon() {
       if (isSvg(widget.thumbIconPath)) {
         return SvgPicture.asset(
           widget.thumbIconPath,
@@ -92,7 +92,7 @@ class _CstImageSwitchState extends State<CstImageSwitch> {
                   shape: BoxShape.circle,
                   color: widget.thumbColor ?? Colors.transparent,
                 ),
-                child: Center(child: _buildThumbIcon()),
+                child: Center(child: buildThumbIcon()),
               ),
             ),
           ),

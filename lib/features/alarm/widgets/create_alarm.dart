@@ -231,12 +231,12 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
   }
 
   Future<AlarmParams> _setParams() async {
-    List<int> _alarmKeys = [];
-    List<int> _selectedWeekdays =
+    List<int> alarmKeys = [];
+    List<int> selectedWeekdays =
         _weekdays.where((w) => w.isSelected == true).map((w) => w.id).toList();
 
-    _alarmKeys = await NotificationController.setWeeklyAlarm(
-      weekdays: _selectedWeekdays,
+    alarmKeys = await NotificationController.setWeeklyAlarm(
+      weekdays: selectedWeekdays,
       dateTime: _selectedDateTime,
       bellId: _bellId,
       vibrateId: _vibrateId,
@@ -245,8 +245,8 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
 
     return AlarmParams(
       id: _currentAlarmDbId,
-      alarmKeys: _alarmKeys,
-      weekdays: _selectedWeekdays,
+      alarmKeys: alarmKeys,
+      weekdays: selectedWeekdays,
       bellId: _bellId,
       vibrateId: _vibrateId,
       alarmTime: dtFormStr(_selectedDateTime, 'HH:mm:ss'),

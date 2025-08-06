@@ -8,7 +8,7 @@ class AlarmsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _getWeekdayName(int weekday) {
+    String getWeekdayName(int weekday) {
       switch (weekday) {
         case DateTime.monday:
           return '월요일';
@@ -40,7 +40,7 @@ class AlarmsDialog extends StatelessWidget {
                   final calendar =
                       notification.schedule as NotificationCalendar;
                   scheduleInfo =
-                      '매주 ${_getWeekdayName(calendar.weekday!)} ${calendar.hour!}:${calendar.minute}';
+                      '매주 ${getWeekdayName(calendar.weekday!)} ${calendar.hour!}:${calendar.minute}';
                 } else if (notification.schedule is NotificationInterval) {
                   final interval =
                       notification.schedule as NotificationInterval;

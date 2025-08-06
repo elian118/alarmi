@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FadeLayer extends ConsumerWidget {
-  const FadeLayer({Key? key}) : super(key: key);
+  const FadeLayer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

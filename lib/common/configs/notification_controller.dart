@@ -97,7 +97,7 @@ class NotificationController {
     String channelKey = "${bellId ?? ''}${channelKeySuffix}_channel')";
     String? soundSource =
         bell != null
-            ? 'resource://raw/${bell?.path.split('/').last.split('.').first}'
+            ? 'resource://raw/${bell.path.split('/').last.split('.').first}'
             : null;
 
     // 알림 채널이 존재하는지 확인하고 필요하면 생성
@@ -180,7 +180,7 @@ class NotificationController {
     String channelKey = "${bellId ?? ''}${channelKeySuffix}_channel')";
     String? soundSource =
         bell != null
-            ? 'resource://raw/${bell?.path.split('/').last.split('.').first}'
+            ? 'resource://raw/${bell.path.split('/').last.split('.').first}'
             : null;
 
     debugPrint('soundSource: $soundSource');

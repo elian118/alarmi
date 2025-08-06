@@ -98,7 +98,7 @@ class _CharacterLayerState extends ConsumerState<CharacterLayer>
                     builder: (context, value, child) {
                       if (onboardState.stage < 10) {
                         // 둥실둥실 애니메이션 체인
-                        return child!
+                        return child
                             .animate(
                               onPlay: (controller) => controller.repeat(),
                             )
@@ -117,7 +117,7 @@ class _CharacterLayerState extends ConsumerState<CharacterLayer>
                             );
                       } else if (onboardState.stage == 10) {
                         // 위로 서서히 올라가며 사라지는 애니메이션 체인
-                        return child!
+                        return child
                             .animate()
                             .slide(
                               begin: const Offset(0, 0),

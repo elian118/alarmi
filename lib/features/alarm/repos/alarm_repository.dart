@@ -12,7 +12,7 @@ class AlarmRepository {
   static Future<AlarmRepository> getInstance() async {
     if (_instance == null) {
       final database =
-          await InnerDatabase.instance; // InnerDatabase 인스턴스를 비동기로 가져옵니다.
+          InnerDatabase.instance; // InnerDatabase 인스턴스를 비동기로 가져옵니다.
       _instance = AlarmRepository._(database);
     }
     return _instance!;

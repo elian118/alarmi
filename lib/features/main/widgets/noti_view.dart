@@ -92,7 +92,7 @@ class _NotiTileState extends State<NotiTile> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Container(
+                          child: SizedBox(
                             height: 44,
                             child: Center(
                               child: Text('수락', style: TextStyle(fontSize: 14)),

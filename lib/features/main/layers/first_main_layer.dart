@@ -85,7 +85,9 @@ class _FirstMainLayerState extends ConsumerState<FirstMainLayer>
 
   @override
   void dispose() {
-    _catControllers.values.forEach((controller) => controller.dispose());
+    for (var controller in _catControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 

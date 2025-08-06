@@ -26,12 +26,12 @@ class CstTextBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late Widget? _icon;
-
-    if (icon is String) {
-      _icon = Image.asset(icon as String);
-    } else if (icon is Widget) {
-      _icon = icon as Widget;
+    Widget? buildIcons(Object? ic) {
+      return ic is String
+          ? Image.asset(ic)
+          : ic is Widget
+          ? ic
+          : null;
     }
 
     return TextButton(
@@ -43,7 +43,7 @@ class CstTextBtn extends StatelessWidget {
       onPressed: onPressed,
       child: Row(
         spacing: spacing != null ? spacing! : 12,
-        children: [_icon ?? Container(), Text(label, style: style)],
+        children: [buildIcons(icon) ?? Container(), Text(label, style: style)],
       ),
     );
   }

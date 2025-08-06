@@ -20,7 +20,6 @@ class CstRoundedSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final double _sliderHeight = sliderHeight ?? 6.0;
 
     return Container(
       clipBehavior: Clip.hardEdge,
@@ -29,7 +28,7 @@ class CstRoundedSlider extends StatelessWidget {
         color: Colors.black87.withValues(alpha: 0.45),
       ),
       width: size.width,
-      height: _sliderHeight,
+      height: sliderHeight ?? 6.0,
       child: ValueListenableBuilder<double>(
         valueListenable: progress,
         builder:
@@ -39,7 +38,7 @@ class CstRoundedSlider extends StatelessWidget {
               curve: Curves.easeInOut,
               builder:
                   (context, animatedValue, child) => CustomPaint(
-                    size: Size(size.width, _sliderHeight),
+                    size: Size(size.width, sliderHeight ?? 6.0),
                     painter: ProgressPainter(
                       progress: animatedValue,
                       gradientColors: gradientColors,

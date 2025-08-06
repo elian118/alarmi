@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class ConfirmLayer extends ConsumerWidget {
-  const ConfirmLayer({Key? key}) : super(key: key);
+  const ConfirmLayer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -54,14 +54,9 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
               child: Column(
                 children:
                     alarms.map((alarm) {
-                      final AlarmParams? alarmParams = AlarmParams.fromJson(
+                      final AlarmParams alarmParams = AlarmParams.fromJson(
                         alarm,
                       );
-
-                      // alarmParams가 null일 가능성 처리 (fromJson 결과)
-                      if (alarmParams == null) {
-                        return const SizedBox.shrink(); // 또는 오류 메시지 표시
-                      }
                       // debugPrint(alarmParams.toString());
 
                       return Dismissible(

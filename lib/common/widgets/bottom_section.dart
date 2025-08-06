@@ -98,7 +98,6 @@ class BottomSection extends ConsumerWidget {
                             height: 18,
                             fit: BoxFit.contain,
                             colorFilter: const ColorFilter.mode(
-                              // const 추가
                               Colors.white,
                               BlendMode.srcIn,
                             ),
