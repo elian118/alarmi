@@ -83,9 +83,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
 
   @override
   void dispose() {
-    for (final controller in _catControllers.values) {
-      controller.dispose();
-    }
+    _catControllers.values.forEach((controller) => controller.dispose());
     super.dispose();
   }
 
