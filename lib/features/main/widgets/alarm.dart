@@ -2,6 +2,7 @@ import 'package:alarmi/common/configs/notification_controller.dart';
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/weekdays.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/vms/global_view_model.dart';
 import 'package:alarmi/common/widgets/cst_image_switch.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
@@ -21,6 +22,9 @@ class Alarm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isEvening = ref.watch(
+      globalViewProvider.select((state) => state.isEvening),
+    );
     String formattedTime = formatTimeToAmPm(params.alarmTime);
 
     final List<String> repeatDayNames =
@@ -145,6 +149,10 @@ class Alarm extends ConsumerWidget {
           value: params.isDisabled == 0,
           onChanged: (value) => onChanged(!value),
           thumbIconPath: 'assets/images/icons/cat_icon.svg',
+          inactiveColor:
+              isEvening
+                  ? Theme.of(context).colorScheme.secondaryContainer
+                  : Theme.of(context).colorScheme.secondary,
         ),
       ],
     );

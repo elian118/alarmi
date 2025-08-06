@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'common/configs/inner_database.dart';
 import 'common/configs/notification_initialize.dart';
+import 'common/consts/theme.dart';
 import 'common/routes/router.dart';
 
 void main() {
@@ -73,13 +74,7 @@ class _AlarmiAppState extends ConsumerState<AlarmiApp> {
               // showPerformanceOverlay: true, // 랜더링 성능 테스트 시 활성화
               title: 'Alarmi',
               themeMode: ThemeMode.system,
-              // todo: 언제 한 번 날 잡아서 커스덤 테마 적용하기
-              theme: ThemeData(
-                fontFamily: "Pretendard",
-                colorScheme: ColorScheme.fromSwatch().copyWith(
-                  primary: const Color(0xFF3E7EFF),
-                ),
-              ),
+              theme: commonTheme,
             );
           }
         } else {

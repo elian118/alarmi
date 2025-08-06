@@ -23,7 +23,7 @@ void callToast(BuildContext context, String msg, {Widget? icon}) =>
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: Color(0xFF2C3E50),
+              color: Theme.of(context).colorScheme.secondaryContainer,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(

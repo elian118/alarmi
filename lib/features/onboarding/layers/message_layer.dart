@@ -22,7 +22,7 @@ class MessageLayer extends ConsumerWidget {
           icon: Container(
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: Colors.blueAccent,
+              color: Theme.of(context).colorScheme.primaryContainer,
               shape: BoxShape.circle,
             ),
             child: Icon(Icons.check, color: Colors.white, size: 16),

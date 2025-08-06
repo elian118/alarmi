@@ -304,7 +304,9 @@ class _AlarmSettingsState extends ConsumerState<AlarmSettings> {
                     onChanged: (value) => widget.toggleWakeUpMission(),
                     thumbIconPath: 'assets/images/icons/cat_icon.svg',
                     inactiveColor:
-                        isEvening ? Color(0xFF525672) : Color(0xFF4692C4),
+                        isEvening
+                            ? Theme.of(context).colorScheme.secondaryContainer
+                            : Theme.of(context).colorScheme.secondary,
                   ),
                 ],
               ),

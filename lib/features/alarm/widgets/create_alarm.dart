@@ -188,7 +188,11 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
       callToast(
         context,
         msg,
-        icon: Icon(Icons.error, color: Colors.redAccent, size: 24),
+        icon: Icon(
+          Icons.error,
+          color: Theme.of(context).colorScheme.error,
+          size: 24,
+        ),
       );
     }
 

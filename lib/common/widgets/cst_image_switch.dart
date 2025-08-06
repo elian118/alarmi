@@ -73,8 +73,10 @@ class _CstImageSwitchState extends State<CstImageSwitch> {
             borderRadius: BorderRadius.circular(30.0),
             color:
                 widget.value
-                    ? widget.activeColor ?? Color(0xFF5E8DE8)
-                    : widget.inactiveColor ?? Color(0xFF333333),
+                    ? widget.activeColor ??
+                        Theme.of(context).colorScheme.primary
+                    : widget.inactiveColor ??
+                        Theme.of(context).colorScheme.inverseSurface,
           ),
           curve: Curves.easeInOut,
           child: AnimatedAlign(
