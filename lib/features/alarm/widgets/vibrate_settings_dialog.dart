@@ -1,10 +1,12 @@
 import 'package:alarmi/common/consts/raw_data/bg_gradation_color_set.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/vms/global_view_model.dart';
 import 'package:alarmi/features/alarm/widgets/vibrates.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class VibrateSettingsDialog extends StatefulWidget {
+class VibrateSettingsDialog extends ConsumerStatefulWidget {
   static const String routeName = 'vibrate_settings_dialog';
   static const String routeURL = '/vibrate_settings';
 
@@ -22,10 +24,11 @@ class VibrateSettingsDialog extends StatefulWidget {
   });
 
   @override
-  State<VibrateSettingsDialog> createState() => _VibrateSettingsDialogState();
+  ConsumerState<VibrateSettingsDialog> createState() =>
+      _VibrateSettingsDialogState();
 }
 
-class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
+class _VibrateSettingsDialogState extends ConsumerState<VibrateSettingsDialog> {
   late String? _selectedVibrateId = widget.selectedVibrateId;
   // late bool _isDialogActivatedVibrate = _selectedVibrateId != null;
   final bool _isDialogActivatedVibrate = true;
@@ -64,6 +67,10 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isEvening = ref.watch(
+      globalViewProvider.select((state) => state.isEvening),
+    );
+
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
@@ -77,7 +84,8 @@ class _VibrateSettingsDialogState extends State<VibrateSettingsDialog> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: bgGradationColorSet,
+            colors:
+                isEvening ? nightBgGradationColorSet : dayBgGradationColorSet,
           ),
           // 일부 기기는 모서리가 각 져 있어 적용 시 보기 흉할 수 있음
           borderRadius: const BorderRadius.only(

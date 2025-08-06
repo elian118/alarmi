@@ -1,9 +1,9 @@
+import 'package:alarmi/common/vms/global_view_model.dart';
 import 'package:alarmi/features/main/layers/first_main_layer.dart';
 import 'package:alarmi/features/main/layers/my_alarms_layer.dart';
 import 'package:alarmi/features/main/layers/second_main_layer.dart';
 import 'package:alarmi/features/main/widgets/create_alarm_button.dart';
 import 'package:alarmi/features/test/screens/alarm_test_screen.dart';
-import 'package:alarmi/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,16 +48,12 @@ class _MainScreenState extends ConsumerState<MainScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_didPreloadAssets) {
-      _preloadAssets();
-      _didPreloadAssets = true;
-    }
   }
 
-  Future<void> _preloadAssets() async {
+  Future<void> _preloadAssets(bool isEvening) async {
     // 1. 배경 이미지 미리 로드
     final ImageProvider backgroundProvider = AssetImage(
-      isEvening() ? _nightBackgroundImgPath : _backgroundImgPath,
+      isEvening ? _nightBackgroundImgPath : _backgroundImgPath,
     );
 
     if (mounted) {
@@ -76,6 +72,15 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isEvening = ref.watch(
+      globalViewProvider.select((state) => state.isEvening),
+    );
+
+    if (!_didPreloadAssets) {
+      _preloadAssets(isEvening); // isEvening 값을 전달
+      _didPreloadAssets = true;
+    }
+
     const double initialBottomOffset = 300.0;
 
     return Scaffold(

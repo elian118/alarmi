@@ -2,6 +2,7 @@ import 'package:alarmi/common/configs/notification_controller.dart';
 import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/weekdays.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/vms/global_view_model.dart';
 import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
@@ -257,6 +258,10 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
 
   @override
   Widget build(BuildContext context) {
+    final isEvening = ref.watch(
+      globalViewProvider.select((state) => state.isEvening),
+    );
+
     if (_isLoading) {
       return CstPartLoading();
     }
@@ -308,7 +313,7 @@ class _CreateAlarmState extends ConsumerState<CreateAlarm> {
               style: ElevatedButton.styleFrom(
                 foregroundColor: Color(0xFFFF5F5F),
                 backgroundColor:
-                    isEvening() ? Color(0xFF272C4F) : Color(0xFF206391),
+                    isEvening ? Color(0xFF272C4F) : Color(0xFF206391),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

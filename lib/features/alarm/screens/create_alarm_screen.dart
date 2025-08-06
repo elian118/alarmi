@@ -1,10 +1,12 @@
 import 'package:alarmi/common/consts/raw_data/bg_gradation_color_set.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/vms/global_view_model.dart';
 import 'package:alarmi/features/alarm/widgets/create_alarm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class CreateAlarmScreen extends StatelessWidget {
+class CreateAlarmScreen extends ConsumerWidget {
   static const String routeName = 'createAlarm';
   static const String routeURL = '/create-alarm';
   final String type;
@@ -16,7 +18,11 @@ class CreateAlarmScreen extends StatelessWidget {
   CreateAlarmScreen({super.key, required this.type, this.alarmId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isEvening = ref.watch(
+      globalViewProvider.select((state) => state.isEvening),
+    );
+
     return
     // 기획 변경 시 적용
     ClipRRect(
@@ -74,7 +80,10 @@ class CreateAlarmScreen extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
-                    colors: bgGradationColorSet,
+                    colors:
+                        isEvening
+                            ? nightBgGradationColorSet
+                            : dayBgGradationColorSet,
                   ),
                 ),
               ),

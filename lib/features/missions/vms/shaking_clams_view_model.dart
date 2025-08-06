@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:alarmi/features/missions/constants/enums/clam_animation_state.dart';
-import 'package:alarmi/features/missions/models/ShakingClamsState.dart';
+import 'package:alarmi/features/missions/models/shaking_clams_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -2,17 +2,18 @@ import 'package:alarmi/common/consts/gaps.dart';
 import 'package:alarmi/common/consts/raw_data/bells.dart';
 import 'package:alarmi/common/consts/raw_data/haptic_patterns.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/vms/global_view_model.dart';
 import 'package:alarmi/common/widgets/cst_checkbox.dart';
 import 'package:alarmi/common/widgets/cst_image_switch.dart';
 import 'package:alarmi/features/alarm/models/weekday.dart';
 import 'package:alarmi/features/alarm/widgets/bell_settings_dialog.dart';
 import 'package:alarmi/features/alarm/widgets/vibrate_settings_dialog.dart';
-import 'package:alarmi/utils/date_utils.dart';
 import 'package:alarmi/utils/route_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AlarmSettings extends StatefulWidget {
+class AlarmSettings extends ConsumerStatefulWidget {
   final List<Weekday> weekdays;
   final bool isActivatedVirtualMission;
   final Function() toggleWakeUpMission;
@@ -43,10 +44,10 @@ class AlarmSettings extends StatefulWidget {
   });
 
   @override
-  State<AlarmSettings> createState() => _AlarmSettingsState();
+  ConsumerState<AlarmSettings> createState() => _AlarmSettingsState();
 }
 
-class _AlarmSettingsState extends State<AlarmSettings> {
+class _AlarmSettingsState extends ConsumerState<AlarmSettings> {
   String? _selectedBellId;
   String? _selectedVibrateId;
 
@@ -110,8 +111,12 @@ class _AlarmSettingsState extends State<AlarmSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final isEvening = ref.watch(
+      globalViewProvider.select((state) => state.isEvening),
+    );
+
     return Card(
-      color: Color(!isEvening() ? 0xFF206391 : 0xFF272C4F),
+      color: Color(!isEvening ? 0xFF206391 : 0xFF272C4F),
       child: Padding(
         padding: const EdgeInsets.only(top: 18, bottom: 6, left: 16, right: 16),
         child: Column(
@@ -141,7 +146,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                         size: 16,
                         borderRadius: 5,
                         uncheckedColor:
-                            isEvening() ? Color(0xFF525672) : Color(0xFF4692C4),
+                            isEvening ? Color(0xFF525672) : Color(0xFF4692C4),
                       ),
                       Text(
                         '매일',
@@ -173,14 +178,12 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                           backgroundColor:
                               day.isSelected
                                   ? Colors.white
-                                  : Color(
-                                    isEvening() ? 0xFF525672 : 0xFF4692C4,
-                                  ),
+                                  : Color(isEvening ? 0xFF525672 : 0xFF4692C4),
                           foregroundColor:
                               day.isSelected
                                   ? Colors.black87
                                   : Color(
-                                    isEvening() ? 0xFFA9ABB9 : 0xFF96D3FC,
+                                    isEvening ? 0xFFA9ABB9 : 0xFF96D3FC,
                                   ), // 텍스트 색상
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -199,7 +202,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
             Divider(
               height: 10,
               thickness: 0.67,
-              color: Color(isEvening() ? 0xFF525672 : 0xFF61AADF),
+              color: Color(isEvening ? 0xFF525672 : 0xFF61AADF),
             ),
             TextButton(
               onPressed: () => openSettingsDialog('bell'),
@@ -225,7 +228,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                             ? getBellTitleById(_selectedBellId!)
                             : '없음',
                         style: TextStyle(
-                          color: Color(isEvening() ? 0xFFA9ABB9 : 0xFF96D3FC),
+                          color: Color(isEvening ? 0xFFA9ABB9 : 0xFF96D3FC),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -238,7 +241,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
             Divider(
               height: 10,
               thickness: 0.67,
-              color: Color(isEvening() ? 0xFF525672 : 0xFF61AADF),
+              color: Color(isEvening ? 0xFF525672 : 0xFF61AADF),
             ),
             TextButton(
               onPressed: () => openSettingsDialog('vibrate'),
@@ -267,7 +270,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                             ? getVibrateNameById(_selectedVibrateId!)
                             : '없음',
                         style: TextStyle(
-                          color: Color(isEvening() ? 0xFFA9ABB9 : 0xFF96D3FC),
+                          color: Color(isEvening ? 0xFFA9ABB9 : 0xFF96D3FC),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -280,7 +283,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
             Divider(
               height: 10,
               thickness: 0.67,
-              color: Color(isEvening() ? 0xFF525672 : 0xFF61AADF),
+              color: Color(isEvening ? 0xFF525672 : 0xFF61AADF),
             ),
             TextButton(
               onPressed: widget.toggleWakeUpMission,
@@ -301,7 +304,7 @@ class _AlarmSettingsState extends State<AlarmSettings> {
                     onChanged: (value) => widget.toggleWakeUpMission(),
                     thumbIconPath: 'assets/images/icons/cat_icon.svg',
                     inactiveColor:
-                        isEvening() ? Color(0xFF525672) : Color(0xFF4692C4),
+                        isEvening ? Color(0xFF525672) : Color(0xFF4692C4),
                   ),
                 ],
               ),

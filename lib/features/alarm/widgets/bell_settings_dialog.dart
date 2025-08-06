@@ -1,10 +1,12 @@
 import 'package:alarmi/common/consts/raw_data/bg_gradation_color_set.dart';
 import 'package:alarmi/common/consts/sizes.dart';
+import 'package:alarmi/common/vms/global_view_model.dart';
 import 'package:alarmi/features/alarm/widgets/bell_tabs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class BellSettingsDialog extends StatefulWidget {
+class BellSettingsDialog extends ConsumerStatefulWidget {
   static const String routeName = 'bell_settings_dialog';
   static const String routeURL = '/bell_settings';
 
@@ -18,10 +20,10 @@ class BellSettingsDialog extends StatefulWidget {
   });
 
   @override
-  State<BellSettingsDialog> createState() => _BellSettingsDialogState();
+  ConsumerState<BellSettingsDialog> createState() => _BellSettingsDialogState();
 }
 
-class _BellSettingsDialogState extends State<BellSettingsDialog> {
+class _BellSettingsDialogState extends ConsumerState<BellSettingsDialog> {
   late String? _selectedBellId = widget.selectedBellId;
   double _volume = 0.8;
 
@@ -44,6 +46,10 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isEvening = ref.watch(
+      globalViewProvider.select((state) => state.isEvening),
+    );
+
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
@@ -57,7 +63,8 @@ class _BellSettingsDialogState extends State<BellSettingsDialog> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: bgGradationColorSet,
+            colors:
+                isEvening ? nightBgGradationColorSet : dayBgGradationColorSet,
           ),
           // 일부 기기는 모서리가 각 져 있어 적용 시 보기 흉할 수 있음
           borderRadius: const BorderRadius.only(

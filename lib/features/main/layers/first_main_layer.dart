@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:alarmi/common/consts/raw_data/cat_random_speeches.dart';
 import 'package:alarmi/common/consts/raw_data/cat_regular_speeches.dart';
+import 'package:alarmi/common/vms/global_view_model.dart';
 import 'package:alarmi/common/widgets/speech_bubble.dart';
 import 'package:alarmi/features/main/constants/cat_animation_state.dart';
 import 'package:alarmi/features/onboarding/services/character_service.dart';
@@ -11,8 +12,9 @@ import 'package:alarmi/utils/lottie_utils.dart';
 import 'package:alarmi/utils/relative_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FirstMainLayer extends StatefulWidget {
+class FirstMainLayer extends ConsumerStatefulWidget {
   final AnimationController bgCloudLottieController;
   final AnimationController bgSunlightLottieController;
   final AnimationController bgSeaLottieController;
@@ -31,10 +33,10 @@ class FirstMainLayer extends StatefulWidget {
   });
 
   @override
-  State<FirstMainLayer> createState() => _FirstMainLayerState();
+  ConsumerState<FirstMainLayer> createState() => _FirstMainLayerState();
 }
 
-class _FirstMainLayerState extends State<FirstMainLayer>
+class _FirstMainLayerState extends ConsumerState<FirstMainLayer>
     with TickerProviderStateMixin {
   late String message = '';
 
@@ -214,6 +216,11 @@ class _FirstMainLayerState extends State<FirstMainLayer>
 
   @override
   Widget build(BuildContext context) {
+    // isEvening 변경시에만 리빌드하도록 상태 추적
+    final isEvening = ref.watch(
+      globalViewProvider.select((state) => state.isEvening),
+    );
+
     return GestureDetector(
       onTap: changeMotion,
       child: Stack(
@@ -223,7 +230,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
               children: [
                 Positioned.fill(
                   child: Image.asset(
-                    !isEvening()
+                    !isEvening
                         ? widget.backgroundImgPath
                         : widget.nightBackgroundImgPath,
                     fit: BoxFit.cover,
@@ -238,7 +245,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                       fit: BoxFit.cover, // 잘림 무시하고 확대 - 좌우 슬라이드 애니메이션이라 상관 없음
                       height: getWinHeight(context),
                       repeat: true,
-                      visible: !isEvening(),
+                      visible: !isEvening,
                     ),
                   ),
                 ),
@@ -247,7 +254,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                     alignment: Alignment.topCenter,
                     child: buildLottieWidget(
                       assetPath:
-                          'assets/lotties/home_${isEvening() ? 'night' : 'day'}_bg_${isEvening() ? 'star' : 'sunlight'}_2x.json',
+                          'assets/lotties/home_${isEvening ? 'night' : 'day'}_bg_${isEvening ? 'star' : 'sunlight'}_2x.json',
                       controller: widget.bgSunlightLottieController,
                       fit: BoxFit.cover, // 잘림 무시하고 확대 - 좌우 슬라이드 애니메이션이라 상관 없음
                       height: getRelativeHeight(context),
@@ -258,7 +265,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                 Positioned.fill(
                   child: buildLottieWidget(
                     assetPath:
-                        'assets/lotties/home_${isEvening() ? 'night' : 'day'}_bg_sea_1x${isEvening() ? '' : '_02'}.json',
+                        'assets/lotties/home_${isEvening ? 'night' : 'day'}_bg_sea_1x${isEvening ? '' : '_02'}.json',
                     controller: widget.bgSeaLottieController,
                     repeat: true,
                   ),
@@ -279,7 +286,7 @@ class _FirstMainLayerState extends State<FirstMainLayer>
                       children: [
                         buildLottieWidget(
                           assetPath:
-                              "assets/lotties/home_${isEvening() ? 'night' : 'day'}_cat_${isEvening() ? 'sleep_x2_90' : '${state.name}_x2'}_opti.json",
+                              "assets/lotties/home_${isEvening ? 'night' : 'day'}_cat_${isEvening ? 'sleep_x2_90' : '${state.name}_x2'}_opti.json",
                           controller: _catControllers[state]!,
                           // width: getWinWidth(context) * 0.7,
                           // height: getWinWidth(context) * 0.7,
