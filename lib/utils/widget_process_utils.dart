@@ -26,7 +26,9 @@ Widget buildSingleGradientBlurLayer({
               colors: [
                 Colors.transparent.withValues(alpha: 0.0),
                 Colors.transparent.withValues(alpha: 0.15),
-                Colors.transparent.withValues(alpha: 0.3),
+                Colors.transparent.withValues(
+                  alpha: 0.0,
+                ), // 페이지 전환 시 어색함이 들지 않도록 0으로 조정
               ],
               // 투명도가 변하는 위치
               stops: const [0.0, 0.7, 1.0],

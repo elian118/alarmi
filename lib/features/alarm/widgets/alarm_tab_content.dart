@@ -16,13 +16,8 @@ import 'package:go_router/go_router.dart';
 
 class AlarmTabContent extends ConsumerStatefulWidget {
   final String type;
-  final int currentPageIndex;
 
-  const AlarmTabContent({
-    super.key,
-    required this.type,
-    required this.currentPageIndex,
-  });
+  const AlarmTabContent({super.key, required this.type});
 
   @override
   ConsumerState<AlarmTabContent> createState() => AlarmTabContentState();
@@ -37,7 +32,6 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
   @override
   Widget build(BuildContext context) {
     final currentPageIndex = ref.watch(mainViewProvider).currentPageIndex;
-    final double blurAreaHeight = getWinHeight(context) * 0.25;
 
     final AsyncValue<List<Map<String, dynamic>>> alarmAsync = ref.watch(
       alarmListProvider(widget.type),
@@ -57,7 +51,6 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                       final AlarmParams alarmParams = AlarmParams.fromJson(
                         alarm,
                       );
-                      // debugPrint(alarmParams.toString());
 
                       return Dismissible(
                         key: ValueKey(alarm['id']),
@@ -111,6 +104,7 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                     }).toList(),
               ),
             ),
+
             Positioned(
               // 블러를 적용할 영역 상단에 배치
               top: 0,
@@ -122,7 +116,8 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                 child: ClipRect(
                   child: AnimatedOpacity(
                     opacity: currentPageIndex == 0 ? 1.0 : 0.0,
-                    duration: 500.ms,
+                    duration: currentPageIndex == 0 ? 500.ms : 0.ms,
+                    curve: Curves.decelerate,
                     child: buildSingleGradientBlurLayer(
                       blurAreaHeight: getWinHeight(context) * 0.25,
                       blurSigma: 2.0,

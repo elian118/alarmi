@@ -210,12 +210,7 @@ class _MyAlarmsLayerState extends ConsumerState<MyAlarmsLayer> {
                   curve: Curves.easeInOut,
                 ),
                 currentPageIndex == 1 ? Gaps.v28 : Container(),
-                Expanded(
-                  child: AlarmTabContent(
-                    type: 'my',
-                    currentPageIndex: currentPageIndex,
-                  ),
-                ),
+                Expanded(child: AlarmTabContent(type: 'my')),
               ],
             ),
           ),
