@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 Widget buildSingleGradientBlurLayer({
   required double blurAreaHeight,
   required double blurSigma, // 블러 강도 (sigmaX, sigmaY)
+  required bool isEvening,
 }) {
   return SizedBox(
     height: blurAreaHeight,
@@ -38,7 +39,7 @@ Widget buildSingleGradientBlurLayer({
           blendMode: BlendMode.dstIn, // 마스크 투명도에 따라 BackdropFilter 보임
           child: Container(
             // 마스크의 색상은 중요하지 않음, 투명도를 위해 사용
-            color: Colors.transparent,
+            color: isEvening ? Colors.black87 : Colors.white,
           ),
         ),
       ],

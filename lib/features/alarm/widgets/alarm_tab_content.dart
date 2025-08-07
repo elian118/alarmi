@@ -1,3 +1,4 @@
+import 'package:alarmi/common/vms/global_view_model.dart';
 import 'package:alarmi/common/widgets/cst_error.dart';
 import 'package:alarmi/common/widgets/cst_part_loading.dart';
 import 'package:alarmi/features/alarm/models/alarm_params.dart';
@@ -31,6 +32,9 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
 
   @override
   Widget build(BuildContext context) {
+    final isEvening = ref.watch(
+      globalViewProvider.select((state) => state.isEvening),
+    );
     final currentPageIndex = ref.watch(mainViewProvider).currentPageIndex;
 
     final AsyncValue<List<Map<String, dynamic>>> alarmAsync = ref.watch(
@@ -121,6 +125,7 @@ class AlarmTabContentState extends ConsumerState<AlarmTabContent> {
                     child: buildSingleGradientBlurLayer(
                       blurAreaHeight: getWinHeight(context) * 0.25,
                       blurSigma: 2.0,
+                      isEvening: isEvening,
                     ),
                   ),
                 ),
